@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/ic_menu_main"
+            android:title="@string/menu_main" />
+        <item
+            android:id="@+id/nav_infor"
+            android:icon="@drawable/ic_menu_infor"
+            android:title="@string/menu_infor" />
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_message"
+            android:title="@string/menu_send" />
+        <item
+            android:id="@+id/nav_collection"
+            android:icon="@drawable/ic_menu_collection"
+            android:title="@string/menu_collection" />
+        <item
+            android:id="@+id/nav_chatlist"
+            android:icon="@drawable/ic_menu_about"
+            android:title="訊息列表" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_about"
+            android:title="@string/menu_about" />
+    </group>
+
+    <item android:title="@string/menu_other">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/menu_share" />
+            <item
+                android:id="@+id/nav_suggest"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/menu_suggest" />
+            <item
+                android:id="@+id/nav_signout"
+                android:icon="@drawable/signout"
+                android:title="@string/menu_signout" />
+        </menu>
+    </item>
+
+</menu>
