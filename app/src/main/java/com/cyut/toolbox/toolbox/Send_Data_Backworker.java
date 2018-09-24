@@ -3,6 +3,7 @@ package com.cyut.toolbox.toolbox;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -19,6 +20,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by AiYu on 2018/3/2/002.
  */
@@ -28,7 +31,7 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
     Send_Data_Backworker (Context ctx){
         context = ctx;
     }
-    MaterialDialog.Builder alertDialog;
+
     @Override
     protected String doInBackground(String... strings) {
         //type, send_class,send_Title,send_Money,send_city,send_town,send_road,send_otherdetail,send_detail,send_case_disapear,send_case_finish_start,send_case_finish_end
@@ -69,7 +72,8 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
                                 +URLEncoder.encode("setstart","UTF-8")+"="+URLEncoder.encode(send_case_finish_start,"UTF-8")+"&"
                                 +URLEncoder.encode("setend","UTF-8")+"="+URLEncoder.encode(send_case_finish_end,"UTF-8")+"&"
                                 +URLEncoder.encode("u_pid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"
-                                +URLEncoder.encode("u_rid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8");
+                                +URLEncoder.encode("u_rid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"
+                                +URLEncoder.encode("u_uid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8");
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -102,14 +106,15 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
     //-------------------背景完成後
     @Override
     protected void onPostExecute(String result) {
-        alertDialog = new MaterialDialog.Builder(context)
-                .title("發案結果")
-                .content(result)
-                .positiveText("確定");
-        alertDialog.backgroundColorRes(R.color.colorBackground);
-        MaterialDialog dialog = alertDialog.build();
-        dialog.show();
-        Toast.makeText(context, "發案成功", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onPostExecute: "+result);
+        if(result.contains("成功發案"))
+        {
+            Toast.makeText(context, "發案成功", Toast.LENGTH_SHORT).show();
+
+        }else if (result.contains("發案失敗")){
+            Toast.makeText(context, "發案失敗", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
     //------------------進度

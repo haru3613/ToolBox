@@ -352,7 +352,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String c_money=params[2];
             String u_uid = params[3];
 
-            String delete_url = "http://163.17.5.182/deciderid.php";
+            String delete_url = "http://163.17.5.182/app/deciderid.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -367,6 +367,88 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                         URLEncoder.encode("u_uid", "UTF-8") + "=" + URLEncoder.encode(u_uid, "UTF-8") + "&" +
                         URLEncoder.encode("c_rid", "UTF-8") + "=" + URLEncoder.encode(c_rid, "UTF-8") + "&" +
                         URLEncoder.encode("c_money", "UTF-8") + "=" + URLEncoder.encode(c_money, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(type.equals("image_update")) {
+            String u_image = params[2];
+            String u_uid = params[1];
+
+            String delete_url = "http://163.17.5.182/app/image_update.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("u_image", "UTF-8") + "=" + URLEncoder.encode(u_image, "UTF-8") + "&" +
+                        URLEncoder.encode("u_uid", "UTF-8") + "=" + URLEncoder.encode(u_uid, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(type.equals("member_update")) {
+            String u_nickname = params[2];
+            String u_uid = params[1];
+            String u_phone = params[3];
+            String u_address = params[4];
+
+            String delete_url = "http://163.17.5.182/app/member_update.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("u_nickname", "UTF-8") + "=" + URLEncoder.encode(u_nickname, "UTF-8") + "&" +
+                        URLEncoder.encode("u_phone", "UTF-8") + "=" + URLEncoder.encode(u_phone, "UTF-8") + "&" +
+                        URLEncoder.encode("u_address", "UTF-8") + "=" + URLEncoder.encode(u_address, "UTF-8") + "&" +
+                        URLEncoder.encode("u_uid", "UTF-8") + "=" + URLEncoder.encode(u_uid, "UTF-8");
 
                 Log.d("POST_DATA", "doInBackground: " + post_data);
                 bufferedWriter.write(post_data);
@@ -446,6 +528,10 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "決定成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("決定失敗")) {
             Toast.makeText(context, "決定失敗", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("更新成功")){
+            Toast.makeText(context, "更新成功", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("更新失敗")) {
+            Toast.makeText(context, "更新失敗", Toast.LENGTH_SHORT).show();
         }else if (result.contains("DOCTYPE")){
             Log.d("Result", "onPostExecute: "+result);
             Toast.makeText(context, "系統出錯，請再試一次", Toast.LENGTH_SHORT).show();

@@ -21,6 +21,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -75,7 +76,7 @@ public class InforFragment extends Fragment {
     public static final String KEY = "STATUS";
     private View view;
     ImageView imageView;
-    String u_image;
+    String u_image,uid;
     Uri picUri;
     String path;
     boolean imgboo;
@@ -125,6 +126,7 @@ public class InforFragment extends Fragment {
                             List<Item> posts = new ArrayList<Item>();
                             posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                             final List<Item> itemList=posts;
+                            uid=posts.get(0).getUid();
 
                             final TextView textView_name=(TextView)view.findViewById(R.id.textView_name);
                             final TextView textView_nickname=(TextView)view.findViewById(R.id.textView_nickname);
@@ -153,6 +155,7 @@ public class InforFragment extends Fragment {
                                     picker.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                                     Intent destIntent = Intent.createChooser(picker, null);
                                     startActivityForResult(destIntent, PICKER);
+
                                 }
                             });
 
@@ -209,29 +212,28 @@ public class InforFragment extends Fragment {
         editText_phone.setText(phone, TextView.BufferType.EDITABLE);
         editText_area.setText(area, TextView.BufferType.EDITABLE);
 
-
+        final String u_address=editText_area.getText().toString();
+        final String u_phone=editText_phone.getText().toString();
+        final String u_nickname=editText_nickname.getText().toString();
 
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(MaterialDialog dialog, DialogAction which) {
-                if (editText_phone.getText().toString().equals("")||editText_nickname.getText().toString().equals("")||editText_area.getText().toString().equals("")){
+                final String u_address=editText_area.getText().toString();
+                final String u_phone=editText_phone.getText().toString();
+                final String u_nickname=editText_nickname.getText().toString();
+
+                if (u_phone.equals("")||u_nickname.equals("")||u_address.equals("")){
                     alertDialog("欄位有空值",getResources().getString(R.string.toast_missdata),"OK");//須修正
                 }else if(!editText_phone.getText().toString().matches("[0][9][0-9]{8}")){
                     alertDialog("電話號碼輸入有誤","請在確認一次輸入的訊息","OK");
                 }else{
 
-                    Bitmap bitmap = getResizedBitmap(path); //程式寫在後面
+                    String type = "member_update";
+                    Backgorundwork backgorundwork = new Backgorundwork(view.getContext());
+                    backgorundwork.execute(type,uid ,u_nickname,u_phone,u_address);
+                    Reload();
 
-                    //將 Bitmap 轉為 base64 字串
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                    byte[] bitmapData = bos.toByteArray();
-                    String imageBase64 = Base64.encodeToString(bitmapData, Base64.DEFAULT);
-                    Log.d("imageBase64", "infor: " + imageBase64);
-
-                    imgurUpload(imageBase64);
-
-                    Toast.makeText(getActivity(),"編輯成功",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -248,7 +250,11 @@ public class InforFragment extends Fragment {
 
     }
 
-
+    //Reload Fragment
+    public void Reload(){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
+    }
     private void alertDialog(String T, String M, String P){
         MaterialDialog.Builder dialog =new MaterialDialog.Builder(getContext());
         dialog.content(M);
@@ -270,6 +276,16 @@ public class InforFragment extends Fragment {
                 imageView.setImageURI(uri);
                 picUri = uri;
                 imgboo = true;
+                Bitmap bitmap = getResizedBitmap(path); //程式寫在後面
+
+                //將 Bitmap 轉為 base64 字串
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                byte[] bitmapData = bos.toByteArray();
+                String imageBase64 = Base64.encodeToString(bitmapData, Base64.DEFAULT);
+                Log.d("imageBase64", "infor: " + imageBase64);
+
+                imgurUpload(imageBase64);
                 Toast.makeText(InforFragment.this.getContext(), path, Toast.LENGTH_SHORT).show();
             }
         }
@@ -442,7 +458,11 @@ public class InforFragment extends Fragment {
                 Log.d("editor", "link: " + data.optString("link"));
                 String link = data.optString("link", "");
                 u_image = link.substring(link.length() - 11, link.length() - 4);//取得imgur網址後七碼
-                //TODO UPDATE
+                //update image
+                String type = "image_update";
+                Backgorundwork backgorundwork = new Backgorundwork(view.getContext());
+                backgorundwork.execute(type,uid ,u_image);
+                Reload();
                 Log.d("imgur", "onSuccess: " + u_image);
             }
 

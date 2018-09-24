@@ -114,17 +114,20 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: "+itemList.get(position).getTitle());
-                if (itemList.get(position).getRid().equals(uid)){
-                    myRidDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad())+" \nNT$ "+itemList.get(position).getMoney(),
-                            itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getPid(),itemList.get(position).getStatus());
-                }else {
+                Log.d(TAG, "onClick: "+itemList.get(position).getPid());
+                Log.d(TAG, "onClick: "+itemList.get(position).getRid());
+                if (itemList.get(position).getPid().equals(uid) ){
+                    //我發的
                     customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
                             (itemList.get(position).getCity()+itemList.get(position).getTown()+ itemList.get(position).getRoad())+" \nNT$ "+itemList.get(position).getMoney(),
                             itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
                             itemList.get(position).getStatus(),itemList.get(position).getRid());
+                }else if(itemList.get(position).getRid().equals(uid)){
+                    //我接的
+                    myRidDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
+                            (itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad())+" \nNT$ "+itemList.get(position).getMoney(),
+                            itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
+                            itemList.get(position).getPid(),itemList.get(position).getStatus());
                 }
 
             }
@@ -210,6 +213,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 @Override
                 public void onClick(View view) {
                    //TODO 已完成
+
 
                 }
             });
@@ -337,6 +341,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             public void onClick(View view) {
                 if (cancel.getText().equals("進行中")){
                     //TODO 案件進入確認中，讓發案方確認案件是否完成
+
                 }else if(cancel.getText().equals("待接案")) {
                     //取消申請
                     if (!mid.equals(""))
