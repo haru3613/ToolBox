@@ -53,6 +53,7 @@ public class CollectionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_collection, container, false);
 
+
         recyclerView = (RecyclerView)view.findViewById(R.id.RV_Coll);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
@@ -60,6 +61,7 @@ public class CollectionFragment extends Fragment {
 
         v=view;
         uid="";
+
 
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         String mail=sharedPreferences.getString("Mail",null);
@@ -69,7 +71,6 @@ public class CollectionFragment extends Fragment {
         if (mail!=null){
             LoadUser(mail);
         }
-
 
 
 

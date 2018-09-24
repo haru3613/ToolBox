@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -253,9 +254,11 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
                             List<ItemObject> posts = new ArrayList<ItemObject>();
-                            posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                            adapter = new RecyclerViewAdapter(view.getContext(), posts);
-                            recyclerView.setAdapter(adapter);
+                            if (!response.contains("Undefined")) {
+                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                adapter = new RecyclerViewAdapter(view.getContext(), posts);
+                                recyclerView.setAdapter(adapter);
+                            }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
@@ -313,9 +316,13 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
                             List<ItemObject> posts = new ArrayList<ItemObject>();
-                            posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                            adapter = new RecyclerViewAdapter(view.getContext(), posts);
-                            recyclerView.setAdapter(adapter);
+                            if (!response.contains("Undefined")) {
+                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                adapter = new RecyclerViewAdapter(view.getContext(), posts);
+                                recyclerView.setAdapter(adapter);
+                            }else{
+                                Toast.makeText(getContext(),"沒有搜尋到相關案件",Toast.LENGTH_SHORT).show();
+                            }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 

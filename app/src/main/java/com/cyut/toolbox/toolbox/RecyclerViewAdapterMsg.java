@@ -212,8 +212,9 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             finish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   //TODO 已完成
-
+                   //TODO 把錢轉過去
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("case_status",cid,"已完成");
 
                 }
             });
@@ -221,8 +222,9 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             nfinish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO 退回
 
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("case_status",cid,"進行中");
                 }
             });
         }else{
@@ -325,12 +327,11 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         LoadUserName(pid,item);
 
 
-        LoadMid(cid);
 
         if (status.equals("進行中")){
             cancel.setText("已完成");
-        }else if(status.equals("待接案")){
-
+        }else if(status.equals("確認中")){
+            cancel.setText("我還沒做完");
         }else {
             cancel.setVisibility(View.GONE);
         }
@@ -339,13 +340,14 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cancel.getText().equals("進行中")){
-                    //TODO 案件進入確認中，讓發案方確認案件是否完成
+                if (cancel.getText().equals("已完成")){
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("case_status",cid,"確認中");
+                }else if(cancel.getText().equals("我還沒做完")) {
 
-                }else if(cancel.getText().equals("待接案")) {
-                    //取消申請
-                    if (!mid.equals(""))
-                        RevokeCase(mid,uid);
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("case_status",cid,"進行中");
+
                 }
 
             }
@@ -542,57 +544,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         backgorundwork.execute("deleteMessage",cid);
     }
 
-    public void RevokeCase(final String mid,final String uid){
-        Backgorundwork backgorundwork = new Backgorundwork(context);
-        backgorundwork.execute("RevokeCase",mid,uid);
-    }
 
-    //讀取接案人名稱及訊息
-    public void LoadMid(final String cid){
-        String url ="http://163.17.5.182/app/getmid.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:",response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            Log.d(TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            List<ItemMsg> posts = new ArrayList<ItemMsg>();
-                            if (!response.contains("Undefined")){
-                                posts = Arrays.asList(mGson.fromJson(response, ItemMsg[].class));
-                                mid=posts.get(0).getMid();
-                                Log.d(TAG, "onResponse: "+mid);
-                            }
 
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("c_cid",cid);
-                params.put("u_uid",uid);
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-    }
 
 }

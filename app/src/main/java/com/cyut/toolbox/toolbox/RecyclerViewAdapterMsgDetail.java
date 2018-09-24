@@ -47,7 +47,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     String name;
     String time;
     String email;
-    String message,uid;
+    String message,uid,r_uid;
     @Override
     public RecyclerViewMsgDetailHolders onCreateViewHolder(ViewGroup parent, int viewType) {
         final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_msg, null);
@@ -61,6 +61,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
 
         if(itemList.get(position).getUid()!=""){
+            r_uid=itemList.get(position).getUid();
             LoadUser(itemList.get(position).getUid(),holder);
         }
 
@@ -144,8 +145,6 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(final MaterialDialog dialog, DialogAction which) {
-
-                //TODO 使案件進入進行中
 
                 LoadCase(cid);
 
@@ -239,7 +238,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                                 posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
                                 Backgorundwork backgorundwork = new Backgorundwork(context);
                                 Log.d(TAG, "Load Case Success!");
-                                backgorundwork.execute("deciderid",posts.get(0).getRid(),posts.get(0).getMoney(),uid,cid);
+                                backgorundwork.execute("deciderid",r_uid,posts.get(0).getMoney(),uid,cid);
                             }
 
                         } catch (UnsupportedEncodingException e) {

@@ -96,6 +96,14 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             holder.Title.setText(itemList.get(position).getTitle());
         }
 
+        uid="";
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY, MODE_PRIVATE);
+        String mail=sharedPreferences.getString("Mail",null);
+
+
+        if (mail!=null){
+            LoadUser(mail);
+        }
 
         holder.Status.setText(itemList.get(position).getStatus());
 
@@ -117,14 +125,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                         itemList.get(position).getRid(),itemList.get(position).getCid(),uid,itemList.get(position).getStatus());
             }
         });
-        uid="";
-        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY, MODE_PRIVATE);
-        String mail=sharedPreferences.getString("Mail",null);
 
-
-        if (mail!=null){
-            LoadUser(mail);
-        }
 
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
