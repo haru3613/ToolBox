@@ -149,7 +149,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         final View item = LayoutInflater.from(context).inflate(R.layout.detaildialog, null);
 
-        MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
+        final MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
         dialog.customView(item,wrapInScrollView);
         dialog.backgroundColorRes(R.color.colorBackground);
         ImageView imageView=(ImageView)item.findViewById(R.id.dialog_image);
@@ -200,6 +200,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             public void onClick(View v) {
                 if(uid.equals(rid)){
                     Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
+
                 }else if(status.equals("待接案")){
                     SendMessage(uid,cid);
                 }else{

@@ -79,15 +79,15 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
         holder.Name.setText(Name);
 
 
-        Log.d(TAG, "onBindViewHolder: "+qiscusChatRooms);
+        Log.d(TAG, "onBindViewHolder: "+Email);
 
 
         final String[] split = Email.split(" ");
 
-        imageView=holder.imag;
+
 
         Log.d(TAG, "onBindViewHolder: "+split[0]);
-        LoadUser(split[0]);
+        LoadUser(split[0],holder);
 
 
 
@@ -149,7 +149,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
 
 
 
-    public void LoadUser(final String mail){
+    public void LoadUser(final String mail, final RecyclerViewMsgListHolders holder){
         String url ="http://163.17.5.182/loaduser.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -168,7 +168,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
                                 posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                                 List<Item> itemList=posts;
                                 imagesite=itemList.get(0).getImage();
-                                Picasso.with(context).load("https://imgur.com/"+imagesite+".jpg").into(imageView);
+                                Picasso.with(context).load("https://imgur.com/"+imagesite+".jpg").into(holder.imag);
                             }
 
                         } catch (UnsupportedEncodingException e) {
