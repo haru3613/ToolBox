@@ -78,7 +78,6 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         }
 
         if(itemList.get(position).getTime()!=""){
-            time=itemList.get(position).getTime();
             holder.ap_time.setText(time);
         }
 
@@ -97,9 +96,9 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
             public void onClick(View view) {
                 Log.d(TAG, "onClick: "+name);
                 if (message.equals("")){
-                    dialog(time,email,"無訊息",itemList.get(position).getCid());
+                    dialog(itemList.get(position).getTime(),email,"無訊息",itemList.get(position).getCid());
                 }else {
-                    dialog(time,email,message,itemList.get(position).getCid());
+                    dialog(itemList.get(position).getTime(),email,message,itemList.get(position).getCid());
                 }
 
 
