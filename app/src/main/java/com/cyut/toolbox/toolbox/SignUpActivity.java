@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -64,6 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
 
 
         TextView UseStatement=(TextView)findViewById(R.id.UseStatement);
@@ -228,11 +232,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     //呼叫回傳值為null的AlertDialog
     public void alertDialog(String T, String M, String P) {
-        new AlertDialog.Builder(SignUpActivity.this)
-                .setTitle(T)
-                .setMessage(M)
-                .setPositiveButton(P, null)
-                .show();
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(SignUpActivity.this);
+        builder.title(T);
+        builder.content(M);
+        builder.positiveText(P);
+        builder.show();
     }
 
 

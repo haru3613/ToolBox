@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusAccount;
 
@@ -139,11 +141,13 @@ public class LoginActivity extends AppCompatActivity {
 
     //呼叫回傳值為null的AlertDialog
     public void nullAlertDialog(String T, String M, String PB) {
-        new AlertDialog.Builder(LoginActivity.this)
-                .setTitle(T)
-                .setMessage(M)
-                .setPositiveButton(PB, null)
-                .show();
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(LoginActivity.this);
+        builder.title(T);
+        builder.content(M);
+        builder.positiveText(PB);
+
+        builder.show();
+
     }
 
 

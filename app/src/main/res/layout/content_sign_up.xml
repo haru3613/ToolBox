@@ -30,7 +30,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="30dp">
 
@@ -38,7 +38,7 @@
                     android:id="@+id/imageview"
                     android:layout_width="116dp"
                     android:layout_height="116dp"
-                    android:src="@drawable/sign_image" />
+                    android:src="@drawable/ui_image" />
 
                 <com.rey.material.widget.Button
                     android:id="@+id/uploadimg"
@@ -55,6 +55,33 @@
 
 
             <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ui_mail"
+                />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/mailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text"
+                android:paddingLeft="80dp"
+                android:singleLine="false"
+                android:textSize="15sp"
+                app:met_floatingLabel="normal" />
+
+        </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
@@ -63,18 +90,16 @@
 
                 <ImageView
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
-                    />
+                    android:layout_height="46dp"
+                    android:src="@drawable/ui_pwd" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/mailText"
+                    android:id="@+id/password"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="學號"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:paddingLeft="80dp"
                     android:singleLine="false"
                     android:textSize="15sp"
@@ -82,31 +107,6 @@
 
             </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/sign_pwd"
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:hint="密碼(輸入至少六個字元)"
-                    android:inputType="textPassword"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
-
 
 
 
@@ -119,9 +119,8 @@
 
                 <ImageView
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
-                    />
+                    android:layout_height="60dp"
+                    android:src="@drawable/ui_pwd" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/re_password"
@@ -129,7 +128,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:ems="10"
-                    android:hint="確認密碼"
                     android:inputType="textPassword"
                     app:met_floatingLabel="normal" />
 
@@ -146,7 +144,7 @@
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
+                    android:src="@drawable/ui_name"
                     />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -155,7 +153,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:ems="10"
-                    android:hint="輸入姓名"
                     android:inputType="textPersonName"
                     app:met_floatingLabel="normal" />
 
@@ -172,7 +169,7 @@
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
+                    android:src="@drawable/ui_nickname"
                     />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -181,7 +178,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:ems="10"
-                    android:hint="輸入暱稱"
                     android:inputType="textPersonName"
                     app:met_floatingLabel="normal" />
 
@@ -198,7 +194,7 @@
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
+                    android:src="@drawable/ui_phone"
                     />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -207,7 +203,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:ems="10"
-                    android:hint="輸入電話號碼"
                     android:inputType="phone"
                     app:met_floatingLabel="normal" />
 
@@ -224,7 +219,7 @@
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
+                    android:src="@drawable/ui_identity"
                     />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -233,7 +228,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:ems="10"
-                    android:hint="輸入身分證字號"
                     android:inputType="text"
                     app:met_floatingLabel="normal" />
 
@@ -250,7 +244,7 @@
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/sign_mail"
+                    android:src="@drawable/ui_address"
                     />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -259,7 +253,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:ems="10"
-                    android:hint="輸入現居地址"
                     android:inputType="textPersonName"
                     app:met_floatingLabel="normal" />
 

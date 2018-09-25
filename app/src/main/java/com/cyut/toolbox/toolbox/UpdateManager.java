@@ -21,6 +21,9 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -109,25 +112,22 @@ public class UpdateManager {
 
     private void showNoticeDialog() {
 
-        AlertDialog.Builder builder = new Builder(mContext);
-        builder.setTitle("ToolBox更新");
-        builder.setMessage("已經有新版本了，趕快去下載吧");
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext);
+        builder.title("ToolBox更新");
+        builder.content("已經有新版本了，趕快去下載吧");
+        builder.positiveText("更新");
         // 更新
-        builder.setPositiveButton("更新", new OnClickListener() {
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(MaterialDialog dialog, DialogAction which) {
+
                 dialog.dismiss();
                 downloadApk();
             }
         });
-        builder.setNegativeButton("稍後更新", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        Dialog noticeDialog = builder.create();
-        noticeDialog.show();
+
+        builder.show();
+
     }
 
 
