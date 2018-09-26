@@ -262,10 +262,12 @@ public class MainActivity extends AppCompatActivity
                             final TextView TextNickname=(TextView)hView.findViewById(R.id.nick_name);
                             final TextView TextName=(TextView)hView.findViewById(R.id.nav_name);
                             final TextView TextMail=(TextView)hView.findViewById(R.id.mail);
+                            final TextView TextMoney=(TextView)hView.findViewById(R.id.money);
                             final ImageView iv=(ImageView)hView.findViewById(R.id.hIV) ;
                             TextName.setText(itemList.get(0).getName());
                             TextNickname.setText(itemList.get(0).getNickname());
                             TextMail.setText(itemList.get(0).getMail());
+                            TextMoney.setText("$"+itemList.get(0).getMoney());
                             Picasso.with(hView.getContext()).load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").into(iv);
 
                             Qiscus.setUser(itemList.get(0).getMail(),pwd)
@@ -274,6 +276,7 @@ public class MainActivity extends AppCompatActivity
                                         @Override
                                         public void onSuccess(QiscusAccount qiscusAccount) {
                                             Log.d(TAG, "onSuccess: "+qiscusAccount);
+
                                         }
 
                                         @Override

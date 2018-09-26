@@ -206,9 +206,9 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("c_cid","UTF-8")+"="+URLEncoder.encode(cid,"UTF-8")+"&"+
-                        URLEncoder.encode("u_uid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+
-                        URLEncoder.encode("m_message","UTF-8")+"="+URLEncoder.encode(message,"UTF-8")+
-                        URLEncoder.encode("c_until_h","UTF-8")+"="+URLEncoder.encode(h,"UTF-8")+
+                        URLEncoder.encode("u_uid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"+
+                        URLEncoder.encode("m_message","UTF-8")+"="+URLEncoder.encode(message,"UTF-8")+"&"+
+                        URLEncoder.encode("c_until_h","UTF-8")+"="+URLEncoder.encode(h,"UTF-8")+"&"+
                         URLEncoder.encode("c_until_m","UTF-8")+"="+URLEncoder.encode(m,"UTF-8");
                 Log.d("POST_DATA", "doInBackground: "+post_data);
                 bufferedWriter.write(post_data);
@@ -555,7 +555,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
         }else if (result.contains("收藏成功")){
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("接案成功")){
-            Toast.makeText(context, "接案成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "申請成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除成功")){
             Toast.makeText(context, "刪除成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除失敗")){

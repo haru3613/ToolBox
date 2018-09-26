@@ -58,7 +58,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     };
     final List<String> seletedItems = Arrays.asList(items);
     private View view;
-
+    String SearchString;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -193,30 +193,33 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected: OK");
 
+        SearchString=item.toString();
         switch (item.getItemId()) {
             case R.id.refresh:
-                Reload();
+                SearchV(SearchString);
                 return true;
             case R.id.nav_1:
-                SearchV("日常");
-                Log.d(TAG, "onOptionsItemSelected: 日常");
+                SearchV(SearchString);
+                Log.d(TAG, item.toString());
                 return true;
             case R.id.nav_2:
-                SearchV("接送");
+                SearchV(SearchString);
                 return true;
             case R.id.nav_3:
-                SearchV("外送");
+                SearchV(SearchString);
                 return true;
             case R.id.nav_4:
-                SearchV("課業");
+                SearchV(SearchString);
                 return true;
             case R.id.nav_5:
-                SearchV("修繕");
+                SearchV(SearchString);
                 return true;
             case R.id.nav_6:
-                SearchV("除蟲");
+                SearchV(SearchString);
+                return true;
+            case R.id.nav_7:
+                requestJsonObject(view);
                 return true;
             default:
                 break;

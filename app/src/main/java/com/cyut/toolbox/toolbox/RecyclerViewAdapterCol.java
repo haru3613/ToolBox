@@ -130,7 +130,12 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View arg0) {
-                normalDialogEvent(itemList.get(position).getCid(),uid,position);
+                if(uid.equals(itemList.get(position).getPid())){
+                    Toast.makeText(context,"你不能收藏自己的案子",Toast.LENGTH_SHORT).show();
+                }else {
+                    normalDialogEvent(itemList.get(position).getCid(),uid,position);
+                }
+
                 return true;
             }
         });

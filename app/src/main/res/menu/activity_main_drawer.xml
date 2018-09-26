@@ -22,10 +22,7 @@
             android:id="@+id/nav_chatlist"
             android:icon="@drawable/ic_menu_about"
             android:title="訊息列表" />
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_about"
-            android:title="@string/menu_about" />
+
     </group>
 
     <item android:title="@string/menu_other">
@@ -38,6 +35,10 @@
                 android:id="@+id/nav_suggest"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/menu_suggest" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_about"
+                android:title="@string/menu_about" />
             <item
                 android:id="@+id/nav_signout"
                 android:icon="@drawable/signout"

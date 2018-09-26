@@ -27,10 +27,11 @@ public class Item {
     private String identity;
     @SerializedName("u_uid")
     private String uid;
+    @SerializedName("u_money")
+    private String money;
 
 
-
-    public Item(String mail, String nickname, String name,String image,String phone,String address,String introduce,String identity, String uid) {
+    public Item(String mail, String nickname, String name,String image,String phone,String address,String introduce,String identity, String uid,String money) {
         this.nickname = nickname;
         this.name = name;
         this.mail=mail;
@@ -40,6 +41,7 @@ public class Item {
         this.introduce=introduce;
         this.identity=identity;
         this.uid=uid;
+        this.money=money;
     }
     public String getMail() {
         return mail;
@@ -69,4 +71,7 @@ public class Item {
         return uid;
     }
 
+    public String getMoney() {
+        return money;
+    }
 }

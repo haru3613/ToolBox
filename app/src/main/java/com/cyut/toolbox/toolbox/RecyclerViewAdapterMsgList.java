@@ -47,8 +47,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerViewMsgListHolders> {
     public List<QiscusChatRoom> qiscusChatRooms;
     private Context context;
-    String Name;
-    String Email;
+
+
     ImageView imageView;
     String imagesite;
 
@@ -70,25 +70,11 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
 
 
         if(qiscusChatRooms.get(position).getName()!=""){
-            Name=qiscusChatRooms.get(position).getName();
+            holder.Name.setText(qiscusChatRooms.get(position).getName());
         }
         if(qiscusChatRooms.get(position).getDistinctId()!=""){
-            Email=qiscusChatRooms.get(position).getDistinctId();
+            LoadUser(mail_split(qiscusChatRooms.get(position).getDistinctId()),holder);
         }
-
-        holder.Name.setText(Name);
-
-
-        Log.d(TAG, "onBindViewHolder: "+qiscusChatRooms);
-
-
-        final String[] split = Email.split(" ");
-
-        imageView=holder.imag;
-
-        Log.d(TAG, "onBindViewHolder: "+split[0]);
-        LoadUser(split[0]);
-
 
 
 
@@ -97,7 +83,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Qiscus.buildChatWith(split[0]) //here we use email as userID. But you can make it whatever you want.
+                Qiscus.buildChatWith(mail_split(qiscusChatRooms.get(position).getDistinctId())) //here we use email as userID. But you can make it whatever you want.
                         .build(context, new Qiscus.ChatActivityBuilderListener() {
                             @Override
                             public void onSuccess(Intent intent) {
@@ -128,6 +114,11 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
     }
 
 
+    public String mail_split(String mail){
+        final String[] split = mail.split(" ");
+        Log.d(TAG, "onBindViewHolder: "+split[0]);
+        return split[0];
+    }
 
 
     public void normalDialogEvent(final String uid,final String cid) {
@@ -149,7 +140,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
 
 
 
-    public void LoadUser(final String mail){
+    public void LoadUser(final String mail, final RecyclerViewMsgListHolders holder){
         String url ="http://163.17.5.182/loaduser.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -168,7 +159,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
                                 posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                                 List<Item> itemList=posts;
                                 imagesite=itemList.get(0).getImage();
-                                Picasso.with(context).load("https://imgur.com/"+imagesite+".jpg").into(imageView);
+                                Picasso.with(context).load("https://imgur.com/"+imagesite+".jpg").into(holder.imag);
                             }
 
                         } catch (UnsupportedEncodingException e) {
