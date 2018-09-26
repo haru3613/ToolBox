@@ -219,7 +219,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                 SearchV(SearchString);
                 return true;
             case R.id.nav_7:
-                SearchV(SearchString);
+                requestJsonObject(view);
                 return true;
             default:
                 break;

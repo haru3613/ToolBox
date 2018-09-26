@@ -50,6 +50,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="android.studio@android.com" />
+
+            <TextView
+                android:id="@+id/money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
         </LinearLayout>
     </LinearLayout>
 

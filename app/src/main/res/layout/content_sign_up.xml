@@ -61,23 +61,21 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:src="@drawable/ui_mail"
-                />
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/mailText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:paddingLeft="80dp"
-                android:singleLine="false"
-                android:textSize="15sp"
-                app:met_floatingLabel="normal" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/mailText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:met_iconLeft="@drawable/ui_identity"
+                    app:met_iconPadding="0dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="122222"
+                    android:inputType="text"
+                    android:singleLine="false"
+                    android:textSize="15sp"
+                    app:met_floatingLabel="normal" />
 
         </FrameLayout>
 
@@ -243,9 +241,8 @@
 
                 <ImageView
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/ui_address"
-                    />
+                    android:layout_height="94dp"
+                    android:src="@drawable/ui_address" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/address"

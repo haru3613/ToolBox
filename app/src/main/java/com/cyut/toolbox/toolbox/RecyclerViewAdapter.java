@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -58,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     int end_Day = 0;
     int end_Way = 0;
 
-    String message;
+
 
     public static final String KEY = "STATUS";
     public RecyclerViewAdapter(Context context, List<ItemObject> itemList) {
@@ -242,10 +243,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         dialog.positiveText("送出申請");
         dialog.customView(item,wrapInScrollView);
         dialog.backgroundColorRes(R.color.colorBackground);
-        final MaterialEditText sm_message=(MaterialEditText)item.findViewById(R.id.to_message);
+        final EditText sm_message=(EditText)item.findViewById(R.id.to_message);
         Button button=(Button)item.findViewById(R.id.setting_time);
         final TextView sm_time=(TextView)item.findViewById(R.id.ut_time);
-        message="";
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,16 +282,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         });
 
+
+
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(MaterialDialog dialog, DialogAction which) {
-
-                message=sm_message.getText().toString();
-                String type = "sendmessage";
-                Backgorundwork backgorundwork = new Backgorundwork(context);
-                backgorundwork.execute(type,cid,uid,message,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
-                Intent intent=new Intent(context,MainActivity.class);
-                context.startActivity(intent);
+                //TODO 檢查資料庫是否已有接案
+                if (sm_message.getText().toString().equals("")||sm_time.getText().toString().equals("申請時效")){
+                    Toast.makeText(context,"請設定訊息及時間",Toast.LENGTH_SHORT).show();
+                }else{
+                    String sm =sm_message.getText().toString();
+                    Log.d(TAG, "onClick: "+sm);
+                    String type = "sendmessage";
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
+                    Intent intent=new Intent(context,MainActivity.class);
+                    context.startActivity(intent);
+                }
             }
         });
 

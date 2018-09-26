@@ -3,12 +3,15 @@ package com.cyut.toolbox.toolbox;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -21,6 +24,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 public class LoadingView extends Activity {
     private static final int SPLASH_SHOW_TIME=1000;
     String mail;
+    AnimationDrawable rocketAnimation;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -30,6 +34,11 @@ public class LoadingView extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.loading);
+
+        ImageView rocketImage = findViewById(R.id.animate_logo);
+        rocketImage.setBackgroundResource(R.drawable.animate);
+        rocketAnimation = (AnimationDrawable) rocketImage.getBackground();
+
         new BackgroundSplashTask().execute();
 
     }
@@ -44,6 +53,7 @@ public class LoadingView extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
+                rocketAnimation.start();
                 Thread.sleep(SPLASH_SHOW_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
