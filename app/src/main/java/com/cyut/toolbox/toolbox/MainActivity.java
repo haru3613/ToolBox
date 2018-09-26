@@ -276,6 +276,7 @@ public class MainActivity extends AppCompatActivity
                                         @Override
                                         public void onSuccess(QiscusAccount qiscusAccount) {
                                             Log.d(TAG, "onSuccess: "+qiscusAccount);
+
                                         }
 
                                         @Override
