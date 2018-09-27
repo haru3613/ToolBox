@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
     private static final String ACTIVITY_TAG ="Logwrite";
     String usermail;
     String Password;
+    String Password2;
+    String ID;
     Backgorundwork (Context ctx){
         context = ctx;
     }
@@ -47,6 +50,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
         Log.d(Backgorundwork.ACTIVITY_TAG,"Let's run~~~~");
         String type =params[0];
         String login_url ="http://163.17.5.182/login_finish.php";
+        String check_id_match_mail_url = "http://163.17.5.182/check_id_match_mail_url.php";
+        String changepsw = "http://163.17.5.182/changepsw.php";
         if(type.equals("login")){
             Log.d(Backgorundwork.ACTIVITY_TAG,"login if run");
             try {
@@ -511,6 +516,85 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("check_email_match_id")) {
+            try {
+                String mail = params[1];
+                usermail=mail;
+                String id = params[2];
+                ID=id;
+                URL url = new URL(check_id_match_mail_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("u_mail","UTF-8")+"="+URLEncoder.encode(mail,"UTF-8")+"&"
+                        +URLEncoder.encode("u_identity","UTF-8")+"="+URLEncoder.encode(ID,"UTF-8");
+                Log.d("POST_DATA", "doInBackground: "+post_data);
+
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+                String result="";
+                String line=null;
+                while((line = bufferedReader.readLine())!= null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(type.equals("changepsw")) {
+            try {
+                String mail = params[1];
+                usermail=mail;
+                String psw = params[2];
+                Password=psw;
+                String psw2 = params[3];
+                Password2=psw2;
+                URL url = new URL(changepsw);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("u_mail","UTF-8")+"="+URLEncoder.encode(usermail,"UTF-8")+"&"
+                        +URLEncoder.encode("u_pwd","UTF-8")+"="+URLEncoder.encode(Password,"UTF-8")+"&"
+                        +URLEncoder.encode("u_pwd2","UTF-8")+"="+URLEncoder.encode(Password2,"UTF-8");
+                Log.d("POST_DATA", "doInBackground: "+post_data);
+
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+                String result="";
+                String line=null;
+                while((line = bufferedReader.readLine())!= null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -572,6 +656,27 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "更新成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("更新失敗")) {
             Toast.makeText(context, "更新失敗", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("檢查失敗")) {
+            Toast.makeText(context, "檢查失敗", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("檢查成功")) {
+            Toast.makeText(context, "檢查成功", Toast.LENGTH_SHORT).show();
+            Intent tochangepsw=new Intent(context,changepassword.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("u_email",usermail);
+            tochangepsw.putExtras(bundle);
+            context.startActivity(tochangepsw);
+            ((Activity)context).finish();
+        }else if(result.contains("無此帳號")) {
+            Toast.makeText(context, "無此帳號", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("密碼不得是空值")) {
+            Toast.makeText(context, "密碼不得是空值", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("請確認密碼相同")) {
+            Toast.makeText(context, "請確認密碼相同", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("密碼變更成功")) {
+            Toast.makeText(context, "密碼變更成功", Toast.LENGTH_SHORT).show();
+            Intent toLogin=new Intent(context,LoginActivity.class);
+            context.startActivity(toLogin);
+            ((Activity)context).finish();
         }else if (result.contains("DOCTYPE")){
             Log.d("Result", "onPostExecute: "+result);
             Toast.makeText(context, "系統出錯，請再試一次", Toast.LENGTH_SHORT).show();
