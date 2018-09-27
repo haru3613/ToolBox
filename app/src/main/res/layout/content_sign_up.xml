@@ -28,232 +28,176 @@
             android:paddingRight="10dp"
             android:paddingTop="25dp">
 
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:paddingBottom="30dp"
+                app:srcCompat="@drawable/ic_logo" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="30dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageview"
-                    android:layout_width="116dp"
-                    android:layout_height="116dp"
-                    android:src="@drawable/ui_image" />
-
                 <com.rey.material.widget.Button
                     android:id="@+id/uploadimg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="80dp"
                     android:background="@color/primaryDarkColor"
                     android:text="選擇圖片"
                     android:textColor="@android:color/white"
                     app:rd_enable="true" />
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageview"
+                    android:layout_width="104dp"
+                    android:layout_height="104dp"
+                    android:layout_gravity="right"
+                    android:src="@drawable/sign_pic" />
+
             </LinearLayout>
 
-
-            <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp">
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/mailText"
-                    android:layout_width="match_parent"
+                    android:layout_width="198dp"
                     android:layout_height="wrap_content"
-                    app:met_iconLeft="@drawable/ui_identity"
-                    app:met_iconPadding="0dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="122222"
+                    android:hint="輸入您的學號"
                     android:inputType="text"
                     android:singleLine="false"
                     android:textSize="15sp"
-                    app:met_floatingLabel="normal" />
+                    app:met_floatingLabel="normal"
+                    app:met_iconLeft="@drawable/ui_mail" />
 
-        </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="46dp"
-                    android:src="@drawable/ui_pwd" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
+                <Spinner
+                    android:id="@+id/spinner_login"
+                    android:layout_width="198dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPassword"
-                    android:paddingLeft="80dp"
-                    android:singleLine="false"
-                    android:textSize="15sp"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
+                    android:textColor="@color/primaryDarkColor" />
+            </LinearLayout>
 
 
-
-
-            <FrameLayout
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/password"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ui_pwd" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/re_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:inputType="textPassword"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
+                android:ems="10"
+                android:hint="輸入您的密碼"
+                android:inputType="textPassword"
+                android:paddingBottom="10dp"
+                app:met_floatingLabel="normal"
+                android:singleLine="false"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_pwd" />
 
 
-            <FrameLayout
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/re_password"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/ui_name"
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
+                android:ems="10"
+                android:hint="再輸入一次您的密碼"
+                app:met_floatingLabel="normal"
+                android:inputType="textPassword"
+                android:singleLine="false"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_pwd" />
 
 
-            <FrameLayout
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/ui_nickname"
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/nickname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
+                android:ems="10"
+                android:hint="輸入您的姓名"
+                android:inputType="textPersonName"
+                app:met_floatingLabel="normal"
+                android:singleLine="false"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_name" />
 
 
-            <FrameLayout
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/nickname"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/ui_phone"
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:inputType="phone"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
+                android:ems="10"
+                android:hint="輸入您的暱稱"
+                android:inputType="textPersonName"
+                app:met_floatingLabel="normal"
+                android:singleLine="false"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_nickname" />
 
 
-            <FrameLayout
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:src="@drawable/ui_identity"
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/pid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:inputType="text"
-                    app:met_floatingLabel="normal" />
-
-            </FrameLayout>
+                android:ems="10"
+                android:hint="輸入您的手機號碼"
+                android:inputType="phone"
+                android:singleLine="false"
+                app:met_floatingLabel="normal"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_phone" />
 
 
-            <FrameLayout
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/pid"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:ems="10"
+                android:hint="輸入您的身分證"
+                android:inputType="text"
+                android:singleLine="false"
+                app:met_floatingLabel="normal"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_identity" />
 
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="94dp"
-                    android:src="@drawable/ui_address" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    app:met_floatingLabel="normal" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="輸入您的地址"
+                android:inputType="textPersonName"
+                app:met_floatingLabel="normal"
+                android:singleLine="false"
+                android:paddingBottom="10dp"
+                android:textSize="15sp"
+                app:met_iconLeft="@drawable/ui_address" />
 
-            </FrameLayout>
+
 
 
             <ProgressBar
@@ -305,6 +249,28 @@
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/sign_bot" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="69dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/login_bot" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="68dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/login_bot_right" />
+            </LinearLayout>
 
 
         </LinearLayout>

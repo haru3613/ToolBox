@@ -66,6 +66,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="密碼"
+                app:met_minCharacters="6"
                 android:inputType="textPassword"
                 app:met_floatingLabel="normal" />
         </LinearLayout>
