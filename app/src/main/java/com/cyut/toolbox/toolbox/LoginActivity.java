@@ -151,4 +151,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    public void bt_forgotpsw(View view) {
+        Intent intent = new Intent();
+        intent.setClass(LoginActivity.this , forgotPassword.class);
+        startActivity(intent);
+
+    }
 }
