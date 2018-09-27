@@ -27,9 +27,11 @@ import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +70,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+//spinner option
+        Spinner spinner=(Spinner)findViewById(R.id.spinner_login);
 
+        ArrayAdapter<CharSequence> loginList = ArrayAdapter.createFromResource(SignUpActivity.this,
+                R.array.login_option,
+                R.layout.spinner_item);
+        spinner.setAdapter(loginList);
 
         TextView UseStatement=(TextView)findViewById(R.id.UseStatement);
         UseStatement.setOnClickListener(new View.OnClickListener() {

@@ -22,7 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
  */
 
 public class LoadingView extends Activity {
-    private static final int SPLASH_SHOW_TIME=1000;
+    private static final int SPLASH_SHOW_TIME=2000;
     String mail;
     AnimationDrawable rocketAnimation;
     @Override
