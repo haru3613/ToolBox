@@ -639,7 +639,11 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
         }else if (result.contains("收藏成功")){
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("接案成功")){
-            Toast.makeText(context, "申請成功", Toast.LENGTH_SHORT).show();
+            RecyclerViewAdapterCol adapterCol=new RecyclerViewAdapterCol();
+            RecyclerViewAdapter adapter=new RecyclerViewAdapter();
+            adapterCol.dissmissDialog();
+            adapter.dissmissDialog();
+            Toast.makeText(context, "接案成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除成功")){
             Toast.makeText(context, "刪除成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除失敗")){
@@ -654,6 +658,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "決定失敗", Toast.LENGTH_SHORT).show();
         }else if(result.contains("更新成功")){
             Toast.makeText(context, "更新成功", Toast.LENGTH_SHORT).show();
+            RecyclerViewAdapterMsg adapterMsg=new RecyclerViewAdapterMsg();
+            adapterMsg.dissmissDialog();
         }else if(result.contains("更新失敗")) {
             Toast.makeText(context, "更新失敗", Toast.LENGTH_SHORT).show();
         }else if(result.contains("檢查失敗")) {

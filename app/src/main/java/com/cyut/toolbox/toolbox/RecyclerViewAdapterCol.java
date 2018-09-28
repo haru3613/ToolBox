@@ -50,8 +50,12 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     int end_Hours = 0;
     int end_Day = 0;
     int end_Way = 0;
-
+    private static MaterialDialog dialog;
     String message;
+
+    public RecyclerViewAdapterCol() {
+
+    }
     public RecyclerViewAdapterCol(Context context, List<ItemObject> itemList,String uid) {
         this.itemList = itemList;
         this.context = context;
@@ -141,11 +145,13 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     private void customDialog(final String count, final String title, final String data, final String message,final String time,final String until,final String rid,final String cid,final String uid,final String status){
         boolean wrapInScrollView = true;
 
-        final View item = LayoutInflater.from(context).inflate(R.layout.detaildialog, null);
+        dialog=new MaterialDialog.Builder(context)
+                .customView(R.layout.detaildialog, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
 
-        MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
+        View item = dialog.getCustomView();
+
         ImageView imageView=(ImageView)item.findViewById(R.id.dialog_image);
         ImageView send=(ImageView)item.findViewById(R.id.sendmessage);
         TextView tv_title=(TextView)item.findViewById(R.id.dialog_title);
@@ -203,10 +209,18 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             }
         });
 
+
         dialog.show();
+
+
 
     }
 
+    public static void dissmissDialog() {
+        if(dialog!=null){
+            dialog.dismiss();
+        }
+    }
 
     public void normalDialogEvent(final String cid, final String uid, final int position) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
@@ -227,13 +241,25 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
     public void SendMessage(final String uid,final String cid) {
         boolean wrapInScrollView = true;
-        final View item = LayoutInflater.from(context).inflate(R.layout.wantcase, null);
 
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-        dialog.title("我想接案");
-        dialog.positiveText("送出申請");
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
+        dialog=new MaterialDialog.Builder(context)
+                .title("我想接案")
+                .positiveText("送出申請")
+                .customView(R.layout.wantcase, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                        String type = "sendmessage";
+                        Backgorundwork backgorundwork = new Backgorundwork(context);
+                        backgorundwork.execute(type,cid,uid,message,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
+                    }
+                })
+                .build();
+
+        View item = dialog.getCustomView();
+
+
         final MaterialEditText sm_message=(MaterialEditText)item.findViewById(R.id.to_message);
         Button button=(Button)item.findViewById(R.id.setting_time);
         final TextView sm_time=(TextView)item.findViewById(R.id.ut_time);
@@ -273,16 +299,10 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             }
         });
 
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
-                String type = "sendmessage";
-                Backgorundwork backgorundwork = new Backgorundwork(context);
-                backgorundwork.execute(type,cid,uid,message,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
-            }
-        });
+
 
         dialog.show();
+
     }
 
 

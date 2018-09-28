@@ -147,6 +147,7 @@ public class CollectionFragment extends Fragment {
                             List<Item> posts = new ArrayList<Item>();
                             posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                             List<Item> itemList=posts;
+                            uid=itemList.get(0).getUid();
                             //讀取收藏資料
                             Collection(itemList.get(0).getUid());
                         } catch (UnsupportedEncodingException e) {

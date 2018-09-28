@@ -50,8 +50,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public List<ItemObject> itemList;
     private Context context;
     private String uid;
-    private RecyclerViewAdapterCol adapter;
-
+    private EditText sm_message;
+    private TextView sm_time;
+    private static MaterialDialog dialog;
 
     int c_end_hours = 0;
     int c_end_mins = 0;
@@ -62,7 +63,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     int end_Way = 0;
 
 
+    public RecyclerViewAdapter() {
 
+    }
 
     public RecyclerViewAdapter(Context context, List<ItemObject> itemList,String uid) {
         this.itemList = itemList;
@@ -235,16 +238,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     public void SendMessage(final String uid,final String cid) {
         boolean wrapInScrollView = true;
-        final View item = LayoutInflater.from(context).inflate(R.layout.wantcase, null);
 
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-        dialog.title("我想接案");
-        dialog.positiveText("送出申請");
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
-        final EditText sm_message=(EditText)item.findViewById(R.id.to_message);
+        dialog=new MaterialDialog.Builder(context)
+                .title("我想接案")
+                .positiveText("送出申請")
+                .customView(R.layout.wantcase, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                        //TODO 檢查資料庫是否已有接案
+                        if (sm_message.getText().toString().equals("")||sm_time.getText().toString().equals("申請時效")){
+                            Toast.makeText(context,"請設定訊息及時間",Toast.LENGTH_SHORT).show();
+                        }else{
+                            String sm =sm_message.getText().toString();
+                            Log.d(TAG, "onClick: "+sm);
+                            String type = "sendmessage";
+                            Backgorundwork backgorundwork = new Backgorundwork(context);
+                            backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
+                        }
+                    }
+                })
+                .build();
+
+
+        View item = dialog.getCustomView();
+        sm_message=(EditText)item.findViewById(R.id.to_message);
         Button button=(Button)item.findViewById(R.id.setting_time);
-        final TextView sm_time=(TextView)item.findViewById(R.id.ut_time);
+        sm_time=(TextView)item.findViewById(R.id.ut_time);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -283,29 +304,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
 
 
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
-                //TODO 檢查資料庫是否已有接案
-                if (sm_message.getText().toString().equals("")||sm_time.getText().toString().equals("申請時效")){
-                    Toast.makeText(context,"請設定訊息及時間",Toast.LENGTH_SHORT).show();
-                }else{
-                    String sm =sm_message.getText().toString();
-                    Log.d(TAG, "onClick: "+sm);
-                    String type = "sendmessage";
-                    Backgorundwork backgorundwork = new Backgorundwork(context);
-                    backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
-                    Intent intent=new Intent(context,MainActivity.class);
-                    context.startActivity(intent);
-                }
-            }
-        });
-
         dialog.show();
     }
 
 
 
+    public static void dissmissDialog() {
+        if(dialog!=null){
+            dialog.dismiss();
+        }
+    }
 
 
     //---------------------------------------send_data to php and database----------------------------------------------------------
