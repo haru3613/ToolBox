@@ -39,9 +39,10 @@ public class CollectionFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private RecyclerViewAdapterCol adapter;
+    public static final String KEY = "STATUS";
     View v;
     String uid;
-    public static final String KEY = "STATUS";
+
     public CollectionFragment() {
         // Required empty public constructor
     }
@@ -99,7 +100,7 @@ public class CollectionFragment extends Fragment {
                             if (posts.isEmpty()){
                                 Toast.makeText(v.getContext(),"您尚未收藏案件",Toast.LENGTH_SHORT).show();
                             }else{
-                                adapter = new RecyclerViewAdapterCol(v.getContext(), posts);
+                                adapter = new RecyclerViewAdapterCol(v.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
 

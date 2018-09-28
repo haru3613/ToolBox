@@ -68,12 +68,13 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerViewMsgListHolders holder, final int position) {
 
+        String mail=mail_split(qiscusChatRooms.get(position).getDistinctId());
 
         if(qiscusChatRooms.get(position).getName()!=""){
             holder.Name.setText(qiscusChatRooms.get(position).getName());
         }
         if(qiscusChatRooms.get(position).getDistinctId()!=""){
-            LoadUser(mail_split(qiscusChatRooms.get(position).getDistinctId()),holder);
+            LoadUser(mail,holder);
         }
 
 

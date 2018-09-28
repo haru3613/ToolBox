@@ -2,7 +2,7 @@
 <resources>
   <color name="primaryColor">#90c7cd</color>
   <color name="primaryLightColor">#f4f4f4</color>
-  <color name="primaryDarkColor">#4d979e</color>
+  <color name="primaryDarkColor">#4d969e</color>
   <color name="primaryTextColor">#2b4e65</color>
   <color name="colorBackground">#dfffffff</color>
   <color name="colorNavHead">#df87cfe5</color>

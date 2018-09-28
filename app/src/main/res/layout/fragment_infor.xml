@@ -15,39 +15,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="1"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:paddingBottom="50dp"
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/side_nav_bar"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageView"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:civ_border_color="#FF000000"
                     app:civ_border_width="1dp" />
 
             </LinearLayout>
-            <FrameLayout
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="38dp"
                     android:layout_height="38dp"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ui_name" />
 
 
@@ -56,22 +62,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginLeft="90dp"
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
-            </FrameLayout>
-            <FrameLayout
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="38dp"
+                    android:layout_marginRight="10dp"
                     android:layout_height="38dp"
                     android:src="@drawable/ui_nickname" />
 
@@ -81,22 +90,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginLeft="90dp"
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
-            </FrameLayout>
-            <FrameLayout
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="38dp"
+                    android:layout_marginRight="10dp"
                     android:layout_height="38dp"
                     android:src="@drawable/ui_phone" />
 
@@ -105,22 +117,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginLeft="90dp"
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
-            </FrameLayout>
-            <FrameLayout
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="38dp"
+                    android:layout_marginRight="10dp"
                     android:layout_height="38dp"
                     android:src="@drawable/ui_identity" />
 
@@ -129,23 +144,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginLeft="90dp"
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
-            </FrameLayout>
-            <FrameLayout
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="38dp"
                     android:layout_height="38dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ui_address" />
 
                 <TextView
@@ -153,23 +172,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginLeft="90dp"
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
-            </FrameLayout>
-            <FrameLayout
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="38dp"
                     android:layout_height="38dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ui_identity" />
 
                 <TextView
@@ -177,16 +200,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginLeft="90dp"
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
-            </FrameLayout>
-
-
-
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -200,6 +219,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         app:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
