@@ -19,7 +19,7 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
@@ -39,6 +39,11 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="帳號"
+                app:met_baseColor="@color/primaryDarkColor"
+                app:met_primaryColor="@color/primaryTextColor"
+                app:met_underlineColor="@color/primaryDarkColor"
+                app:met_iconLeft="@drawable/ui_mail"
+                app:met_iconPadding="14dp"
                 android:inputType="textEmailAddress"
                 app:met_floatingLabel="normal" />
 
@@ -63,6 +68,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                app:met_baseColor="@color/primaryDarkColor"
+                app:met_primaryColor="@color/primaryTextColor"
+                app:met_underlineColor="@color/primaryDarkColor"
+                app:met_iconLeft="@drawable/ui_pwd"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="密碼"

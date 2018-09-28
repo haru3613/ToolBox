@@ -7,6 +7,7 @@ package com.cyut.toolbox.toolbox;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RecyclerViewHolders extends RecyclerView.ViewHolder{
@@ -14,12 +15,14 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder{
     public TextView Title;
     public TextView Area;
     public TextView Status;
+    public RelativeLayout bg;
     public RecyclerViewHolders(View itemView) {
         super(itemView);
         CategoryImage = (ImageView)itemView.findViewById(R.id.CategoryImage);
         Title = (TextView)itemView.findViewById(R.id.titleTxt);
         Area = (TextView)itemView.findViewById(R.id.AreaTxt);
         Status=(TextView)itemView.findViewById(R.id.StatusTxt);
+        bg=itemView.findViewById(R.id.bg);
     }
 
 }

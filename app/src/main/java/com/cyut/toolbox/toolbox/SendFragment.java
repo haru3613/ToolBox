@@ -4,6 +4,7 @@ package com.cyut.toolbox.toolbox;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -57,6 +58,12 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
         // Required empty public constructor
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // What i have added is this
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +108,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             Gson mGson = builder.create();
                             List<ItemObject> posts = new ArrayList<ItemObject>();
                             posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                            adapter = new RecyclerViewAdapterMsg(v.getContext(), posts);
+                            adapter = new RecyclerViewAdapterMsg(v.getContext(), posts,uid);
                             recyclerView.setAdapter(adapter);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -150,6 +157,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             List<Item> posts = new ArrayList<Item>();
                             posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                             List<Item> itemList=posts;
+                            uid=itemList.get(0).getUid();
                             //讀取自己發的案子
                             Message(itemList.get(0).getUid());
                         } catch (UnsupportedEncodingException e) {
@@ -264,7 +272,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     public void SearchV(final String SearchString){
-        String url ="http://163.17.5.182/search.php";
+        String url ="http://163.17.5.182/app/message_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -280,7 +288,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             List<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
                                 posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                                adapter = new RecyclerViewAdapterMsg(view.getContext(), posts);
+                                adapter = new RecyclerViewAdapterMsg(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
                         } catch (UnsupportedEncodingException e) {
@@ -312,7 +320,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
 
 
     public void SearchQuery(final String SearchString){
-        String url ="http://163.17.5.182/querysearch.php";
+        String url ="http://163.17.5.182/app/message_querysearch.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -328,7 +336,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             List<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
                                 posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                                adapter = new RecyclerViewAdapterMsg(view.getContext(), posts);
+                                adapter = new RecyclerViewAdapterMsg(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }else{
                                 Toast.makeText(getContext(),"沒有搜尋到相關案件",Toast.LENGTH_SHORT).show();

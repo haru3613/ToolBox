@@ -2,6 +2,7 @@ package com.cyut.toolbox.toolbox;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -51,6 +53,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private RecyclerViewAdapter adapter;
+    public static final String KEY = "STATUS";
     final String[] items = {"我同意契約書","我會當一個稱職的工具人"};
     final boolean[] checked= new boolean[]{
             false, // 同意契約書
@@ -58,7 +61,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     };
     final List<String> seletedItems = Arrays.asList(items);
     private View view;
-    String SearchString;
+    String SearchString,uid;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -83,13 +86,23 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         // Inflate the layout for this fragment
 
         View v =inflater.inflate(R.layout.fragment_main, container, false);
-
+        view=v;
         recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(v.getContext()));
         layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
         requestJsonObject(v);
 
+        uid="";
+
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
+        String mail=sharedPreferences.getString("Mail",null);
+
+
+
+        if (mail!=null){
+            LoadUser(mail);
+        }
 
 
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
@@ -102,7 +115,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
             }
         });
 
-        view=v;
+
 
 
 
@@ -123,7 +136,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                     Gson mGson = builder.create();
                     List<ItemObject> posts = new ArrayList<ItemObject>();
                     posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                    adapter = new RecyclerViewAdapter(v.getContext(), posts);
+                    adapter = new RecyclerViewAdapter(v.getContext(), posts,uid);
                     recyclerView.setAdapter(adapter);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -259,7 +272,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             List<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
                                 posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                                adapter = new RecyclerViewAdapter(view.getContext(), posts);
+                                adapter = new RecyclerViewAdapter(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
                         } catch (UnsupportedEncodingException e) {
@@ -321,7 +334,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             List<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
                                 posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                                adapter = new RecyclerViewAdapter(view.getContext(), posts);
+                                adapter = new RecyclerViewAdapter(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }else{
                                 Toast.makeText(getContext(),"沒有搜尋到相關案件",Toast.LENGTH_SHORT).show();
@@ -347,6 +360,49 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
         };
 
+        RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
+        requestQueue.add(stringRequest);
+    }
+
+    public void LoadUser(final String mail){
+        String url ="http://163.17.5.182/loaduser.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            List<Item> posts = new ArrayList<Item>();
+                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
+                            List<Item> itemList=posts;
+                            uid=itemList.get(0).getUid();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("mail",mail+"@gm.cyut.edu.tw");
+
+                return params;
+            }
+
+        };
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         requestQueue.add(stringRequest);
     }

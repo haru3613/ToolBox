@@ -316,7 +316,8 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void getPermissionAccess() {
-        final Button upload = (Button) findViewById(R.id.uploadimg);
+
+        final TextView upload =  findViewById(R.id.textimg);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
