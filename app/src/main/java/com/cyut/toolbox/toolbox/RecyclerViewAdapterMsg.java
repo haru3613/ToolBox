@@ -50,8 +50,13 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     private RecyclerViewAdapterMsgList adapterList;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-
+    private static MaterialDialog RidDialog;
     public static final String KEY = "STATUS";
+
+    public RecyclerViewAdapterMsg() {
+
+    }
+
     public RecyclerViewAdapterMsg(Context context, List<ItemObject> itemList,String uid) {
         this.itemList = itemList;
         this.context = context;
@@ -279,11 +284,14 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     private void myRidDialog(final String count, final String title, final String data, final String message,final String time,final String until,final String cid,final String pid,final String status){
         boolean wrapInScrollView = true;
 
-        final View item = LayoutInflater.from(context).inflate(R.layout.mygetcase, null);
 
-        MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
+        RidDialog=new MaterialDialog.Builder(context)
+                .customView(R.layout.mygetcase, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+
+        View item = RidDialog.getCustomView();
+
         ImageView imageView=(ImageView)item.findViewById(R.id.dialog_image);
         TextView tv_title=(TextView)item.findViewById(R.id.dialog_title);
         TextView tv_data=(TextView)item.findViewById(R.id.dialog_data);
@@ -380,7 +388,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
 
 
 
-        dialog.show();
+        RidDialog.show();
 
     }
 
@@ -401,6 +409,11 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         dialog.show();
     }
 
+    public static void dissmissDialog() {
+        if(RidDialog!=null){
+            RidDialog.dismiss();
+        }
+    }
 
     //讀取接案人名稱及訊息
     public void MessageLoad(final String cid){
