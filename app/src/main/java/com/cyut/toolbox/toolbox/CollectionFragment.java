@@ -38,7 +38,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class CollectionFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private RecyclerViewAdapterCol adapter;
+    protected static RecyclerViewAdapterCol adapter;
     public static final String KEY = "STATUS";
     View v;
     String uid;

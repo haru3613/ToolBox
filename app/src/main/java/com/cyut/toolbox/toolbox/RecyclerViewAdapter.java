@@ -116,8 +116,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.Area.setText(Address);
         }
 
+
+        holder.Money.setText("$"+itemList.get(position).getMoney());
         holder.Status.setText(itemList.get(position).getStatus());
 
+        if (holder.Status.getText().equals("待接案")){
+            holder.Status.setTextColor(Color.parseColor("#ff3333"));
+        }
 
         if (itemList.get(position).getPid().equals(uid)){
             holder.bg.setBackgroundColor(Color.parseColor("#90c7cd"));

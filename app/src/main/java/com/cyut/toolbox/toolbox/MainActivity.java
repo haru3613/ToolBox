@@ -175,6 +175,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Runtime.getRuntime().gc();
+    }
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

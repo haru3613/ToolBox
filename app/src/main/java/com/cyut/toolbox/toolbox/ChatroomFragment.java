@@ -34,7 +34,7 @@ import static com.android.volley.VolleyLog.TAG;
 public class ChatroomFragment extends android.support.v4.app.Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private RecyclerViewAdapterMsgList adapter;
+    protected static RecyclerViewAdapterMsgList adapter;
 
     private ArrayAdapter<String> listAdapter;
     public ChatroomFragment() {

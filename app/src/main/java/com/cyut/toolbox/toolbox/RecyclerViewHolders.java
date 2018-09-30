@@ -15,6 +15,7 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder{
     public TextView Title;
     public TextView Area;
     public TextView Status;
+    public TextView Money;
     public RelativeLayout bg;
     public RecyclerViewHolders(View itemView) {
         super(itemView);
@@ -22,6 +23,7 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder{
         Title = (TextView)itemView.findViewById(R.id.titleTxt);
         Area = (TextView)itemView.findViewById(R.id.AreaTxt);
         Status=(TextView)itemView.findViewById(R.id.StatusTxt);
+        Money=itemView.findViewById(R.id.moneyTxt);
         bg=itemView.findViewById(R.id.bg);
     }
 

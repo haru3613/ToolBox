@@ -10,5 +10,6 @@
     <color name="secondaryColor">#99ccff</color>
     <color name="secondaryLightColor">#ccffff</color>
     <color name="secondaryDarkColor">#679bcc</color>
+    <color name="redColor">#ff3333</color>
     <color name="transparent_color">#00000000</color>
 </resources>

@@ -49,7 +49,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     private View view;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private RecyclerViewAdapterMsg adapter;
+    protected static RecyclerViewAdapterMsg adapter;
     String uid;
     View v;
     String SearchString;
