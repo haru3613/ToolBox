@@ -110,11 +110,13 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
                             adapter = new RecyclerViewAdapterMsg(v.getContext(), posts,uid);
                             recyclerView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
                         }
                     }
+
                 },
                 new Response.ErrorListener() {
                     @Override
@@ -128,7 +130,6 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                 params.put("uid",Uid);
                 return params;
             }
-
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(v.getContext());

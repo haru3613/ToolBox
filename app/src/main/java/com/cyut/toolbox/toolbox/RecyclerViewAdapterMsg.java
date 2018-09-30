@@ -28,9 +28,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.data.model.QiscusChatRoom;
-import com.qiscus.sdk.data.remote.QiscusApi;
-import com.qiscus.sdk.util.QiscusRxExecutor;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -47,7 +44,6 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     private Context context;
     private String uid;
     private RecyclerViewAdapterMsgDetail adapter;
-    private RecyclerViewAdapterMsgList adapterList;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private static MaterialDialog RidDialog;
@@ -281,7 +277,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     }
 
 
-    private void myRidDialog(final String count, final String title, final String data, final String message,final String time,final String until,final String cid,final String pid,final String status){
+    private void myRidDialog(final String count, final String title, final String data, final String message, final String time, final String until, final String cid, final String pid, final String status){
         boolean wrapInScrollView = true;
 
 
@@ -290,7 +286,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 .backgroundColorRes(R.color.colorBackground)
                 .build();
 
-        View item = RidDialog.getCustomView();
+        final View item = RidDialog.getCustomView();
 
         ImageView imageView=(ImageView)item.findViewById(R.id.dialog_image);
         TextView tv_title=(TextView)item.findViewById(R.id.dialog_title);
@@ -350,10 +346,23 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             @Override
             public void onClick(View view) {
                 if (cancel.getText().equals("已完成")){
-                    Backgorundwork backgorundwork = new Backgorundwork(context);
-                    backgorundwork.execute("case_status",cid,"確認中");
-                }else if(cancel.getText().equals("我還沒做完")) {
+                    MaterialDialog dialog=new MaterialDialog.Builder(context)
+                            .title("是否已完成")
+                            .positiveText("確認")
+                            .negativeText("未完成")
+                            .content("請詳細檢查是否已完成，選擇完後即不可退回")
+                            .backgroundColorRes(R.color.colorBackground)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                                    backgorundwork.execute("case_status",cid,"確認中");
+                                }
+                            })
+                            .build();
+                    dialog.show();
 
+                }else if(cancel.getText().equals("我還沒做完")) {
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute("case_status",cid,"進行中");
 
@@ -392,6 +401,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
 
     }
 
+
     public void normalDialogEvent(final String cid,final String uid,final int position) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog.title("是否刪除此案件");
@@ -400,9 +410,8 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             @Override
             public void onClick(MaterialDialog dialog, DialogAction which) {
                 //刪除
-                DeleteCase(cid,uid);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,itemList.size());
+
+
             }
         });
 
@@ -461,6 +470,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }
+
 
     public void LoadUserName(final String uid,final View item){
         String url ="http://163.17.5.182/loadusername.php";

@@ -46,7 +46,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import cz.msebera.android.httpclient.Header;
 
 
@@ -70,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-//spinner option
+        //spinner option
         Spinner spinner=(Spinner)findViewById(R.id.spinner_login);
 
         ArrayAdapter<CharSequence> loginList = ArrayAdapter.createFromResource(SignUpActivity.this,
@@ -151,7 +151,7 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d("repwd", re_pwd);
 
 
-        if (name.equals("") || nickname.equals("") || address.equals("")) {
+        if (name.equals("") || nickname.equals("") || address.equals("") ||identity.equals("")||phone.equals("")) {
             alertDialog("欄位有空值", "請勿輸入空值", "OK");
         } else if (mail.length() == 0) {
             alertDialog(getResources().getString(R.string.email_error_title), getResources().getString(R.string.email_error2), "OK");
@@ -161,8 +161,8 @@ public class SignUpActivity extends AppCompatActivity {
             alertDialog(getResources().getString(R.string.pwd_short_title), getResources().getString(R.string.pwd_short), "OK");
         } else if (!pwd.equals(re_pwd)) {
             alertDialog(getResources().getString(R.string.re_error_title), getResources().getString(R.string.re_error), "OK");
-        } else if (!path.isEmpty()){
-            alertDialog("尚未選擇圖片", getResources().getString(R.string.re_error), "OK");
+        } else if (path.isEmpty()){
+            alertDialog("尚未選擇圖片", "尚未選擇圖片", "OK");
         }else{
             try {
                 sex = String.valueOf(identity.charAt(1));
@@ -185,11 +185,9 @@ public class SignUpActivity extends AppCompatActivity {
             Log.d("imageBase64", "signup: " + imageBase64);
             u_verify = "0";
             u_verityCode = RndCode();
-            SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("正在註冊，請稍後");
-            pDialog.setCancelable(false);
-            pDialog.show();
+
+            Toast.makeText(SignUpActivity.this,"註冊中，請稍後....",Toast.LENGTH_LONG).show();
+
             imgurUpload(imageBase64);
         }
 
@@ -454,7 +452,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void imgurUpload(final String image) { //插入圖片
         Log.d("上傳圖片", "True");
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
-        String mashapeKey = "XR6S0dZU7Hmsh289zCmGwLH8tQNrp1KA0jfjsn8EHvOt1q8QR5'"; //設定自己的 Mashape Key
+        String mashapeKey = "XR6S0dZU7Hmsh289zCmGwLH8tQNrp1KA0jfjsn8EHvOt1q8QR5"; //設定自己的 Mashape Key
         String clientId = "6989dec20061743"; //設定自己的 Clinet ID
 
         AsyncHttpClient client = new AsyncHttpClient();

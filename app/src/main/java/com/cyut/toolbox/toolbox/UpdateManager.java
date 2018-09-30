@@ -39,7 +39,6 @@ public class UpdateManager {
 
     HashMap<String, String> mHashMap;
 
-    private String mSavePath;
 
 
     private ProgressDialog pDialog;
