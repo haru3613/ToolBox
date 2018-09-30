@@ -26,16 +26,6 @@
             android:paddingBottom="10dp"
             android:paddingTop="25dp">
 
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:cropToPadding="false"
-                android:paddingBottom="30dp"
-                app:srcCompat="@drawable/ic_logo" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +119,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 app:met_iconPadding="14dp"
-                android:hint="再輸入一次您的密碼"
+                android:hint="確認您的密碼"
                 app:met_primaryColor="@color/primaryTextColor"
                 app:met_floatingLabel="normal"
                 app:met_minCharacters="6"

@@ -32,6 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
@@ -142,19 +145,17 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
                 LoadCase(cid,r_uid);
 
-
-                Qiscus.buildChatWith(mail) //here we use email as userID. But you can make it whatever you want.
-                        .build(context, new Qiscus.ChatActivityBuilderListener() {
-                            @Override
-                            public void onSuccess(Intent intent) {
-                                context.startActivity(intent);
-                            }
-                            @Override
-                            public void onError(Throwable throwable) {
-                                //do anything if error occurs
-                                Log.d(TAG, "onError: "+throwable);
-                            }
+                Qiscus.buildChatWith(mail)
+                        .build(context)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(intent -> {
+                            context.startActivity(intent);
+                        }, throwable -> {
+                            //do anything if error occurs
+                            Log.d(TAG, "onError: "+throwable);
                         });
+
 
                 Toast.makeText(context, "成功，即將開啟聊天室", Toast.LENGTH_SHORT).show();
             }

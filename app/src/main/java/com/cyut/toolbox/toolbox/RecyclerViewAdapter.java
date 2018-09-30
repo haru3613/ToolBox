@@ -31,7 +31,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.data.model.QiscusAccount;
+
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.UnsupportedEncodingException;

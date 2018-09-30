@@ -137,7 +137,7 @@ public class InforFragment extends Fragment {
                             imageView=(ImageView)view.findViewById(R.id.imageView) ;
 
 
-                            Picasso.with(view.getContext()).load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").into(imageView);
+                            Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(imageView);
                             textView_nickname.setText(itemList.get(0).getNickname());
                             textView_name.setText(itemList.get(0).getName());
                             textView_phone.setText(itemList.get(0).getPhone());
@@ -416,7 +416,7 @@ public class InforFragment extends Fragment {
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
         int width = options.outWidth, height = options.outHeight;
 
-        // 將圖檔等比例縮小至寬度為1024
+
         final int MAX_WIDTH = 1024;
         float resize = 1; // 縮小值 resize 可為任意小數
         if (width > MAX_WIDTH) {
@@ -437,7 +437,7 @@ public class InforFragment extends Fragment {
     private void imgurUpload(final String image) { //插入圖片
         Log.d("上傳圖片", "True");
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
-        String mashapeKey = "XR6S0dZU7Hmsh289zCmGwLH8tQNrp1KA0jfjsn8EHvOt1q8QR5'"; //設定自己的 Mashape Key
+        String mashapeKey = "XR6S0dZU7Hmsh289zCmGwLH8tQNrp1KA0jfjsn8EHvOt1q8QR5"; //設定自己的 Mashape Key
         String clientId = "6989dec20061743"; //設定自己的 Clinet ID
 
         AsyncHttpClient client = new AsyncHttpClient();

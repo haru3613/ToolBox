@@ -27,8 +27,9 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.data.model.QiscusAccount;
-import com.qiscus.sdk.data.model.QiscusChatRoom;
+
+
+import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +40,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
@@ -84,17 +88,15 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Qiscus.buildChatWith(mail_split(qiscusChatRooms.get(position).getDistinctId())) //here we use email as userID. But you can make it whatever you want.
-                        .build(context, new Qiscus.ChatActivityBuilderListener() {
-                            @Override
-                            public void onSuccess(Intent intent) {
-                                context.startActivity(intent);
-                            }
-                            @Override
-                            public void onError(Throwable throwable) {
-                                //do anything if error occurs
-                                Log.d(TAG, "onError: "+throwable);
-                            }
+                Qiscus.buildChatWith(mail_split(qiscusChatRooms.get(position).getDistinctId()))
+                        .build(context)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(intent -> {
+                            context.startActivity(intent);
+                        }, throwable -> {
+                            //do anything if error occurs
+                            Log.d(TAG, "onError: "+throwable);
                         });
             }
         });
@@ -160,7 +162,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
                                 posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                                 List<Item> itemList=posts;
                                 imagesite=itemList.get(0).getImage();
-                                Picasso.with(context).load("https://imgur.com/"+imagesite+".jpg").into(holder.imag);
+                                Picasso.get().load("https://imgur.com/"+imagesite+".jpg").into(holder.imag);
                             }
 
                         } catch (UnsupportedEncodingException e) {

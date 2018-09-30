@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -34,8 +35,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.data.model.QiscusAccount;
+
+import com.qiscus.sdk.chat.core.data.model.QiscusNonce;
+import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
+import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -49,12 +55,14 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    JSONObject jsonobject;
     String mail,pwd;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -101,7 +109,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //qiscus setting
+        Qiscus.init(this.getApplication(), "toolbox-mzj9nz7n85jfv");
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
@@ -216,8 +225,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             shareTo("分享測試","https://drive.google.com/open?id=0B3BqbzgR0hXPMllJa0VVc1hPM2s","選擇要分享的軟體");
         }else if (id == R.id.nav_suggest) {
-
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/forms/WbSE9qmsQl654TLS2"));
+            startActivity(browserIntent);
         } else if (id== R.id.nav_signout){
+            if (Qiscus.hasSetupUser()) {
+                Qiscus.clearUser();
+            }
             SharedPreferences sharedPreferences = this.getSharedPreferences(KEY , MODE_PRIVATE);
             sharedPreferences.edit().putBoolean("Status" , false).apply();
             Intent toLogin=new Intent(this,LoginActivity.class);
@@ -257,33 +270,45 @@ public class MainActivity extends AppCompatActivity
                             List<Item> itemList=posts;
 
                             //讀取NAV資料
-                            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                            NavigationView navigationView = findViewById(R.id.nav_view);
                             View hView =navigationView.getHeaderView(0);
-                            final TextView TextNickname=(TextView)hView.findViewById(R.id.nick_name);
-                            final TextView TextName=(TextView)hView.findViewById(R.id.nav_name);
-                            final TextView TextMail=(TextView)hView.findViewById(R.id.mail);
-                            final TextView TextMoney=(TextView)hView.findViewById(R.id.money);
-                            final ImageView iv=(ImageView)hView.findViewById(R.id.hIV) ;
+                            final TextView TextNickname=hView.findViewById(R.id.nick_name);
+                            final TextView TextName=hView.findViewById(R.id.nav_name);
+                            final TextView TextMail=hView.findViewById(R.id.mail);
+                            final TextView TextMoney=hView.findViewById(R.id.money);
+                            final ImageView iv=hView.findViewById(R.id.hIV) ;
                             TextName.setText(itemList.get(0).getName());
                             TextNickname.setText(itemList.get(0).getNickname());
                             TextMail.setText(itemList.get(0).getMail());
                             TextMoney.setText("$"+itemList.get(0).getMoney());
-                            Picasso.with(hView.getContext()).load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").into(iv);
 
-                            Qiscus.setUser(itemList.get(0).getMail(),pwd)
-                                    .withUsername(itemList.get(0).getName())
-                                    .save(new Qiscus.SetUserListener() {
-                                        @Override
-                                        public void onSuccess(QiscusAccount qiscusAccount) {
-                                            Log.d(TAG, "onSuccess: "+qiscusAccount);
+                            Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
 
-                                        }
 
-                                        @Override
-                                        public void onError(Throwable throwable) {
-                                            Log.d(TAG, "onError: "+throwable);
-                                        }
-                                    });
+                            QiscusRxExecutor.execute(QiscusApi.getInstance().requestNonce(), new QiscusRxExecutor.Listener<QiscusNonce>() {
+                                @Override
+                                public void onSuccess(QiscusNonce qiscusNonce) {
+                                    Qiscus.setUser(itemList.get(0).getMail(),pwd)
+                                            .withUsername(itemList.get(0).getName())
+                                            .withAvatarUrl("https://imgur.com/"+itemList.get(0).getImage()+".jpg")
+                                            .save()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(qiscusAccount -> {
+                                                Log.i("MainActivity", "Login with account: " + qiscusAccount);
+
+                                            }, throwable -> {
+
+                                            });
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    //do anything if error occurred
+                                }
+                            });
+
+
 
 
                         } catch (UnsupportedEncodingException e) {

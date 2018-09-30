@@ -20,7 +20,7 @@
             android:title="@string/menu_collection" />
         <item
             android:id="@+id/nav_chatlist"
-            android:icon="@drawable/ic_menu_about"
+            android:icon="@drawable/ic_menu_chatlist"
             android:title="訊息列表" />
 
     </group>

@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.data.model.QiscusAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,8 +104,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //qiscus setting
-        Qiscus.init(LoginActivity.this.getApplication(), "toolbox-mzj9nz7n85jfv");
+
 
         //判斷使用者是否第一次登入
 
