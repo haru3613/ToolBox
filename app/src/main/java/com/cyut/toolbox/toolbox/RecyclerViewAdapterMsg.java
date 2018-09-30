@@ -103,7 +103,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         }
 
         holder.Status.setText(itemList.get(position).getStatus());
-
+        holder.Money.setText("$"+itemList.get(position).getMoney());
 
         if (itemList.get(position).getPid().equals(uid)){
             holder.bg.setBackgroundColor(Color.parseColor("#90c7cd"));

@@ -52,7 +52,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private RecyclerViewAdapter adapter;
+    protected static RecyclerViewAdapter adapter;
     public static final String KEY = "STATUS";
     final String[] items = {"我同意契約書","我會當一個稱職的工具人"};
     final boolean[] checked= new boolean[]{
@@ -90,6 +90,10 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(v.getContext()));
         layoutManager = new LinearLayoutManager(v.getContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(layoutManager);
         requestJsonObject(v);
 

@@ -102,7 +102,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
 
         holder.Status.setText(itemList.get(position).getStatus());
-
+        holder.Money.setText("$"+itemList.get(position).getMoney());
 
         String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
         if (Address.length()>10){
