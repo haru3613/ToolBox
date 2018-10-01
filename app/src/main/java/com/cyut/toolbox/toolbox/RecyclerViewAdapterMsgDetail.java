@@ -41,16 +41,15 @@ import static android.content.Context.MODE_PRIVATE;
 public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerViewMsgDetailHolders> {
     public List<ItemMsg> itemList;
     private Context context;
-    String name , email;
+    String name , email,uid;
     public static final String KEY = "STATUS";
-    public RecyclerViewAdapterMsgDetail(Context context, List<ItemMsg> itemList) {
+    public RecyclerViewAdapterMsgDetail(Context context, List<ItemMsg> itemList,String uid) {
         this.itemList = itemList;
         this.context = context;
+        this.uid=uid;
     }
 
 
-
-    String uid;
     @Override
     public RecyclerViewMsgDetailHolders onCreateViewHolder(ViewGroup parent, int viewType) {
         final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_msg, null);
@@ -84,14 +83,8 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
             holder.ap_time.setText(itemList.get(position).getTime());
         }
 
-        uid="";
-        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY, MODE_PRIVATE);
-        String mail=sharedPreferences.getString("Mail",null);
 
 
-        if (mail!=null){
-            LoadUid(mail);
-        }
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -306,46 +299,6 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         requestQueue.add(stringRequest);
     }
 
-    public void LoadUid(final String mail){
-        String url ="http://163.17.5.182/loaduser.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:",response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            List<Item> posts = new ArrayList<Item>();
-                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            List<Item> itemList=posts;
-                            Log.d(TAG, "Get Uid");
-                            uid= itemList.get(0).getUid();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
 
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("mail",mail+"@gm.cyut.edu.tw");
-                return params;
-            }
-
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-    }
 
 }

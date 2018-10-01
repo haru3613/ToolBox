@@ -118,14 +118,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
 
         holder.Money.setText("$"+itemList.get(position).getMoney());
-        holder.Status.setText(itemList.get(position).getStatus());
 
-        if (holder.Status.getText().equals("待接案")){
+        String status=itemList.get(position).getStatus();
+        holder.Status.setText(status);
+
+
+        if (status.equals("待接案")){
             holder.Status.setTextColor(Color.parseColor("#ff3333"));
+        }else{
+            holder.Status.setTextColor(Color.parseColor("#000000"));
         }
 
         if (itemList.get(position).getPid().equals(uid)){
             holder.bg.setBackgroundColor(Color.parseColor("#90c7cd"));
+        }else{
+            holder.bg.setBackgroundColor(Color.parseColor("#dfffffff"));
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +148,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View arg0) {
-                normalDialogEvent(uid,itemList.get(position).getCid());
+                if(uid.equals(itemList.get(position).getPid())){
+                    Toast.makeText(context,"你不能收藏自己的案子",Toast.LENGTH_SHORT).show();
+                }else {
+                    normalDialogEvent(uid,itemList.get(position).getCid());
+
+                }
+
+
                 return true;
             }
         });

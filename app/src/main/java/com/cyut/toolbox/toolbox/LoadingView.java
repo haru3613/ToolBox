@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.qiscus.sdk.Qiscus;
 
 /**
  * Created by Haru on 2017/5/10.
@@ -38,7 +39,8 @@ public class LoadingView extends Activity {
         ImageView rocketImage = findViewById(R.id.animate_logo);
         rocketImage.setBackgroundResource(R.drawable.animate);
         rocketAnimation = (AnimationDrawable) rocketImage.getBackground();
-
+        //qiscus setting
+        Qiscus.init(this.getApplication(), "toolbox-mzj9nz7n85jfv");
         new BackgroundSplashTask().execute();
 
     }

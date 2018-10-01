@@ -70,29 +70,27 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =inflater.inflate(R.layout.fragment_send, container, false);
-
+        uid="";
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_message);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         v=view;
-        uid="";
+
 
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
-        String mail=sharedPreferences.getString("Mail",null);
+        String uid=sharedPreferences.getString("uid",null);
+
+        Message(uid);
 
 
-
-        if (mail!=null){
-            LoadUser(mail);
-        }
 
         return view;
     }
 
 
-    public void Message(final String Uid){
+    public void Message(final String uid){
         String url ="http://163.17.5.182/message.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -107,10 +105,17 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
                             List<ItemObject> posts = new ArrayList<ItemObject>();
-                            posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
-                            adapter = new RecyclerViewAdapterMsg(v.getContext(), posts,uid);
-                            recyclerView.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
+                            if (!response.contains("Undefined")){
+                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                            }
+
+                            if (posts.isEmpty()){
+                                Toast.makeText(v.getContext(),"尚無案件",Toast.LENGTH_SHORT).show();
+                            }else{
+                                adapter = new RecyclerViewAdapterMsg(v.getContext(), posts,uid);
+                                recyclerView.setAdapter(adapter);
+                            }
+
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
@@ -127,7 +132,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("uid",Uid);
+                params.put("uid",uid);
                 return params;
             }
         };
@@ -141,50 +146,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
         ft.detach(this).attach(this).commit();
     }
 
-    public void LoadUser(final String mail){
-        String url ="http://163.17.5.182/loaduser.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:",response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            Log.d(TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            List<Item> posts = new ArrayList<Item>();
-                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            List<Item> itemList=posts;
-                            uid=itemList.get(0).getUid();
-                            //讀取自己發的案子
-                            Message(itemList.get(0).getUid());
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
 
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("mail",mail+"@gm.cyut.edu.tw");
-
-                return params;
-            }
-
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(v.getContext());
-        requestQueue.add(stringRequest);
-    }
 
     @Override
     public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {

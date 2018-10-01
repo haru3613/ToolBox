@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
-import com.qiscus.sdk.chat.core.data.model.QiscusNonce;
 import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
 import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
 
@@ -31,7 +30,7 @@ import static com.android.volley.VolleyLog.TAG;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatroomFragment extends android.support.v4.app.Fragment {
+public class ChatroomFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapterMsgList adapter;
@@ -53,28 +52,18 @@ public class ChatroomFragment extends android.support.v4.app.Fragment {
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        QiscusRxExecutor.execute(QiscusApi.getInstance().requestNonce(), new QiscusRxExecutor.Listener<QiscusNonce>() {
+        QiscusRxExecutor.execute(QiscusApi.getInstance().getChatRooms(1, 20, true), new QiscusRxExecutor.Listener<List<QiscusChatRoom>>() {
             @Override
-            public void onSuccess(QiscusNonce qiscusNonce) {
-                QiscusRxExecutor.execute(QiscusApi.getInstance().getChatRooms(1, 20, true), new QiscusRxExecutor.Listener<List<QiscusChatRoom>>() {
-                    @Override
-                    public void onSuccess(List<QiscusChatRoom> qiscusChatRooms) {
-                        //Success getting the rooms
-                        adapter = new RecyclerViewAdapterMsgList(view.getContext(), qiscusChatRooms);
-                        recyclerView.setAdapter(adapter);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        //Something went wrong
-                        Log.d(TAG, "onError: "+throwable);
-                    }
-                });
+            public void onSuccess(List<QiscusChatRoom> qiscusChatRooms) {
+                //Success getting the rooms
+                adapter = new RecyclerViewAdapterMsgList(view.getContext(), qiscusChatRooms);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onError(Throwable throwable) {
-                //do anything if error occurred
+                //Something went wrong
+                Log.d(TAG, "onError: "+throwable);
             }
         });
 

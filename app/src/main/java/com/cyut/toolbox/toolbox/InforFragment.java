@@ -95,22 +95,15 @@ public class InforFragment extends Fragment {
 
 
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(KEY, MODE_PRIVATE);
-        String mail=sharedPreferences.getString("Mail",null);
+        uid=sharedPreferences.getString("uid",null);
 
 
-
-        Log.d("mail:",mail);
-        if (mail!=null){
-            LoadUser(mail);
-        }
-
-
-
+        LoadUser(uid);
 
         return view;
     }
-    public void LoadUser(final String mail){
-        String url ="http://163.17.5.182/loaduser.php";
+    public void LoadUser(final String uid){
+        String url ="http://163.17.5.182/app/loaduser.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -126,7 +119,6 @@ public class InforFragment extends Fragment {
                             List<Item> posts = new ArrayList<Item>();
                             posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                             final List<Item> itemList=posts;
-                            uid=posts.get(0).getUid();
 
                             final TextView textView_name=(TextView)view.findViewById(R.id.textView_name);
                             final TextView textView_nickname=(TextView)view.findViewById(R.id.textView_nickname);
@@ -183,7 +175,7 @@ public class InforFragment extends Fragment {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("mail",mail+"@gm.cyut.edu.tw");
+                params.put("uid",uid);
                 return params;
             }
 

@@ -39,9 +39,9 @@ import com.google.gson.GsonBuilder;
 
 import com.qiscus.sdk.Qiscus;
 
-import com.qiscus.sdk.chat.core.data.model.QiscusNonce;
-import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
-import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
+
+import com.qiscus.sdk.chat.core.QiscusCore;
+import com.qiscus.sdk.chat.core.data.model.QiscusAccount;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -63,8 +63,7 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String mail,pwd;
-
+    String uid;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -109,8 +108,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //qiscus setting
-        Qiscus.init(this.getApplication(), "toolbox-mzj9nz7n85jfv");
+
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
@@ -147,12 +145,12 @@ public class MainActivity extends AppCompatActivity
                 .setRightBubbleTextColor(R.color.primaryTextColor);
 
         SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
-        mail=sharedPreferences.getString("Mail",null);
-        pwd=sharedPreferences.getString("Password",null);
+        uid=sharedPreferences.getString("uid",null);
 
 
-        if (mail!=null){
-            LoadUser(mail);
+
+        if (uid!=null){
+            LoadUser(uid);
         }
 
 
@@ -174,11 +172,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Runtime.getRuntime().gc();
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -256,8 +249,8 @@ public class MainActivity extends AppCompatActivity
         startActivity(Intent.createChooser(sharingIntent, chooserTitle));
     }
 
-    public void LoadUser(final String mail){
-        String url ="http://163.17.5.182/loaduser.php";
+    public void LoadUser(final String uid){
+        String url ="http://163.17.5.182/app/loaduser.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -288,30 +281,20 @@ public class MainActivity extends AppCompatActivity
                             TextMoney.setText("$"+itemList.get(0).getMoney());
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
+                            Log.d(TAG, "password: "+itemList.get(0).getPwd());
+                            Qiscus.setUser(itemList.get(0).getMail(),itemList.get(0).getPwd())
+                                    .withUsername(itemList.get(0).getName())
+                                    .withAvatarUrl("https://imgur.com/"+itemList.get(0).getImage()+".jpg")
+                                    .save()
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(qiscusAccount  -> {
+                                        Log.d(TAG,"Login Account:"+qiscusAccount);
+                                    }, throwable -> {
+                                        Log.d(TAG,"Qiscus Error:"+throwable);
 
+                                    });
 
-                            QiscusRxExecutor.execute(QiscusApi.getInstance().requestNonce(), new QiscusRxExecutor.Listener<QiscusNonce>() {
-                                @Override
-                                public void onSuccess(QiscusNonce qiscusNonce) {
-                                    Qiscus.setUser(itemList.get(0).getMail(),pwd)
-                                            .withUsername(itemList.get(0).getName())
-                                            .withAvatarUrl("https://imgur.com/"+itemList.get(0).getImage()+".jpg")
-                                            .save()
-                                            .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(qiscusAccount -> {
-                                                Log.i("MainActivity", "Login with account: " + qiscusAccount);
-
-                                            }, throwable -> {
-
-                                            });
-                                }
-
-                                @Override
-                                public void onError(Throwable throwable) {
-                                    //do anything if error occurred
-                                }
-                            });
 
 
 
@@ -331,7 +314,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("mail",mail+"@gm.cyut.edu.tw");
+                params.put("uid",uid);
                 return params;
             }
 
