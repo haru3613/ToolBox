@@ -1,6 +1,7 @@
 package com.cyut.toolbox.toolbox;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 import java.io.BufferedReader;
@@ -19,10 +28,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.support.constraint.Constraints.TAG;
@@ -32,14 +47,11 @@ import static android.support.constraint.Constraints.TAG;
  */
 
 public class Backgorundwork extends AsyncTask<String,Void,String> {
-    Context context;
-    MaterialDialog.Builder alertDialog;
+    private Context context;
+    private MaterialDialog.Builder alertDialog;
     public static final String KEY = "STATUS";
     private static final String ACTIVITY_TAG ="Logwrite";
     String usermail;
-    String Password;
-    String Password2;
-    String ID;
     Backgorundwork (Context ctx){
         context = ctx;
     }
@@ -54,9 +66,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Log.d(Backgorundwork.ACTIVITY_TAG,"login if run");
             try {
                 String mail = params[1];
-                usermail=mail;
                 String pwd = params[2];
-                Password=pwd;
+
                 URL url = new URL(login_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -519,7 +530,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 String mail = params[1];
                 usermail=mail;
                 String id = params[2];
-                ID=id;
+
                 URL url = new URL(check_id_match_mail_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -529,7 +540,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("u_mail","UTF-8")+"="+URLEncoder.encode(mail,"UTF-8")+"&"
-                        +URLEncoder.encode("u_identity","UTF-8")+"="+URLEncoder.encode(ID,"UTF-8");
+                        +URLEncoder.encode("u_identity","UTF-8")+"="+URLEncoder.encode(id,"UTF-8");
                 Log.d("POST_DATA", "doInBackground: "+post_data);
 
                 bufferedWriter.write(post_data);
@@ -555,11 +566,9 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
         }else if(type.equals("changepsw")) {
             try {
                 String mail = params[1];
-                usermail=mail;
                 String psw = params[2];
-                Password=psw;
                 String psw2 = params[3];
-                Password2=psw2;
+
                 URL url = new URL(changepsw);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -568,9 +577,9 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("u_mail","UTF-8")+"="+URLEncoder.encode(usermail,"UTF-8")+"&"
-                        +URLEncoder.encode("u_pwd","UTF-8")+"="+URLEncoder.encode(Password,"UTF-8")+"&"
-                        +URLEncoder.encode("u_pwd2","UTF-8")+"="+URLEncoder.encode(Password2,"UTF-8");
+                String post_data = URLEncoder.encode("u_mail","UTF-8")+"="+URLEncoder.encode(mail,"UTF-8")+"&"
+                        +URLEncoder.encode("u_pwd","UTF-8")+"="+URLEncoder.encode(psw,"UTF-8")+"&"
+                        +URLEncoder.encode("u_pwd2","UTF-8")+"="+URLEncoder.encode(psw2,"UTF-8");
                 Log.d("POST_DATA", "doInBackground: "+post_data);
 
                 bufferedWriter.write(post_data);
@@ -615,8 +624,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "登入中…", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = context.getSharedPreferences(KEY , MODE_PRIVATE);
             sharedPreferences.edit().putBoolean("Status" , true).apply();
-            sharedPreferences.edit().putString("Mail" , usermail).apply();
-            sharedPreferences.edit().putString("Password" ,Password ).apply();
+
+
             Intent toLoadView=new Intent(context,LoadingView.class);
             context.startActivity(toLoadView);
             ((Activity)context).finish();

@@ -30,6 +30,9 @@ import com.qiscus.sdk.Qiscus;
 
 
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
+import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
+import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
+import com.qiscus.sdk.ui.QiscusGroupChatActivity;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
@@ -88,17 +91,21 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Qiscus.buildChatWith(mail_split(qiscusChatRooms.get(position).getDistinctId()))
-                        .build(context)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(intent -> {
-                            context.startActivity(intent);
-                        }, throwable -> {
-                            //do anything if error occurs
-                            Log.d(TAG, "onError: "+throwable);
+                QiscusRxExecutor.execute(QiscusApi.getInstance().getChatRoom(qiscusChatRooms.get(position).getId()),
+                        new QiscusRxExecutor.Listener<QiscusChatRoom>() {
+                            @Override
+                            public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                                context.startActivity(QiscusGroupChatActivity.
+                                        generateIntent(context, qiscusChatRoom));
+                            }
+                            @Override
+                            public void onError(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                         });
             }
+
+
         });
 
 

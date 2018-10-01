@@ -107,6 +107,8 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
 
         if (itemList.get(position).getPid().equals(uid)){
             holder.bg.setBackgroundColor(Color.parseColor("#90c7cd"));
+        }else {
+            holder.bg.setBackgroundColor(Color.parseColor("#dfffffff"));
         }
 
         holder.Status.setText(itemList.get(position).getStatus());
@@ -442,7 +444,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                             List<ItemMsg> posts = new ArrayList<ItemMsg>();
                             if (!response.contains("Undefined")){
                                 posts = Arrays.asList(mGson.fromJson(response, ItemMsg[].class));
-                                adapter = new RecyclerViewAdapterMsgDetail(context, posts);
+                                adapter = new RecyclerViewAdapterMsgDetail(context, posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
 
