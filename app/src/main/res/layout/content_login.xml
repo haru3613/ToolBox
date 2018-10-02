@@ -30,7 +30,6 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
             android:orientation="horizontal">
 
             <com.rengwuxian.materialedittext.MaterialEditText
@@ -39,9 +38,9 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="帳號"
-                app:met_baseColor="@color/primaryDarkColor"
+                app:met_baseColor="@color/primaryColor"
                 app:met_primaryColor="@color/primaryTextColor"
-                app:met_underlineColor="@color/primaryDarkColor"
+                app:met_underlineColor="@color/primaryTextColor"
                 app:met_iconLeft="@drawable/ui_mail"
                 app:met_iconPadding="14dp"
                 android:inputType="textEmailAddress"
@@ -66,12 +65,12 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                app:met_baseColor="@color/primaryDarkColor"
+                app:met_baseColor="@color/primaryColor"
                 app:met_primaryColor="@color/primaryTextColor"
-                app:met_underlineColor="@color/primaryDarkColor"
+                app:met_underlineColor="@color/primaryTextColor"
                 app:met_iconLeft="@drawable/ui_pwd"
+                app:met_iconPadding="14dp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="密碼"
@@ -95,7 +94,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="@color/primaryDarkColor"
+                android:background="@color/primaryColor"
                 android:text="登入"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
@@ -106,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@color/primaryDarkColor"
+                android:background="@color/primaryColor"
                 android:text="註冊"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />

@@ -102,9 +102,16 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             holder.Area.setText(Address);
         }
 
-        holder.Status.setText(itemList.get(position).getStatus());
+        String status=itemList.get(position).getStatus();
+        holder.Status.setText(status);
+
         holder.Money.setText("$"+itemList.get(position).getMoney());
 
+        if (status.equals("待接案")){
+            holder.Status.setTextColor(Color.parseColor("#ff3333"));
+        }else{
+            holder.Status.setTextColor(Color.parseColor("#000000"));
+        }
         if (itemList.get(position).getPid().equals(uid)){
             holder.bg.setBackgroundColor(Color.parseColor("#90c7cd"));
         }else {
@@ -123,13 +130,13 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 if (itemList.get(position).getPid().equals(uid) ){
                     //我發的
                     customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+ itemList.get(position).getRoad())+" \nNT$ "+itemList.get(position).getMoney(),
+                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad())+" \n  NT$ "+itemList.get(position).getMoney(),
                             itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
                             itemList.get(position).getStatus(),itemList.get(position).getRid());
                 }else if(itemList.get(position).getRid().equals(uid)){
                     //我接的
                     myRidDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad())+" \nNT$ "+itemList.get(position).getMoney(),
+                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad())+" \n  NT$ "+itemList.get(position).getMoney(),
                             itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
                             itemList.get(position).getPid(),itemList.get(position).getStatus());
                 }
@@ -196,11 +203,14 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         else{
             t=title;
         }
+        String lineSep = System.getProperty("line.separator");
+        String m=message.replaceAll("<br />", lineSep);
+
         tv_title.setText(t);
         tv_data.setText(data);
-        tv_message.setText(message);
-        tv_time.setText("發案時間：\n"+time);
-        tv_umtil.setText("至\n"+until+" 截止");
+        tv_message.setText(m);
+        tv_time.setText("發案時間：");
+        tv_umtil.setText(time+"\n至\n"+until+" \n截止");
 
         if (!rid.equals(uid)){
             LoadUserName(rid,item);
@@ -325,11 +335,14 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         else{
             t=title;
         }
+        String lineSep = System.getProperty("line.separator");
+        String m=message.replaceAll("<br />", lineSep);
+
         tv_title.setText(t);
         tv_data.setText(data);
-        tv_message.setText(message);
-        tv_time.setText("發案時間：\n"+time);
-        tv_umtil.setText("至\n"+until+" 截止");
+        tv_message.setText(m);
+        tv_time.setText("發案時間：");
+        tv_umtil.setText(time+"\n至\n"+until+" 截止");
 
         LoadUserName(pid,item);
 

@@ -75,7 +75,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class InforFragment extends Fragment {
     public static final String KEY = "STATUS";
     private View view;
-    ImageView imageView;
+    ImageView imageView,imageButton;
     String u_image,uid;
     Uri picUri;
     String path;
@@ -126,8 +126,8 @@ public class InforFragment extends Fragment {
                             final TextView textView_pid=(TextView)view.findViewById(R.id.textView_pid);
                             final TextView textView_area=(TextView)view.findViewById(R.id.textView_area);
                             final TextView textView_introduce=(TextView)view.findViewById(R.id.textView_introduce);
-                            imageView=(ImageView)view.findViewById(R.id.imageView) ;
-
+                            imageButton=(ImageView)view.findViewById(R.id.imageView8) ;
+                            imageView=view.findViewById(R.id.imageView);
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(imageView);
                             textView_nickname.setText(itemList.get(0).getNickname());
@@ -138,7 +138,7 @@ public class InforFragment extends Fragment {
                             textView_introduce.setText(itemList.get(0).getIntroduce());
 
 
-                            imageView.setOnClickListener(new View.OnClickListener(){
+                            imageButton.setOnClickListener(new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
                                     Log.v(TAG, " click");

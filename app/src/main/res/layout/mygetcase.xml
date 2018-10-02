@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="TextView"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@color/primaryTextColor"
                     android:textAllCaps="false"
                     android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@android:color/black"
                     android:text="TextView"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor=" @android:color/black"
+            android:textColor="@color/primaryTextColor"
             android:text="工作內容"
             android:textSize="18sp" />
 
@@ -73,7 +73,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="TextView"
-            android:textColor=" @android:color/black" />
+            android:textColor="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,10 +92,10 @@
                     android:id="@+id/d_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor=" @android:color/black" />
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/d_until"
@@ -104,7 +104,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor=" @android:color/black" />
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
         </LinearLayout>
@@ -122,8 +122,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="聯繫人"
-                android:textColor=" @android:color/black" />
+                android:text="工具人選"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/case_name"
@@ -131,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="姓名"
-                android:textColor=" @android:color/black" />
+                android:textColor="@color/primaryTextColor" />
 
         </LinearLayout>
 
@@ -140,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/primaryDarkColor"
+            android:background="?attr/colorPrimary"
             android:text="我還沒做完"
             android:textColor="@android:color/white" />
 

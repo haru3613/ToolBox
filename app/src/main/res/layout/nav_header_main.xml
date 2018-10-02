@@ -19,8 +19,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/hIV"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_weight="1"
             app:civ_border_color="#FF000000"
             app:civ_border_width="1dp" />
@@ -47,15 +47,17 @@
 
             <TextView
                 android:id="@+id/mail"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="android.studio@android.com" />
+                android:text="android.studio@android.com"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/money"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 

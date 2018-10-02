@@ -111,9 +111,7 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
         if(result.contains("成功發案"))
         {
             Toast.makeText(context, "發案成功", Toast.LENGTH_SHORT).show();
-            Intent toLogin=new Intent(context,MainActivity.class);
-            context.startActivity(toLogin);
-            ((Activity)context).finish();
+
         }else if (result.contains("發案失敗")){
             Toast.makeText(context, "發案失敗", Toast.LENGTH_SHORT).show();
         }

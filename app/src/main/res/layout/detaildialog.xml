@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="TextView"
                     android:textAllCaps="false"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="18sp" />
 
                 <TextView
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
                     android:text="TextView"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@color/secondaryTextColor"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor=" @android:color/black"
+            android:textColor="@color/primaryColor"
             android:text="工作內容"
             android:textSize="18sp" />
 
@@ -73,53 +73,53 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:paddingBottom="20dp"
             android:text="TextView"
-            android:textColor=" @android:color/black" />
+            android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/sendmessage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="false"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:scaleType="centerInside"
-                android:tint="@color/primaryTextColor"
-                android:background="@null"
-                app:srcCompat="@drawable/send" />
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/d_time"
-                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor=" @android:color/black"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textColor="@color/primaryColor" />
 
                 <TextView
                     android:id="@+id/d_until"
-                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:textColor=" @android:color/black"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textColor="@color/secondaryTextColor" />
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/sendmessage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentBottom="false"
+                android:layout_gravity="bottom|right"
+                android:layout_weight="1"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:tint="@color/primaryTextColor"
+                app:srcCompat="@drawable/send" />
 
         </LinearLayout>
 

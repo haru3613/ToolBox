@@ -130,7 +130,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     public void dialog(String time,final String name,final String mail,final String message,final String cid,final String r_uid){
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog.title("是否選擇此位工具人");
-        dialog.content("截止日期："+time+"\n姓名："+name+"\n訊息："+message);
+        dialog.content("截止日期："+time+"\n姓名："+name+"\n打招呼的話："+message);
         dialog.positiveText("確定");
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override

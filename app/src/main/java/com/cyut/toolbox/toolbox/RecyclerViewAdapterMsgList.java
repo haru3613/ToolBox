@@ -56,7 +56,6 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
     private Context context;
 
 
-    ImageView imageView;
     String imagesite;
 
     public RecyclerViewAdapterMsgList(Context context, List<QiscusChatRoom> qiscusChatRooms) {
@@ -80,7 +79,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
         if(qiscusChatRooms.get(position).getName()!=""){
             holder.Name.setText(qiscusChatRooms.get(position).getName());
         }
-        if(qiscusChatRooms.get(position).getDistinctId()!=""){
+        if(mail!=""){
             LoadUser(mail,holder);
         }
 
@@ -167,8 +166,7 @@ public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerVie
                             List<Item> posts = new ArrayList<Item>();
                             if (!response.contains("Undefined")){
                                 posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                                List<Item> itemList=posts;
-                                imagesite=itemList.get(0).getImage();
+                                imagesite=posts.get(0).getImage();
                                 Picasso.get().load("https://imgur.com/"+imagesite+".jpg").into(holder.imag);
                             }
 
