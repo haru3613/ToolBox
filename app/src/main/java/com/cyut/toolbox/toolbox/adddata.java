@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,15 +49,16 @@ import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
 
-public class adddata extends AppCompatActivity {
+public class adddata extends AppCompatActivity{
     private AsyncHttpClient client;
     private TextView text_viewtime, text_until_time, text_end_until_time, text_case_done_viewtime1, text_case_done_viewtime2, text_view_done_type, textView2;
     private static final int msgKey1 = 1;
     private TimePickerDialog.OnTimeSetListener onTimeSetListener;
+    private String category;
     private TimePickerDialog timePickerDialog;
     private RadioButton rb_cmp_non, rb_cmp_one, rb_cmp_local;
     private EditText edt_title,edt_money,edt_detail,spinner_other;
-    Spinner spinner_class, spinner_local, spinner_road;
+    Spinner  spinner_local, spinner_road;
     private Button bt_timeout, bt_case_done_A, bt_case_done_B,bt_sendcase;
     String spinner_road_data;
     int c_end_hours = 0;
@@ -76,6 +79,7 @@ public class adddata extends AppCompatActivity {
     String erroMessage="";
     String radioCheck="0";
     MaterialDialog.Builder alertDialog;
+    private RecyclerViewAdapterCategory adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +98,6 @@ public class adddata extends AppCompatActivity {
         edt_detail =(EditText)findViewById(R.id.edt_detail);
         spinner_other=(EditText)findViewById(R.id.spinner_other);
         //spinner
-        spinner_class = (Spinner) findViewById(R.id.spinner_class);
         spinner_local = (Spinner) findViewById(R.id.spinner_local);
         spinner_road = (Spinner) findViewById(R.id.spinner_road);
         //TextView
@@ -115,11 +118,41 @@ public class adddata extends AppCompatActivity {
         bt_sendcase = findViewById(R.id.bt_sendcase);
         //--------------------------------------------------------------
         //--spinner類別Open~
-        class_spinner();
+
         town_spinner();
         road_spinner();
+        category="";
+        ArrayList<String> categorylist=new ArrayList<String>();
+
+        categorylist.add("日常");
+        categorylist.add("接送");
+        categorylist.add("外送");
+        categorylist.add("課業");
+        categorylist.add("修繕");
+        categorylist.add("除蟲");
 
 
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(adddata.this, LinearLayoutManager.HORIZONTAL, false);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.category);
+        recyclerView.setLayoutManager(layoutManager);
+        Log.d(TAG, "list: "+categorylist);
+        adapter=new RecyclerViewAdapterCategory(adddata.this,categorylist);
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnItemTouchListener(new RecylerItemClickListener(adddata.this, recyclerView, new RecylerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                category=adapter.itemList.get(position);
+                Toast.makeText(adddata.this,"你選擇："+adapter.itemList.get(position),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                // ...
+            }
+        }));
 
         uid="";
         SharedPreferences sharedPreferences = adddata.this.getSharedPreferences(KEY, MODE_PRIVATE);
@@ -198,7 +231,7 @@ public class adddata extends AppCompatActivity {
                 int Money=0;
                 String send_Money="0";
                 String type="check_ok";
-                String send_class=spinner_class.getSelectedItem().toString();
+                String send_class=category;
                 String send_Title=edt_title.getText().toString();
                 if (send_Title.length()<4){
                     erroMessage=erroMessage+"標題至少為四個字唷\n";
@@ -271,17 +304,9 @@ public class adddata extends AppCompatActivity {
     }
 
 
-
     //----------------------------------------------------------------------------------
 
-    //--------------------class spinner-----------------------------------
-    private void class_spinner() {
-        ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(adddata.this,
-                R.array.category,
-                R.layout.spinner_item);
-        spinner_class.setAdapter(a);
 
-    }
 
     //------------------------跟php要鄉鎮資料 to Spinner_town----------------------------------------
     private void town_spinner() {

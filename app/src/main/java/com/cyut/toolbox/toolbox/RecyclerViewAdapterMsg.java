@@ -113,7 +113,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             holder.Status.setTextColor(Color.parseColor("#000000"));
         }
         if (itemList.get(position).getPid().equals(uid)){
-            holder.bg.setBackgroundColor(Color.parseColor("#90c7cd"));
+            holder.bg.setBackgroundColor(Color.parseColor("#72c6cc"));
         }else {
             holder.bg.setBackgroundColor(Color.parseColor("#dfffffff"));
         }
