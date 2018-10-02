@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/colorBackground"
     tools:context="com.cyut.toolbox.toolbox.adddata">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,22 +32,14 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="案件類型"
-                    android:textColor="@android:color/black"
+                    android:text="選擇案件類型"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
             </TableRow>
-
-            <TableRow
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category"
                 android:layout_width="match_parent"
-                android:layout_height="78dp">
-
-                <Spinner
-                    android:id="@+id/spinner_class"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="@android:color/black" />
-
-            </TableRow>
+                android:layout_height="wrap_content" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -254,7 +247,7 @@
                 android:id="@+id/bt_timeout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryDarkColor"
+                android:background="@color/primaryColor"
                 android:onClick="timeout"
                 android:text="設定案件有效期限"
                 android:textColor="@android:color/white" />
@@ -395,7 +388,8 @@
                 android:id="@+id/bt_sendcase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryDarkColor"
+                android:layout_marginBottom="20dp"
+                android:background="@color/primaryColor"
                 android:text="完成"
                 android:textColor="@android:color/white" />
 

@@ -28,7 +28,7 @@
                     android:layout_gravity="left|center"
                     android:layout_weight="1"
                     android:text="我想成為你的工具人"
-                    android:textColor="@color/primaryDarkColor"
+                    android:textColor="@color/primaryColor"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="打個招呼"
-                android:textColor="@color/primaryDarkColor"
+                android:textColor="@color/primaryColor"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -61,7 +61,7 @@
                     android:hint="給案主的一句話"
                     android:inputType="textPersonName"
                     android:paddingBottom="10dp"
-                    app:met_baseColor="@color/primaryDarkColor"
+                    app:met_baseColor="@color/primaryColor"
                     app:met_floatingLabel="normal"
                     app:met_primaryColor="@color/primaryTextColor"
                     app:met_underlineColor="@color/primaryDarkColor" />
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:background="@color/primaryDarkColor"
+                    android:background="@color/primaryColor"
                     android:text="設定申請效期"
                     android:textColor="@android:color/white" />
 
@@ -93,7 +93,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:text="申請時效"
-                android:textColor=" @android:color/black" />
+                android:textColor="@android:color/black" />
 
             <ImageView
                 android:id="@+id/send_job_message"

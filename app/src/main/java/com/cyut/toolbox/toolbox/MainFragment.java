@@ -50,9 +50,10 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class MainFragment extends Fragment  implements SearchView.OnQueryTextListener{
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,categoryView;
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapter adapter;
+    private RecyclerViewAdapterCategory categoryadapter;
     public static final String KEY = "STATUS";
     final String[] items = {"我同意契約書","我會當一個稱職的工具人"};
     final boolean[] checked= new boolean[]{
@@ -91,10 +92,10 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(v.getContext()));
         layoutManager = new LinearLayoutManager(v.getContext());
-        recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
@@ -102,8 +103,36 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
         requestJsonObject(v);
 
+        ArrayList<String> categorylist=new ArrayList<String>();
+
+        categorylist.add("日常");
+        categorylist.add("接送");
+        categorylist.add("外送");
+        categorylist.add("課業");
+        categorylist.add("修繕");
+        categorylist.add("除蟲");
 
 
+        LinearLayoutManager categoryManager
+                = new LinearLayoutManager(v.getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        categoryView = (RecyclerView) v.findViewById(R.id.category);
+        categoryView.setLayoutManager(categoryManager);
+        Log.d(TAG, "list: "+categorylist);
+        categoryadapter=new RecyclerViewAdapterCategory(v.getContext(),categorylist);
+        categoryView.setAdapter(categoryadapter);
+        categoryView.setNestedScrollingEnabled(false);
+        categoryView.addOnItemTouchListener(new RecylerItemClickListener(v.getContext(), categoryView, new RecylerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                SearchV(categoryadapter.itemList.get(position));
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                // ...
+            }
+        }));
 
 
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
