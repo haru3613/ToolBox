@@ -21,15 +21,16 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/addwork"
         app:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
         app:elevation="6dp"
-        app:fabSize="normal"
-        android:src="@drawable/addwork" />
+        app:fabSize="normal" />
 
 </RelativeLayout>

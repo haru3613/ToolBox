@@ -650,7 +650,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             RecyclerViewAdapter adapter=new RecyclerViewAdapter();
             adapterCol.dissmissDialog();
             adapter.dissmissDialog();
-            Toast.makeText(context, "接案成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "申請成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除成功")){
             Toast.makeText(context, "刪除成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除失敗")){

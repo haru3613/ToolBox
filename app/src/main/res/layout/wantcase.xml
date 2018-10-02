@@ -13,7 +13,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:layout_weight="1"
+                    android:text="我想成為你的工具人"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/login_bot_right" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="打個招呼"
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,9 +60,11 @@
                     android:ems="10"
                     android:hint="給案主的一句話"
                     android:inputType="textPersonName"
+                    android:paddingBottom="10dp"
+                    app:met_baseColor="@color/primaryDarkColor"
                     app:met_floatingLabel="normal"
-                    app:met_floatingLabelTextColor="#679bcc"
-                    app:met_primaryColor="#679bcc" />
+                    app:met_primaryColor="@color/primaryTextColor"
+                    app:met_underlineColor="@color/primaryDarkColor" />
 
             </LinearLayout>
 
@@ -44,10 +78,11 @@
                     android:id="@+id/setting_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@color/primaryDarkColor"
-                    android:textColor="@android:color/white"
-                    android:text="設定申請效期" />
+                    android:text="設定申請效期"
+                    android:textColor="@android:color/white" />
 
             </LinearLayout>
 
@@ -55,10 +90,21 @@
                 android:id="@+id/ut_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:text="申請時效"
                 android:textColor=" @android:color/black" />
 
+            <ImageView
+                android:id="@+id/send_job_message"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="right"
+                app:srcCompat="@drawable/send"
+                tools:layout_editor_absoluteX="110dp"
+                tools:layout_editor_absoluteY="349dp" />
+
         </LinearLayout>
     </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

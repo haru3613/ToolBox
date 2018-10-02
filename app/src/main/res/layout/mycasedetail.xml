@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="TextView"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@color/primaryTextColor"
                     android:textAllCaps="false"
                     android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@android:color/black"
                     android:text="TextView"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor=" @android:color/black"
+            android:textColor="@color/primaryTextColor"
             android:text="工作內容"
             android:textSize="18sp" />
 
@@ -73,7 +73,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="TextView"
-            android:textColor=" @android:color/black" />
+            android:textColor="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor=" @android:color/black" />
+                    android:textColor="@color/primaryTextColor" />
 
                 <TextView
                     android:id="@+id/d_until"
@@ -104,7 +104,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor=" @android:color/black" />
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
         </LinearLayout>

@@ -3,6 +3,7 @@ package com.cyut.toolbox.toolbox;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,8 +102,15 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
 
 
-        holder.Status.setText(itemList.get(position).getStatus());
+        String status=itemList.get(position).getStatus();
+        holder.Status.setText(status);
+
         holder.Money.setText("$"+itemList.get(position).getMoney());
+        if (status.equals("待接案")){
+            holder.Status.setTextColor(Color.parseColor("#ff3333"));
+        }else{
+            holder.Status.setTextColor(Color.parseColor("#000000"));
+        }
 
         String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
         if (Address.length()>10){
@@ -116,8 +124,8 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             public void onClick(View view) {
                 Log.d(TAG, "onClick: "+itemList.get(position).getTitle());
                 //OPEN DETAIL
-                customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),(itemList.get(position).getCity()+itemList.get(position).getTown()+
-                        itemList.get(position).getRoad())+" \nNT$ "+itemList.get(position).getMoney(),itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),
+                customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),(itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+
+                        itemList.get(position).getRoad())+" \n  NT$ "+itemList.get(position).getMoney(),itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),
                         itemList.get(position).getRid(),itemList.get(position).getCid(),uid,itemList.get(position).getStatus());
             }
         });
@@ -179,7 +187,8 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                 imageView.setImageResource(R.drawable.debug);
                 break;
         }
-
+        String lineSep = System.getProperty("line.separator");
+        String m=message.replaceAll("<br />", lineSep);
         String t;
         if (title.length()>20){
             t=title.substring(0,20)+"...";
@@ -189,9 +198,9 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         }
         tv_title.setText(t);
         tv_data.setText(data);
-        tv_message.setText(message);
-        tv_time.setText("發案時間：\n"+time);
-        tv_umtil.setText("至\n"+until+" 截止");
+        tv_message.setText(m);
+        tv_time.setText("發案時間：");
+        tv_umtil.setText(time+"\n至\n"+until+" \n截止");
 
 
 
@@ -243,18 +252,8 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         boolean wrapInScrollView = true;
 
         dialog=new MaterialDialog.Builder(context)
-                .title("我想接案")
-                .positiveText("送出申請")
                 .customView(R.layout.wantcase, wrapInScrollView)
                 .backgroundColorRes(R.color.colorBackground)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                        String type = "sendmessage";
-                        Backgorundwork backgorundwork = new Backgorundwork(context);
-                        backgorundwork.execute(type,cid,uid,message,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
-                    }
-                })
                 .build();
 
         View item = dialog.getCustomView();
@@ -263,6 +262,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         final MaterialEditText sm_message=(MaterialEditText)item.findViewById(R.id.to_message);
         Button button=(Button)item.findViewById(R.id.setting_time);
         final TextView sm_time=(TextView)item.findViewById(R.id.ut_time);
+        ImageView send=item.findViewById(R.id.send_job_message);
         message="";
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -286,7 +286,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                 new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        sm_time.setText("您設定的案件有效時間:" + hourOfDay + "個小時" + minute + "分");
+                        sm_time.setText("您設定的案件有效時間:\n" + hourOfDay + "個小時" + minute + "分");
                         c_end_hours = hourOfDay;
                         c_end_mins = minute;
                         Log.d("Tag", "get_time_end_hour=" + c_end_hours + "min=" + c_end_mins);
@@ -299,7 +299,21 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             }
         });
 
-
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO 檢查資料庫是否已有接案
+                if (sm_message.getText().toString().equals("")||sm_time.getText().toString().equals("申請時效")){
+                    Toast.makeText(context,"請設定訊息及時間",Toast.LENGTH_SHORT).show();
+                }else{
+                    String sm =sm_message.getText().toString();
+                    Log.d(TAG, "onClick: "+sm);
+                    String type = "sendmessage";
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
+                }
+            }
+        });
 
         dialog.show();
 
