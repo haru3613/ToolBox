@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="55" />
+                                                <entry key="scalingPercent" value="65" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -35,7 +35,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="fcfeff" />
-                                      <entry key="foregroundImage" value="C:\Users\user\Desktop\App Project\ToolBoxMySQL-master\ToolBoxMySQL-master\app\src\main\res\drawable-v21\ic_logo.png" />
+                                      <entry key="foregroundImage" value="C:\Users\user\Desktop\App Project\ToolBoxMySQL-master\ToolBoxMySQL-master\app\src\main\res\drawable-v21\logo_icon.png" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="showSafeZone" value="false" />
                                     </map>

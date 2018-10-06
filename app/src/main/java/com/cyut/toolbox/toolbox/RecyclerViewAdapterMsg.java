@@ -40,7 +40,7 @@ import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHolders> {
-    public List<ItemObject> itemList;
+    public ArrayList<ItemObject> itemList;
     private Context context;
     private String uid;
     private RecyclerViewAdapterMsgDetail adapter;
@@ -53,7 +53,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
 
     }
 
-    public RecyclerViewAdapterMsg(Context context, List<ItemObject> itemList,String uid) {
+    public RecyclerViewAdapterMsg(Context context, ArrayList<ItemObject> itemList,String uid) {
         this.itemList = itemList;
         this.context = context;
         this.uid=uid;
@@ -110,7 +110,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         if (status.equals("待接案")){
             holder.Status.setTextColor(Color.parseColor("#ff3333"));
         }else{
-            holder.Status.setTextColor(Color.parseColor("#000000"));
+            holder.Status.setTextColor(Color.parseColor("#908e8d"));
         }
         if (itemList.get(position).getPid().equals(uid)){
             holder.bg.setBackgroundColor(Color.parseColor("#72c6cc"));
@@ -130,15 +130,15 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 if (itemList.get(position).getPid().equals(uid) ){
                     //我發的
                     customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad())+" \n  NT$ "+itemList.get(position).getMoney(),
+                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad()),itemList.get(position).getMoney(),
                             itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getStatus(),itemList.get(position).getRid());
+                            itemList.get(position).getStatus(),itemList.get(position).getRid(),position);
                 }else if(itemList.get(position).getRid().equals(uid)){
                     //我接的
                     myRidDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad())+" \n  NT$ "+itemList.get(position).getMoney(),
+                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad()),itemList.get(position).getMoney(),
                             itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getPid(),itemList.get(position).getStatus());
+                            itemList.get(position).getPid(),itemList.get(position).getStatus(),position);
                 }
 
             }
@@ -158,7 +158,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     }
 
 
-    private void customDialog(final String count, final String title, final String data, final String message,final String time,final String until,final String cid,final String status,final String rid){
+    private void customDialog(final String count, final String title, final String data,final String money, final String message,final String time,final String until,final String cid,final String status,final String rid,int position){
         boolean wrapInScrollView = true;
 
         final View item = LayoutInflater.from(context).inflate(R.layout.mycasedetail, null);
@@ -175,7 +175,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         final TextView tv_casename=(TextView)item.findViewById(R.id.case_name);
         LinearLayout confirm=(LinearLayout)item.findViewById(R.id.confirm);
         final LinearLayout check_before=(LinearLayout)item.findViewById(R.id.check_before);
-
+        TextView tv_money=item.findViewById(R.id.dialog_money);
         switch(count) {
             case "日常":
                 imageView.setImageResource(R.drawable.life);
@@ -205,12 +205,14 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         }
         String lineSep = System.getProperty("line.separator");
         String m=message.replaceAll("<br />", lineSep);
-
+        tv_money.setText("$"+money);
         tv_title.setText(t);
         tv_data.setText(data);
         tv_message.setText(m);
-        tv_time.setText("發案時間：");
-        tv_umtil.setText(time+"\n至\n"+until+" \n截止");
+        String short_time=string_sub(time);
+        String short_until=string_sub(until);
+        tv_time.setText("時間限制");
+        tv_umtil.setText(short_time+"\n      至\n"+short_until);
 
         if (!rid.equals(uid)){
             LoadUserName(rid,item);
@@ -228,17 +230,19 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 public void onClick(View view) {
                    //TODO 把錢轉過去
                     Backgorundwork backgorundwork = new Backgorundwork(context);
-                    backgorundwork.execute("case_status",cid,"已完成");
-
+                    backgorundwork.execute("finish_case",cid,"已完成",money,rid);
+                    itemList.get(position).setStatus("已完成");
+                    notifyItemChanged(position);
                 }
             });
 
             nfinish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute("case_status",cid,"進行中");
+                    itemList.get(position).setStatus("進行中");
+                    notifyItemChanged(position);
                 }
             });
         }else{
@@ -289,7 +293,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     }
 
 
-    private void myRidDialog(final String count, final String title, final String data, final String message, final String time, final String until, final String cid, final String pid, final String status){
+    private void myRidDialog(final String count, final String title, final String data,final String money, final String message, final String time, final String until, final String cid, final String pid, final String status,int position){
         boolean wrapInScrollView = true;
 
 
@@ -308,6 +312,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         TextView tv_umtil=(TextView)item.findViewById(R.id.d_until);
         final TextView tv_casename=(TextView)item.findViewById(R.id.case_name);
         final Button cancel=(Button)item.findViewById(R.id.cancelcase);
+        TextView tv_money=item.findViewById(R.id.dialog_money);
         switch(count) {
             case "日常":
                 imageView.setImageResource(R.drawable.life);
@@ -337,12 +342,15 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         }
         String lineSep = System.getProperty("line.separator");
         String m=message.replaceAll("<br />", lineSep);
-
+        tv_money.setText("$"+money);
         tv_title.setText(t);
         tv_data.setText(data);
         tv_message.setText(m);
-        tv_time.setText("發案時間：");
-        tv_umtil.setText(time+"\n至\n"+until+" 截止");
+        String short_time=string_sub(time);
+        String short_until=string_sub(until);
+        tv_time.setText("時間限制");
+        tv_umtil.setText(short_time+"\n      至\n"+short_until);
+
 
         LoadUserName(pid,item);
 
@@ -372,6 +380,8 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                                 public void onClick(MaterialDialog dialog, DialogAction which) {
                                     Backgorundwork backgorundwork = new Backgorundwork(context);
                                     backgorundwork.execute("case_status",cid,"確認中");
+                                    itemList.get(position).setStatus("確認中");
+                                    notifyItemChanged(position);
                                 }
                             })
                             .build();
@@ -380,7 +390,8 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 }else if(cancel.getText().equals("我還沒做完")) {
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute("case_status",cid,"進行中");
-
+                    itemList.get(position).setStatus("進行中");
+                    notifyItemChanged(position);
                 }
 
             }
@@ -416,6 +427,12 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
 
     }
 
+    private String string_sub(String original){
+        int start_index=original.indexOf("-");
+        int last_index=original.lastIndexOf(":");
+
+        return original.substring(start_index+1,last_index);
+    }
 
     public void normalDialogEvent(final String cid,final String uid,final int position) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
@@ -542,6 +559,15 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         backgorundwork.execute("deleteMessage",cid);
     }
 
+    void deleteItem(int index) {
+        itemList.remove(index);
+        notifyItemRemoved(index);
+    }
+
+
+    String getItemCid(int position) {
+        return itemList.get(position).getCid();
+    }
 
 
 

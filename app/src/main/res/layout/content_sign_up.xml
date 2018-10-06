@@ -226,7 +226,25 @@
                 app:met_iconLeft="@drawable/ui_address" />
 
 
-
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/introduce"
+                android:layout_width="match_parent"
+                android:layout_height="142dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="輸入您的自我介紹"
+                android:paddingBottom="10dp"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:maxLines="10"
+                android:minLines="6"
+                android:textSize="15sp"
+                app:met_baseColor="@color/primaryColor"
+                app:met_floatingLabel="normal"
+                app:met_iconPadding="14dp"
+                app:met_iconLeft="@drawable/introduce"
+                app:met_primaryColor="@color/primaryTextColor"
+                app:met_underlineColor="@color/primaryTextColor" />
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -245,7 +263,7 @@
                     android:id="@+id/checkBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor=" @android:color/black"
+                    android:textColor="@android:color/black"
                     android:text="我已經閱讀並同意" />
 
                 <TextView
@@ -287,14 +305,14 @@
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="69dp"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/login_bot" />
 
                 <ImageView
                     android:id="@+id/imageView3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="68dp"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/login_bot_right" />

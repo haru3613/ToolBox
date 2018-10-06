@@ -4,6 +4,7 @@
   <color name="primaryLightColor">#f4f4f4</color>
   <color name="primaryDarkColor">#72c6cc</color>
   <color name="primaryTextColor">#2a4e65</color>
+  <color name="grayColor">#908e8d</color>
   <color name="colorBackground">#dfffffff</color>
   <color name="colorNavHead">#df87cfe5</color>
     <color name="secondaryTextColor">#000000</color>

@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.icu.text.StringPrepParseException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    String mail, pwd, identity, sex, name, nickname, phone, address, re_pwd;
+    String mail, pwd, identity, sex, name, nickname, phone, address, re_pwd,introduce,server;
 
 
     private ImageView image;
@@ -147,11 +148,14 @@ public class SignUpActivity extends AppCompatActivity {
         address = ((EditText) findViewById(R.id.address)).getText().toString();
         phone = ((EditText) findViewById(R.id.phone)).getText().toString();
         identity = ((EditText) findViewById(R.id.pid)).getText().toString();
+        introduce=((EditText) findViewById(R.id.introduce)).getText().toString();
+        Spinner spinner=findViewById(R.id.spinner_login);
+        server=spinner.getSelectedItem().toString();
         Log.d("pwd", pwd);
         Log.d("repwd", re_pwd);
 
 
-        if (name.equals("") || nickname.equals("") || address.equals("") ||identity.equals("")||phone.equals("")) {
+        if (name.equals("") || nickname.equals("") || address.equals("") ||identity.equals("")||phone.equals("")||introduce.equals("")) {
             alertDialog("欄位有空值", "請勿輸入空值", "OK");
         } else if (mail.length() == 0) {
             alertDialog(getResources().getString(R.string.email_error_title), getResources().getString(R.string.email_error2), "OK");
@@ -163,6 +167,8 @@ public class SignUpActivity extends AppCompatActivity {
             alertDialog(getResources().getString(R.string.re_error_title), getResources().getString(R.string.re_error), "OK");
         } else if (path.isEmpty()){
             alertDialog("尚未選擇圖片", "尚未選擇圖片", "OK");
+        } else if (introduce.length()<10 ||introduce.length()>255){
+            alertDialog("自我介紹錯誤","請重新輸入(最少要十個字，最多255個字)","OK");
         }else{
             try {
                 sex = String.valueOf(identity.charAt(1));
@@ -183,7 +189,7 @@ public class SignUpActivity extends AppCompatActivity {
             byte[] bitmapData = bos.toByteArray();
             String imageBase64 = Base64.encodeToString(bitmapData, Base64.DEFAULT);
             Log.d("imageBase64", "signup: " + imageBase64);
-            u_verify = "0";
+            u_verify = "未驗證";
             u_verityCode = RndCode();
 
             Toast.makeText(SignUpActivity.this,"註冊中，請稍後....",Toast.LENGTH_LONG).show();
@@ -191,6 +197,24 @@ public class SignUpActivity extends AppCompatActivity {
             imgurUpload(imageBase64);
         }
 
+    }
+    public String RndCode() {
+        int z;
+        StringBuilder sb = new StringBuilder();
+        int i;
+        for (i = 0; i < 4; i++) {
+            z = (int) ((Math.random() * 7) % 3);
+
+            if (z == 1) { // 放數字
+                sb.append((int) ((Math.random() * 10)));
+            } else if (z == 2) { // 放大寫英文
+                sb.append((char) (((Math.random() * 26) + 65)));
+            } else {// 放小寫英文
+                sb.append(((char) ((Math.random() * 26) + 97)));
+            }
+        }
+        String result = sb.toString();
+        return result;
     }
 
     private Bitmap getResizedBitmap(String imagePath) {
@@ -216,24 +240,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    public String RndCode() {
-        int z;
-        StringBuilder sb = new StringBuilder();
-        int i;
-        for (i = 0; i < 4; i++) {
-            z = (int) ((Math.random() * 7) % 3);
 
-            if (z == 1) { // 放數字
-                sb.append((int) ((Math.random() * 10)));
-            } else if (z == 2) { // 放大寫英文
-                sb.append((char) (((Math.random() * 26) + 65)));
-            } else {// 放小寫英文
-                sb.append(((char) ((Math.random() * 26) + 97)));
-            }
-        }
-        String result = sb.toString();
-        return result;
-    }
 
 
     //呼叫回傳值為null的AlertDialog
@@ -475,8 +482,7 @@ public class SignUpActivity extends AppCompatActivity {
                 //連結php
                 String type = "signup";
                 Backgorundwork backgorundwork = new Backgorundwork(SignUpActivity.this);
-                String Date=getDate();
-                backgorundwork.execute(type,mail , pwd, identity, sex, name, nickname, phone, address, u_image, u_verify, u_verityCode,Date);
+                backgorundwork.execute(type,mail , pwd, identity, sex, name, nickname, phone, address, u_image, u_verify, u_verityCode,introduce,server);
                 Log.d("imgur", "onSuccess: " + u_image);
             }
 

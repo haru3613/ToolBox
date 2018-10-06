@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -30,8 +31,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -74,10 +78,13 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_message);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
 
         v=view;
 
+        FloatingActionButton floatingActionButton=(FloatingActionButton)getActivity().findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
 
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         String uid=sharedPreferences.getString("uid",null);
@@ -104,9 +111,10 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             Log.d(TAG, "Response " + response);
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
-                            List<ItemObject> posts = new ArrayList<ItemObject>();
+                            Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                            ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")){
-                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                posts = mGson.fromJson(response, listType);
                             }
 
                             if (posts.isEmpty()){
@@ -248,9 +256,10 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             Log.d(TAG, "Response " + response);
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
-                            List<ItemObject> posts = new ArrayList<ItemObject>();
+                            Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                            ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
-                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                posts = mGson.fromJson(response, listType);
                                 adapter = new RecyclerViewAdapterMsg(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
@@ -296,9 +305,10 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             Log.d(TAG, "Response " + response);
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
-                            List<ItemObject> posts = new ArrayList<ItemObject>();
+                            Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                            ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
-                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                posts = mGson.fromJson(response, listType);
                                 adapter = new RecyclerViewAdapterMsg(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }else{

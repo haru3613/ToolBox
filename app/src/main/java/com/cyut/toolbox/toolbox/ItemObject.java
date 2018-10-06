@@ -38,6 +38,7 @@ public class ItemObject {
     private String pid;
 
 
+
     public ItemObject(String CategoryImage, String Title,String city,String town,String road,String address,String money,String detail,String time,String until,String status,String cid,String rid,String pid) {
         this.CategoryImage = CategoryImage;
         this.Title = Title;
@@ -97,5 +98,59 @@ public class ItemObject {
         return rid;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
+    public void setCategoryImage(String categoryImage) {
+        CategoryImage = categoryImage;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setUntil(String until) {
+        this.until = until;
+    }
+
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
+
+    public void setRid(String rid) {
+        this.rid = rid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
 }

@@ -49,8 +49,8 @@
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="標題:"
-                    android:textColor="@android:color/black"
+                    android:text="標題"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
             </TableRow>
 
@@ -77,8 +77,8 @@
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="酬勞:"
-                    android:textColor="@android:color/black"
+                    android:text="酬勞"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
             </TableRow>
 
@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="元(新台幣)"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/primaryTextColor"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -122,8 +122,8 @@
                     android:id="@+id/textView7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="工作地點:"
-                    android:textColor="@android:color/black"
+                    android:text="工作地點"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
             </TableRow>
 
@@ -179,8 +179,8 @@
                     android:id="@+id/textView8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="詳細工作內容:"
-                    android:textColor="@android:color/black"
+                    android:text="詳細工作內容"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
             </TableRow>
@@ -211,8 +211,8 @@
                     android:id="@+id/tx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="現在時間:"
-                    android:textColor="@android:color/black"
+                    android:text="現在時間"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
             </TableRow>
 
@@ -237,8 +237,8 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="設定案件效期(至少為五分鐘)："
-                    android:textColor="@android:color/black"
+                    android:text="設定案件效期(至少為五分鐘)"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
             </TableRow>
 

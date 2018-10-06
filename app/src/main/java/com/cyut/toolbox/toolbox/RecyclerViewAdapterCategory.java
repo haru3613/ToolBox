@@ -28,7 +28,8 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
     public List<String> itemList;
     private Context context;
 
-
+    int lastIndex=-1;
+    RecyclerViewCategoryHolders holder;
     private static MaterialDialog dialog;
 
 
@@ -52,30 +53,62 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerViewCategoryHolders holder, final int position) {
 
+
         switch (itemList.get(position)) {
             case "日常":
                 holder.imag.setImageResource(R.drawable.life);
                 holder.categoryText.setText("日常");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
+
                 break;
             case "接送":
                 holder.imag.setImageResource(R.drawable.pickup);
                 holder.categoryText.setText("接送");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
                 break;
             case "外送":
                 holder.imag.setImageResource(R.drawable.delivery);
                 holder.categoryText.setText("外送");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
                 break;
             case "課業":
                 holder.imag.setImageResource(R.drawable.homework);
                 holder.categoryText.setText("課業");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
                 break;
             case "修繕":
                 holder.imag.setImageResource(R.drawable.repair);
                 holder.categoryText.setText("修繕");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
                 break;
             case "除蟲":
                 holder.imag.setImageResource(R.drawable.debug);
                 holder.categoryText.setText("除蟲");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
                 break;
         }
 
@@ -86,6 +119,9 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
         return this.itemList.size();
     }
 
-
+    void setAlpha(int index){
+        lastIndex=index;
+        notifyDataSetChanged();
+    }
 
 }

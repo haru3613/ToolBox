@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.cyut.toolbox.toolbox.InforFragment">
 
@@ -74,11 +75,12 @@
                     android:id="@+id/textView_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -102,11 +104,12 @@
                     android:id="@+id/textView_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -129,11 +132,12 @@
                     android:id="@+id/textView_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -156,11 +160,12 @@
                     android:id="@+id/textView_pid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -184,11 +189,12 @@
                     android:id="@+id/textView_area"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -212,11 +218,12 @@
                     android:id="@+id/textView_introduce"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -224,19 +231,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        app:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/change_btn" />
+
 
 </RelativeLayout>
