@@ -2,7 +2,9 @@ package com.cyut.toolbox.toolbox;
 
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,8 +24,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,15 +65,41 @@ public class CollectionFragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.RV_Coll);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
         v=view;
         uid="";
-
+        FloatingActionButton floatingActionButton=getActivity().findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
 
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         String uid=sharedPreferences.getString("uid",null);
+        recyclerView.addOnItemTouchListener(new RecylerItemClickListener(v.getContext(), recyclerView, new RecylerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
 
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                MaterialDialog.Builder dialog = new MaterialDialog.Builder(view.getContext());
+                dialog.title("是否刪除此案件");
+                dialog.positiveText("確定");
+                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                        //刪除
+                        Backgorundwork backgorundwork = new Backgorundwork(view.getContext());
+                        backgorundwork.execute("deleteColl",adapter.getItemCid(position),uid);
+                        adapter.deleteItem(position);
+
+                    }
+                });
+
+                dialog.show();
+            }
+        }));
 
         Collection(uid);
 
@@ -88,9 +121,10 @@ public class CollectionFragment extends Fragment {
                             Log.d(TAG, "Response " + response);
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
-                            List<ItemObject> posts = new ArrayList<ItemObject>();
+                            Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                            ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")){
-                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                posts = mGson.fromJson(response, listType);
                             }
 
                             if (posts.isEmpty()){

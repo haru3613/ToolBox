@@ -84,8 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="20dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <Button
                 android:id="@+id/Login"
@@ -121,7 +121,7 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="69dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/login_bot" />
@@ -140,7 +140,7 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="68dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/login_bot_right" />

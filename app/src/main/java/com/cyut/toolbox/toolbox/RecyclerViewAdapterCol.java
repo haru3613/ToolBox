@@ -40,7 +40,7 @@ import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHolders> {
-    public List<ItemObject> itemList;
+    public ArrayList<ItemObject> itemList ;
     private String uid;
     private Context context;
 
@@ -57,7 +57,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     public RecyclerViewAdapterCol() {
 
     }
-    public RecyclerViewAdapterCol(Context context, List<ItemObject> itemList,String uid) {
+    public RecyclerViewAdapterCol(Context context, ArrayList<ItemObject> itemList,String uid) {
         this.itemList = itemList;
         this.context = context;
         this.uid=uid;
@@ -109,7 +109,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         if (status.equals("待接案")){
             holder.Status.setTextColor(Color.parseColor("#ff3333"));
         }else{
-            holder.Status.setTextColor(Color.parseColor("#000000"));
+            holder.Status.setTextColor(Color.parseColor("#908e8d"));
         }
 
         String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
@@ -125,24 +125,14 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                 Log.d(TAG, "onClick: "+itemList.get(position).getTitle());
                 //OPEN DETAIL
                 customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),(itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+
-                        itemList.get(position).getRoad())+" \n  NT$ "+itemList.get(position).getMoney(),itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),
+                        itemList.get(position).getRoad()),itemList.get(position).getMoney(),itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),
                         itemList.get(position).getRid(),itemList.get(position).getCid(),uid,itemList.get(position).getStatus());
             }
         });
 
 
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            public boolean onLongClick(View arg0) {
 
-                normalDialogEvent(itemList.get(position).getCid(),uid,position);
-                    //lists.remove(holder.getLayoutPosition());
-                    //notifyItemRemoved(holder.getLayoutPosition());
-
-
-                return true;
-            }
-        });
     }
     @Override
     public int getItemCount() {
@@ -150,7 +140,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     }
 
 
-    private void customDialog(final String count, final String title, final String data, final String message,final String time,final String until,final String rid,final String cid,final String uid,final String status){
+    private void customDialog(final String count, final String title, final String data,final String money, final String message,final String time,final String until,final String rid,final String cid,final String uid,final String status){
         boolean wrapInScrollView = true;
 
         dialog=new MaterialDialog.Builder(context)
@@ -167,6 +157,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         TextView tv_message=(TextView)item.findViewById(R.id.dialog_message);
         TextView tv_time=(TextView)item.findViewById(R.id.d_time);
         TextView tv_umtil=(TextView)item.findViewById(R.id.d_until);
+        TextView tv_money=item.findViewById(R.id.dialog_money);
         switch(count) {
             case "日常":
                 imageView.setImageResource(R.drawable.life);
@@ -188,6 +179,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                 break;
         }
         String lineSep = System.getProperty("line.separator");
+        tv_money.setText("$"+money);
         String m=message.replaceAll("<br />", lineSep);
         String t;
         if (title.length()>20){
@@ -199,9 +191,11 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         tv_title.setText(t);
         tv_data.setText(data);
         tv_message.setText(m);
-        tv_time.setText("發案時間：");
-        tv_umtil.setText(time+"\n至\n"+until+" \n截止");
 
+        String short_time=string_sub(time);
+        String short_until=string_sub(until);
+        tv_time.setText("時間限制");
+        tv_umtil.setText(short_time+"\n      至\n"+short_until);
 
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -231,21 +225,11 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         }
     }
 
-    public void normalDialogEvent(final String cid, final String uid, final int position) {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-        dialog.title("是否刪除此案件");
-        dialog.positiveText("確定");
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
-                //刪除
-                Backgorundwork backgorundwork = new Backgorundwork(context);
-                backgorundwork.execute("deleteColl",cid,uid);
+    private String string_sub(String original){
+        int start_index=original.indexOf("-");
+        int last_index=original.lastIndexOf(":");
 
-            }
-        });
-
-        dialog.show();
+        return original.substring(start_index+1,last_index);
     }
 
     public void SendMessage(final String uid,final String cid) {
@@ -320,9 +304,13 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     }
 
 
+    void deleteItem(int index) {
+        itemList.remove(index);
+        notifyItemRemoved(index);
+    }
 
 
-
-
-
+    String getItemCid(int position) {
+        return itemList.get(position).getCid();
+    }
 }

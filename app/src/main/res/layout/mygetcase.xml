@@ -37,6 +37,15 @@
                 android:padding="5dp">
 
                 <TextView
+                    android:id="@+id/dialog_money"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="10dp"
+                    android:text="TextView"
+                    android:textColor="@color/primaryColor" />
+
+                <TextView
                     android:id="@+id/dialog_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,7 +81,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:text="TextView"
             android:textColor="@android:color/black" />
 
         <LinearLayout
@@ -95,7 +103,7 @@
                     android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/d_until"
@@ -103,7 +111,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="TextView"
                     android:textColor="@android:color/black" />
             </LinearLayout>
 
@@ -131,7 +138,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="姓名"
                 android:textColor="@color/primaryTextColor" />
 
         </LinearLayout>

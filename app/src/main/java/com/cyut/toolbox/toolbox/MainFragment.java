@@ -3,12 +3,14 @@ package com.cyut.toolbox.toolbox;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -33,8 +35,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -100,7 +104,6 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
 
-
         requestJsonObject(v);
 
         ArrayList<String> categorylist=new ArrayList<String>();
@@ -117,6 +120,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                 = new LinearLayoutManager(v.getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         categoryView = (RecyclerView) v.findViewById(R.id.category);
+        categoryView.setBackgroundColor(Color.parseColor("#72c6cc"));
         categoryView.setLayoutManager(categoryManager);
         Log.d(TAG, "list: "+categorylist);
         categoryadapter=new RecyclerViewAdapterCategory(v.getContext(),categorylist);
@@ -125,7 +129,8 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         categoryView.addOnItemTouchListener(new RecylerItemClickListener(v.getContext(), categoryView, new RecylerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SearchV(categoryadapter.itemList.get(position));
+                SearchV(categoryadapter.itemList.get(position).substring(0,2));
+                categoryadapter.setAlpha(position);
             }
 
             @Override
@@ -135,7 +140,8 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         }));
 
 
-        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -146,7 +152,31 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         });
 
 
+        NestedScrollView nsv = (NestedScrollView) getActivity().findViewById(R.id.fragment_container);
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    fab.hide();
+                } else {
+                    fab.show();
+                }
+            }
+        });
 
+        recyclerView.addOnScrollListener(new HideShowScrollListener() {
+            @Override
+            public void onHide() {
+            }
+
+            @Override
+            public void onShow() {
+            }
+            @Override
+            public void onScrolled() {
+                // To load more data
+            }
+        });
 
 
         return v;
@@ -164,8 +194,9 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                     Log.d(TAG, "Response " + response);
                     GsonBuilder builder = new GsonBuilder();
                     Gson mGson = builder.create();
-                    List<ItemObject> posts = new ArrayList<ItemObject>();
-                    posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                    Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                    ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
+                    posts = mGson.fromJson(response, listType);
                     adapter = new RecyclerViewAdapter(v.getContext(), posts,uid);
                     recyclerView.setAdapter(adapter);
                 } catch (UnsupportedEncodingException e) {
@@ -299,9 +330,10 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             Log.d(TAG, "Response " + response);
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
-                            List<ItemObject> posts = new ArrayList<ItemObject>();
+                            Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                            ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
-                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                posts = mGson.fromJson(response, listType);
                                 adapter = new RecyclerViewAdapter(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
@@ -361,9 +393,10 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             Log.d(TAG, "Response " + response);
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
-                            List<ItemObject> posts = new ArrayList<ItemObject>();
+                            Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
+                            ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
-                                posts = Arrays.asList(mGson.fromJson(response, ItemObject[].class));
+                                posts = mGson.fromJson(response, listType);
                                 adapter = new RecyclerViewAdapter(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }else{

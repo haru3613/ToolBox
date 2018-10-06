@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,12 +66,14 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
     String uid;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private  Toolbar toolbar;
     private static Boolean isExit = false;
     private static Boolean hasTask = false;
     public static final String KEY = "STATUS";
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         UpdateManager Umanager = new UpdateManager(MainActivity.this);
         Umanager.checkUpdate();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -181,6 +186,21 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+    public void hideViews() {
+        toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(1));
+        if (toolbar.getParent() instanceof AppBarLayout){
+            ((AppBarLayout)toolbar.getParent()).setExpanded(false,true);
+        }
+    }
+
+    public void showViews() {
+        toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(1));
+        if (toolbar.getParent() instanceof AppBarLayout) {
+            ((AppBarLayout) toolbar.getParent()).setExpanded(true, true);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

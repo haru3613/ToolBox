@@ -135,7 +135,9 @@ public class InforFragment extends Fragment {
                             textView_phone.setText(itemList.get(0).getPhone());
                             textView_pid.setText(itemList.get(0).getIdentity());
                             textView_area.setText(itemList.get(0).getAddress());
-                            textView_introduce.setText(itemList.get(0).getIntroduce());
+                            String lineSep = System.getProperty("line.separator");
+                            String m=itemList.get(0).getIntroduce().replaceAll("<br />", lineSep);
+                            textView_introduce.setText(m);
 
 
                             imageButton.setOnClickListener(new View.OnClickListener(){
@@ -152,7 +154,7 @@ public class InforFragment extends Fragment {
                             });
 
 
-                            FloatingActionButton floatingActionButton=(FloatingActionButton)view.findViewById(R.id.floatingActionButton);
+                            FloatingActionButton floatingActionButton=(FloatingActionButton)getActivity().findViewById(R.id.fab);
                             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

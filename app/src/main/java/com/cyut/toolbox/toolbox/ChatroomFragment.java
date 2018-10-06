@@ -2,6 +2,7 @@ package com.cyut.toolbox.toolbox;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
 import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
+
 
 
 import java.util.List;
@@ -47,7 +49,8 @@ public class ChatroomFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view= inflater.inflate(R.layout.fragment_chatroom, container, false);
 
-
+        FloatingActionButton floatingActionButton=getActivity().findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
         recyclerView = (RecyclerView)view.findViewById(R.id.ryv_msglist);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());

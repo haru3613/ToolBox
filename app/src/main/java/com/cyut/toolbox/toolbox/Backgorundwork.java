@@ -114,10 +114,11 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String image=params[9];
             String verify=params[10];
             String verifyCode=params[11];
-            String u_regtime=params[12];
+            String introduce=params[12];
+            String server=params[13];
 
             Log.d("image src", "doInBackground: "+image);
-            String sign_url ="http://163.17.5.182/register_finish.php";
+            String sign_url ="http://163.17.5.182/app/register.php";
             try {
 
                 URL url = new URL(sign_url);
@@ -137,11 +138,10 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                         URLEncoder.encode("u_nickname","UTF-8")+"="+URLEncoder.encode(nickname,"UTF-8")+"&"+
                         URLEncoder.encode("u_phone","UTF-8")+"="+URLEncoder.encode(phone,"UTF-8")+"&"+
                         URLEncoder.encode("u_address","UTF-8")+"="+URLEncoder.encode(address,"UTF-8")+"&"+
-                        URLEncoder.encode("u_isReceived","UTF-8")+"="+URLEncoder.encode("test","UTF-8")+"&"+
-                        URLEncoder.encode("u_message","UTF-8")+"="+URLEncoder.encode("test","UTF-8")+"&"+
                         URLEncoder.encode("u_verify","UTF-8")+"="+URLEncoder.encode(verify,"UTF-8")+"&"+
                         URLEncoder.encode("u_verifyCode","UTF-8")+"="+URLEncoder.encode(verifyCode,"UTF-8")+"&"+
-                        URLEncoder.encode("u_regtime","UTF-8")+"="+URLEncoder.encode(u_regtime,"UTF-8");
+                        URLEncoder.encode("u_introduce","UTF-8")+"="+URLEncoder.encode(introduce,"UTF-8")+"&"+
+                        URLEncoder.encode("u_server","UTF-8")+"="+URLEncoder.encode(server,"UTF-8");
                         Log.d("POST_DATA", "doInBackground: "+post_data);
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
@@ -568,7 +568,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 String mail = params[1];
                 String psw = params[2];
                 String psw2 = params[3];
-
+                String delete_url = "http://163.17.5.182/app/case_status.php";
                 URL url = new URL(changepsw);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -602,7 +602,53 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("finish_case")) {
+
+            String cid = params[1];
+            String status = params[2];
+            String rid = params[4];
+            String money = params[3];
+
+            String delete_url = "http://163.17.5.182/app/finish_case.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("c_cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8") + "&" +
+                        URLEncoder.encode("c_status", "UTF-8") + "=" + URLEncoder.encode(status, "UTF-8")+ "&" +
+                        URLEncoder.encode("c_money", "UTF-8") + "=" + URLEncoder.encode(money, "UTF-8")+ "&" +
+                        URLEncoder.encode("c_rid", "UTF-8") + "=" + URLEncoder.encode(rid, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
 
         return null;
 
@@ -652,6 +698,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             adapter.dissmissDialog();
             Toast.makeText(context, "申請成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除成功")){
+            cancel(true);
             Toast.makeText(context, "刪除成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("刪除失敗")){
             Toast.makeText(context, "刪除失敗", Toast.LENGTH_SHORT).show();
@@ -671,6 +718,10 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "更新失敗", Toast.LENGTH_SHORT).show();
         }else if(result.contains("檢查失敗")) {
             Toast.makeText(context, "檢查失敗", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("轉帳成功")) {
+            Toast.makeText(context, "轉帳成功", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("轉帳失敗")) {
+            Toast.makeText(context, "轉帳失敗", Toast.LENGTH_SHORT).show();
         }else if(result.contains("檢查成功")) {
             Toast.makeText(context, "檢查成功", Toast.LENGTH_SHORT).show();
             Intent tochangepsw=new Intent(context,changepassword.class);
@@ -708,4 +759,6 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
     }
+
+
 }

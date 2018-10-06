@@ -77,12 +77,12 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_add_work">addWorkActivity</string>
     <!--menu-->
-    <string name="menu_main">招募工具人</string>
-    <string name="menu_infor">會員中心</string>
-    <string name="menu_collection">收藏的案件</string>
+    <string name="menu_main">招募/成為工具人</string>
+    <string name="menu_infor">個人資料</string>
+    <string name="menu_collection">收藏案件</string>
     <string name="menu_before">歷史案件</string>
     <string name="menu_about">關於</string>
-    <string name="menu_send">我的發案</string>
+    <string name="menu_send">我的案件</string>
     <string name="menu_other">其他</string>
     <string name="menu_share">分享</string>
     <string name="menu_suggest">給我們建議</string>

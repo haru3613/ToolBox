@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -136,6 +137,7 @@ public class adddata extends AppCompatActivity{
                 = new LinearLayoutManager(adddata.this, LinearLayoutManager.HORIZONTAL, false);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.category);
+        recyclerView.setBackgroundColor(Color.parseColor("#dfffffff"));
         recyclerView.setLayoutManager(layoutManager);
         Log.d(TAG, "list: "+categorylist);
         adapter=new RecyclerViewAdapterCategory(adddata.this,categorylist);
@@ -145,6 +147,7 @@ public class adddata extends AppCompatActivity{
             @Override
             public void onItemClick(View view, int position) {
                 category=adapter.itemList.get(position);
+                adapter.setAlpha(position);
                 Toast.makeText(adddata.this,"你選擇："+adapter.itemList.get(position),Toast.LENGTH_SHORT).show();
             }
 
@@ -235,6 +238,8 @@ public class adddata extends AppCompatActivity{
                 String send_Title=edt_title.getText().toString();
                 if (send_Title.length()<4){
                     erroMessage=erroMessage+"標題至少為四個字唷\n";
+                }else if (send_class.equals("")){
+                    erroMessage=erroMessage+"您尚未選擇分類";
                 }
                 if (!edt_money.getText().toString().equals("")){
                     Money=Integer.parseInt(edt_money.getText().toString());
