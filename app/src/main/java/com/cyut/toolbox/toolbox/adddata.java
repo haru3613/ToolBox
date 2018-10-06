@@ -171,7 +171,7 @@ public class adddata extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
                 String selected_town = spinner_local.getSelectedItem().toString();
-                Toast.makeText(adddata.this, "您選擇" + selected_town, Toast.LENGTH_LONG).show();
+                Toast.makeText(adddata.this, "您選擇" + selected_town, Toast.LENGTH_SHORT).show();
                 Log.d("TAG", "我有選擇" + selected_town);
                 RoadProesss(selected_town);
             }

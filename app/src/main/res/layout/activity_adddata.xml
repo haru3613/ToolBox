@@ -198,7 +198,6 @@
                     android:inputType="textMultiLine"
                     android:maxLines="10"
                     android:minLines="6"
-                    android:selectAllOnFocus="false"
                     android:singleLine="false"
                     app:met_floatingLabel="normal" />
             </TableRow>

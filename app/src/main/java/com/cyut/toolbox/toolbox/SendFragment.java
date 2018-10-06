@@ -74,20 +74,22 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =inflater.inflate(R.layout.fragment_send, container, false);
+        v=view;
         uid="";
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
+        uid=sharedPreferences.getString("uid",null);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_message);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
 
-        v=view;
+
 
         FloatingActionButton floatingActionButton=(FloatingActionButton)getActivity().findViewById(R.id.fab);
         floatingActionButton.setVisibility(View.GONE);
 
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
-        String uid=sharedPreferences.getString("uid",null);
+
 
         Message(uid);
 
@@ -98,6 +100,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
 
 
     public void Message(final String uid){
+        Log.d(TAG, "Message: uid"+uid);
         String url ="http://163.17.5.182/message.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -243,6 +246,8 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     public void SearchV(final String SearchString){
+        Log.d(TAG, "SearchV: "+SearchString);
+        Log.d(TAG, "SearchV: uid"+uid);
         String url ="http://163.17.5.182/app/message_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -292,6 +297,8 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
 
 
     public void SearchQuery(final String SearchString){
+        Log.d(TAG, "SearchQuery: "+SearchString);
+        Log.d(TAG, "SearchV: uid"+uid);
         String url ="http://163.17.5.182/app/message_querysearch.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

@@ -74,7 +74,7 @@ public class CollectionFragment extends Fragment {
         floatingActionButton.setVisibility(View.GONE);
 
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
-        String uid=sharedPreferences.getString("uid",null);
+        uid=sharedPreferences.getString("uid",null);
         recyclerView.addOnItemTouchListener(new RecylerItemClickListener(v.getContext(), recyclerView, new RecylerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

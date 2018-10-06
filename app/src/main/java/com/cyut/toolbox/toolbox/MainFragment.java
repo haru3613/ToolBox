@@ -103,7 +103,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         recyclerView.setLayoutManager(layoutManager);
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
-
+        Log.d(TAG, "onCreateView: uid "+uid);
         requestJsonObject(v);
 
         ArrayList<String> categorylist=new ArrayList<String>();

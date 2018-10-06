@@ -130,6 +130,7 @@ public class InforFragment extends Fragment {
                             imageView=view.findViewById(R.id.imageView);
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(imageView);
+
                             textView_nickname.setText(itemList.get(0).getNickname());
                             textView_name.setText(itemList.get(0).getName());
                             textView_phone.setText(itemList.get(0).getPhone());
@@ -158,7 +159,7 @@ public class InforFragment extends Fragment {
                             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    customDialog(itemList.get(0).getNickname(),itemList.get(0).getAddress(),itemList.get(0).getPhone());
+                                    customDialog(itemList.get(0).getNickname(),itemList.get(0).getAddress(),itemList.get(0).getPhone(),itemList.get(0).getIntroduce());
                                 }
                             });
 
@@ -187,7 +188,7 @@ public class InforFragment extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    private void customDialog(final String nickname, final String area, final String phone){
+    private void customDialog(final String nickname, final String area, final String phone,final String introduce){
         boolean wrapInScrollView = true;
 
         final View item = LayoutInflater.from(view.getContext()).inflate(R.layout.alert_edit, null);
@@ -202,13 +203,12 @@ public class InforFragment extends Fragment {
         final EditText editText_nickname=(EditText)item.findViewById(R.id.editText_nickname);
         final EditText editText_phone = (EditText) item.findViewById(R.id.editText_phone);
         final EditText editText_area = (EditText) item.findViewById(R.id.editText_area);
+        final EditText editText_introduce = (EditText) item.findViewById(R.id.editText_introduce);
         editText_nickname.setText(nickname, TextView.BufferType.EDITABLE);
         editText_phone.setText(phone, TextView.BufferType.EDITABLE);
         editText_area.setText(area, TextView.BufferType.EDITABLE);
+        editText_introduce.setText(introduce, TextView.BufferType.EDITABLE);
 
-        final String u_address=editText_area.getText().toString();
-        final String u_phone=editText_phone.getText().toString();
-        final String u_nickname=editText_nickname.getText().toString();
 
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
@@ -216,16 +216,15 @@ public class InforFragment extends Fragment {
                 final String u_address=editText_area.getText().toString();
                 final String u_phone=editText_phone.getText().toString();
                 final String u_nickname=editText_nickname.getText().toString();
-
-                if (u_phone.equals("")||u_nickname.equals("")||u_address.equals("")){
+                final String u_introduce=editText_nickname.getText().toString();
+                if (u_phone.equals("")||u_nickname.equals("")||u_address.equals("")||u_introduce.equals("")){
                     alertDialog("欄位有空值",getResources().getString(R.string.toast_missdata),"OK");//須修正
                 }else if(!editText_phone.getText().toString().matches("[0][9][0-9]{8}")){
                     alertDialog("電話號碼輸入有誤","請在確認一次輸入的訊息","OK");
                 }else{
-
                     String type = "member_update";
                     Backgorundwork backgorundwork = new Backgorundwork(view.getContext());
-                    backgorundwork.execute(type,uid ,u_nickname,u_phone,u_address);
+                    backgorundwork.execute(type,uid ,u_nickname,u_phone,u_address,u_introduce);
                     Reload();
 
                 }
