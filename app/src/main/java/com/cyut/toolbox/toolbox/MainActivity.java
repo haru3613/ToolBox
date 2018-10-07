@@ -2,6 +2,8 @@ package com.cyut.toolbox.toolbox;
 
 import android.Manifest;
 import android.app.Activity;
+
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,13 +11,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,7 +34,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.Application;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,6 +41,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -43,11 +49,7 @@ import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
 
 
-import com.qiscus.sdk.chat.core.QiscusCore;
-import com.qiscus.sdk.chat.core.data.model.QiscusAccount;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
 
     String uid;
@@ -125,7 +128,11 @@ public class MainActivity extends AppCompatActivity
         Umanager.checkUpdate();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -135,12 +142,34 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NestedScrollView nsv = (NestedScrollView)findViewById(R.id.fragment_container);
 
 
         MainFragment fragment=new MainFragment();
         FragmentManager manager=getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
 
+
+
+
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    fab.hide();
+                } else {
+                    Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    if (currentFragment instanceof MainFragment) {
+                        Log.d(TAG, "In Main");
+                        fab.show();
+                    }else if (currentFragment instanceof InforFragment){
+                        Log.d(TAG, "In Infor");
+                        fab.show();
+                    }
+
+                }
+            }
+        });
 
 
         Qiscus.getChatConfig()
@@ -230,8 +259,8 @@ public class MainActivity extends AppCompatActivity
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
         } else if (id == R.id.nav_send) {
             SendFragment fragment = new SendFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
         }  else if (id == R.id.nav_chatlist) {
             ChatroomFragment fragment=new ChatroomFragment();
             FragmentManager manager=getSupportFragmentManager();
