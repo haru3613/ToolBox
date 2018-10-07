@@ -1,4 +1,4 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.adapter;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.RecyclerViewCategoryHolders;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,7 +121,7 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
         return this.itemList.size();
     }
 
-    void setAlpha(int index){
+    public void setAlpha(int index){
         lastIndex=index;
         notifyDataSetChanged();
     }

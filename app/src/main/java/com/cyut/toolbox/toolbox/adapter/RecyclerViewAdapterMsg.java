@@ -1,8 +1,7 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +21,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.RecyclerViewHolders;
+import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
+import com.cyut.toolbox.toolbox.connection.Backgorundwork;
+import com.cyut.toolbox.toolbox.model.Item;
+import com.cyut.toolbox.toolbox.model.ItemMsg;
+import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
@@ -36,8 +41,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHolders> {
     public ArrayList<ItemObject> itemList;
@@ -253,17 +260,15 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             @Override
             public void onClick(View view) {
                 if(!tv_casename.getText().toString().equals("此案尚未有接案人")){
-                    Qiscus.buildChatWith(mail) //here we use email as userID. But you can make it whatever you want.
-                            .build(context, new Qiscus.ChatActivityBuilderListener() {
-                                @Override
-                                public void onSuccess(Intent intent) {
-                                    context.startActivity(intent);
-                                }
-                                @Override
-                                public void onError(Throwable throwable) {
-                                    //do anything if error occurs
-                                    Log.d(TAG, "onError: "+throwable);
-                                }
+                    Qiscus.buildChatWith(mail)
+                            .build(context)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(intent -> {
+                                context.startActivity(intent);
+                            }, throwable -> {
+                                //do anything if error occurs
+                                Log.d(TAG, "onError: "+throwable);
                             });
 
                     Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();

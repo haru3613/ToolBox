@@ -1,8 +1,7 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.Fragment;
 
 
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,6 +21,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
+import com.cyut.toolbox.toolbox.RecylerItemClickListener;
+import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
+import com.cyut.toolbox.toolbox.connection.Backgorundwork;
+import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,9 +35,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
