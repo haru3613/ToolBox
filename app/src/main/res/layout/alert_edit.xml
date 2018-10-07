@@ -4,18 +4,16 @@
     android:id="@+id/alert_edit"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:orientation="vertical"
-    android:paddingTop="20dp">
+    android:layout_margin="10dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -39,9 +37,9 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -62,16 +60,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout4"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/editText_area"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
@@ -79,4 +77,16 @@
             android:inputType="textPersonName"
             app:met_floatingLabel="normal" />
     </LinearLayout>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editText_introduce"
+        android:layout_width="match_parent"
+        android:layout_height="116dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="自我介紹"
+        android:inputType="textMultiLine"
+        android:maxLines="10"
+        android:minLines="6"
+        app:met_floatingLabel="normal" />
 </LinearLayout>

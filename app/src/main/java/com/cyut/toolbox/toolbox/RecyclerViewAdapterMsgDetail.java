@@ -67,26 +67,6 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
             LoadUser(itemList.get(position).getUid(),holder);
         }
 
-
-
-
-        if(!itemList.get(position).getMessage().equals("")){
-            if(itemList.get(position).getMessage().length()>8){
-                holder.ap_message.setText(itemList.get(position).getMessage().substring(0,8)+"...");
-            }
-
-        }else{
-            holder.ap_message.setText("無訊息");
-        }
-
-        if(itemList.get(position).getTime()!=""){
-            holder.ap_time.setText(itemList.get(position).getTime());
-        }
-
-
-
-
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +79,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View arg0) {
-                normalDialogEvent();
+
                 return true;
             }
         });
@@ -111,26 +91,29 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
 
 
+    private String string_sub(String original){
+        int start_index=original.indexOf("-");
+        int last_index=original.lastIndexOf(":");
 
-    public void normalDialogEvent() {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-        dialog.title("是否刪除此案件");
-        dialog.positiveText("確定");
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
-                //刪除 TODO
-                Toast.makeText(context, "刪除成功", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        dialog.show();
+        return original.substring(start_index+1,last_index);
     }
 
+
     public void dialog(String time,final String name,final String mail,final String message,final String cid,final String r_uid){
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        boolean wrapInScrollView = true;
+
+        final View item = LayoutInflater.from(context).inflate(R.layout.choice_tool, null);
+
+        MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
+        dialog.customView(item,wrapInScrollView);
+        dialog.backgroundColorRes(R.color.colorBackground);
+        TextView tv_name=(TextView)item.findViewById(R.id.tool_name);
+        TextView tv_date=(TextView)item.findViewById(R.id.tool_date);
+        TextView tv_message=(TextView)item.findViewById(R.id.tool_message);
+        tv_name.setText(name);
+        tv_date.setText(time);
+        tv_message.setText(message);
         dialog.title("是否選擇此位工具人");
-        dialog.content("截止日期："+time+"\n姓名："+name+"\n打招呼的話："+message);
         dialog.positiveText("確定");
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
