@@ -1,62 +1,35 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.adapter;
 
-import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.qiscus.sdk.Qiscus;
-
+import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.RecyclerViewHolders;
+import com.cyut.toolbox.toolbox.connection.Backgorundwork;
+import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
-    public ArrayList<ItemObject> itemList;
-    private Context context;
+public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHolders> {
+    public ArrayList<ItemObject> itemList ;
     private String uid;
-    private EditText sm_message;
-    private TextView sm_time;
-    private static MaterialDialog dialog;
+    private Context context;
 
     int c_end_hours = 0;
     int c_end_mins = 0;
@@ -65,13 +38,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     int end_Hours = 0;
     int end_Day = 0;
     int end_Way = 0;
+    private static MaterialDialog dialog;
+    String message;
 
-
-    public RecyclerViewAdapter() {
+    public RecyclerViewAdapterCol() {
 
     }
-
-    public RecyclerViewAdapter(Context context, ArrayList<ItemObject> itemList,String uid) {
+    public RecyclerViewAdapterCol(Context context, ArrayList<ItemObject> itemList,String uid) {
         this.itemList = itemList;
         this.context = context;
         this.uid=uid;
@@ -85,7 +58,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         return rcv;
     }
     @Override
-    public void onBindViewHolder(RecyclerViewHolders holder, final int position) {
+    public void onBindViewHolder(final RecyclerViewHolders holder, final int position) {
+
 
         switch (itemList.get(position).getCategoryImage()) {
             case "日常":
@@ -113,30 +87,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.Title.setText(itemList.get(position).getTitle());
         }
 
-        String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
-        if (Address.length()>10){
-            holder.Area.setText(Address.substring(0,10)+"...");
-        }else{
-            holder.Area.setText(Address);
-        }
 
-
-        holder.Money.setText("$"+itemList.get(position).getMoney());
 
         String status=itemList.get(position).getStatus();
         holder.Status.setText(status);
 
-
+        holder.Money.setText("$"+itemList.get(position).getMoney());
         if (status.equals("待接案")){
             holder.Status.setTextColor(Color.parseColor("#ff3333"));
         }else{
             holder.Status.setTextColor(Color.parseColor("#908e8d"));
         }
 
-        if (itemList.get(position).getPid().equals(uid)){
-            holder.bg.setBackgroundColor(Color.parseColor("#72c6cc"));
+        String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
+        if (Address.length()>10){
+            holder.Area.setText(Address.substring(0,10)+"...");
         }else{
-            holder.bg.setBackgroundColor(Color.parseColor("#dfffffff"));
+            holder.Area.setText(Address);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -150,19 +117,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            public boolean onLongClick(View arg0) {
-                if(uid.equals(itemList.get(position).getPid())){
-                    Toast.makeText(context,"你不能收藏自己的案子",Toast.LENGTH_SHORT).show();
-                }else {
-                    normalDialogEvent(uid,itemList.get(position).getCid());
-
-                }
 
 
-                return true;
-            }
-        });
+
     }
     @Override
     public int getItemCount() {
@@ -173,11 +130,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     private void customDialog(final String count, final String title, final String data,final String money, final String message,final String time,final String until,final String rid,final String cid,final String uid,final String status){
         boolean wrapInScrollView = true;
 
-        final View item = LayoutInflater.from(context).inflate(R.layout.detaildialog, null);
+        dialog=new MaterialDialog.Builder(context)
+                .customView(R.layout.detaildialog, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
 
-        final MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
+        View item = dialog.getCustomView();
+
         ImageView imageView=(ImageView)item.findViewById(R.id.dialog_image);
         ImageView send=(ImageView)item.findViewById(R.id.sendmessage);
         TextView tv_title=(TextView)item.findViewById(R.id.dialog_title);
@@ -206,6 +165,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 imageView.setImageResource(R.drawable.debug);
                 break;
         }
+        String lineSep = System.getProperty("line.separator");
+        tv_money.setText("$"+money);
+        String m=message.replaceAll("<br />", lineSep);
         String t;
         if (title.length()>20){
             t=title.substring(0,20)+"...";
@@ -213,13 +175,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         else{
             t=title;
         }
-
-        tv_money.setText("$"+money);
         tv_title.setText(t);
         tv_data.setText(data);
-        String lineSep = System.getProperty("line.separator");
-        String m=message.replaceAll("<br />", lineSep);
         tv_message.setText(m);
+
         String short_time=string_sub(time);
         String short_until=string_sub(until);
         tv_time.setText("時間限制");
@@ -231,7 +190,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             public void onClick(View v) {
                 if(uid.equals(rid)){
                     Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
-
                 }else if(status.equals("待接案")){
                     SendMessage(uid,cid);
                 }else{
@@ -242,9 +200,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         });
 
 
-
         dialog.show();
 
+
+
+    }
+
+    public static void dissmissDialog() {
+        if(dialog!=null){
+            dialog.dismiss();
+        }
     }
 
     private String string_sub(String original){
@@ -252,22 +217,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         int last_index=original.lastIndexOf(":");
 
         return original.substring(start_index+1,last_index);
-    }
-
-    public void normalDialogEvent(final String uid,final String cid) {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-        dialog.title("是否收藏此案件");
-        dialog.positiveText("確定");
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
-                String type = "collection";
-                Backgorundwork backgorundwork = new Backgorundwork(context);
-                backgorundwork.execute(type,cid,uid);
-            }
-        });
-
-        dialog.show();
     }
 
     public void SendMessage(final String uid,final String cid) {
@@ -278,13 +227,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 .backgroundColorRes(R.color.colorBackground)
                 .build();
 
-
         View item = dialog.getCustomView();
-        sm_message=(EditText)item.findViewById(R.id.to_message);
-        Button button=(Button)item.findViewById(R.id.setting_time);
-        sm_time=(TextView)item.findViewById(R.id.ut_time);
-        ImageView send=item.findViewById(R.id.send_job_message);
 
+
+        final MaterialEditText sm_message=(MaterialEditText)item.findViewById(R.id.to_message);
+        Button button=(Button)item.findViewById(R.id.setting_time);
+        final TextView sm_time=(TextView)item.findViewById(R.id.ut_time);
+        ImageView send=item.findViewById(R.id.send_job_message);
+        message="";
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,7 +247,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 end_Day = 0;
                 end_Way = 0;
 
-
+                message=sm_message.getText().toString();
                 sm_time.setText("正在設定時間");
 
                 final Calendar c = Calendar.getInstance();
@@ -337,27 +287,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         });
 
         dialog.show();
+
     }
 
 
-
-    public static void dissmissDialog() {
-        if(dialog!=null){
-            dialog.dismiss();
-        }
+    public void deleteItem(int index) {
+        itemList.remove(index);
+        notifyItemRemoved(index);
     }
 
 
-    //---------------------------------------send_data to php and database----------------------------------------------------------
-
-    public String toTimeFormat(String y, String month, String day, String hour, String min, String sec){
-        String formatetime=y+"-"+month+"-"+day+" "+hour+":"+min+":"+sec;
-        return formatetime;
+    public String getItemCid(int position) {
+        return itemList.get(position).getCid();
     }
-    public String toTimeFormat1(int y, int month, int day, int hour, int min, int sec){
-        String formatetime=y+"-"+month+"-"+day+" "+hour+":"+min+":"+sec;
-        return formatetime;
-    }
-
-
 }

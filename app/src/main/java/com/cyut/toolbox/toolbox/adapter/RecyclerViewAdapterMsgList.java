@@ -1,20 +1,11 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.adapter;
 
-import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.design.widget.NavigationView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,31 +15,28 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.RecyclerViewMsgListHolders;
+import com.cyut.toolbox.toolbox.connection.Backgorundwork;
+import com.cyut.toolbox.toolbox.model.Item;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.qiscus.sdk.Qiscus;
 
 
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
 import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
 import com.qiscus.sdk.ui.QiscusGroupChatActivity;
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
 
 //訊息列表
 public class RecyclerViewAdapterMsgList extends RecyclerView.Adapter<RecyclerViewMsgListHolders> {

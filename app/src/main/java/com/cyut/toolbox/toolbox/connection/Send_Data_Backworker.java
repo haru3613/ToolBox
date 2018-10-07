@@ -1,4 +1,4 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.connection;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +29,7 @@ import static android.content.ContentValues.TAG;
 
 public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
     Context context;
-    Send_Data_Backworker (Context ctx){
+    public Send_Data_Backworker (Context ctx){
         context = ctx;
     }
 

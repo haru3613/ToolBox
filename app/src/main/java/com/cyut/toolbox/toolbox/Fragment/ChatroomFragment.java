@@ -1,4 +1,4 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.Fragment;
 
 
 import android.os.Bundle;
@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 
+import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsgList;
+import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
@@ -55,22 +57,23 @@ public class ChatroomFragment extends Fragment {
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        QiscusRxExecutor.execute(QiscusApi.getInstance().getChatRooms(1, 20, true), new QiscusRxExecutor.Listener<List<QiscusChatRoom>>() {
-            @Override
-            public void onSuccess(List<QiscusChatRoom> qiscusChatRooms) {
-                //Success getting the rooms
-                adapter = new RecyclerViewAdapterMsgList(view.getContext(), qiscusChatRooms);
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                //Something went wrong
-                Log.d(TAG, "onError: "+throwable);
-            }
-        });
 
 
+        QiscusApi.getInstance().getChatRooms(1, 20, true)
+                .doOnNext(chatRooms -> {
+                    for (QiscusChatRoom chatRoom : chatRooms) {
+                        Qiscus.getDataStore().addOrUpdate(chatRoom);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(chatRooms -> {
+                    //success
+                    adapter = new RecyclerViewAdapterMsgList(view.getContext(), chatRooms);
+                    recyclerView.setAdapter(adapter);
+                }, throwable -> {
+                    //error
+                });
 
 
         return view;

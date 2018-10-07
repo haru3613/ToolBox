@@ -1,4 +1,4 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.model;
 
 /**
  * Created by Haru on 2018/1/7.

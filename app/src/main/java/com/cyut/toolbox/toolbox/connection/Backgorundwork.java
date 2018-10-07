@@ -1,7 +1,6 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.connection;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,14 +10,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.cyut.toolbox.toolbox.LoadingView;
+import com.cyut.toolbox.toolbox.LoginActivity;
+import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapter;
+import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
+import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsg;
+import com.cyut.toolbox.toolbox.changepassword;
 
 
 import java.io.BufferedReader;
@@ -28,16 +25,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.support.constraint.Constraints.TAG;
@@ -52,8 +43,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
     public static final String KEY = "STATUS";
     private static final String ACTIVITY_TAG ="Logwrite";
     String usermail;
-    Backgorundwork (Context ctx){
-        context = ctx;
+    public Backgorundwork (Context ctx){
+        this.context = ctx;
     }
     @Override
     protected String doInBackground(String... params) {

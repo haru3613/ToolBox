@@ -3,7 +3,6 @@ package com.cyut.toolbox.toolbox;
 import android.Manifest;
 import android.app.Activity;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -41,7 +40,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.Fragment.ChatroomFragment;
+import com.cyut.toolbox.toolbox.Fragment.CollectionFragment;
+import com.cyut.toolbox.toolbox.Fragment.InforFragment;
+import com.cyut.toolbox.toolbox.Fragment.MainFragment;
+import com.cyut.toolbox.toolbox.Fragment.SendFragment;
 import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
+import com.cyut.toolbox.toolbox.model.Item;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

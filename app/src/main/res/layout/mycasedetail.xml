@@ -161,14 +161,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="此案接案人"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/grayColor" />
 
             <TextView
                 android:id="@+id/case_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/primaryColor" />
 
         </LinearLayout>
 
