@@ -211,7 +211,7 @@
                     android:layout_height="38dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ui_identity" />
+                    android:src="@drawable/introduce" />
 
                 <TextView
                     android:id="@+id/textView_introduce"

@@ -159,12 +159,10 @@ public class adddata extends AppCompatActivity{
 
         uid="";
         SharedPreferences sharedPreferences = adddata.this.getSharedPreferences(KEY, MODE_PRIVATE);
-        String mail=sharedPreferences.getString("Mail",null);
+        uid=sharedPreferences.getString("uid",null);
 
 
-        if (mail!=null){
-            LoadUser(mail);
-        }
+
 
         //--------------------------------------------------------------
         spinner_local.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -284,6 +282,7 @@ public class adddata extends AppCompatActivity{
                 }
                 if (erroMessage.equals("")){
                     Send_Data_Backworker SDB = new Send_Data_Backworker(adddata.this);
+                    Log.d(TAG, "onClick: uid"+uid);
                     SDB.execute(type, send_class,send_Title,send_Money,send_city,send_town,send_road,send_otherdetail,send_detail,send_case_disapear,send_case_finish_start,send_case_finish_end,uid);
                     Intent intent=new Intent(adddata.this,MainActivity.class);
                     startActivity(intent);
@@ -825,47 +824,7 @@ public class adddata extends AppCompatActivity{
     }
 
 
-    public void LoadUser(final String mail){
-        String url ="http://163.17.5.182/loaduser.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:",response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            Log.d(TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            List<Item> posts = new ArrayList<Item>();
-                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            List<Item> itemList=posts;
-                            uid= itemList.get(0).getUid();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
 
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("mail",mail+"@gm.cyut.edu.tw");
-                return params;
-            }
-
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(adddata.this);
-        requestQueue.add(stringRequest);
-    }
 }
 
 

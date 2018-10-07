@@ -216,12 +216,15 @@ public class InforFragment extends Fragment {
                 final String u_address=editText_area.getText().toString();
                 final String u_phone=editText_phone.getText().toString();
                 final String u_nickname=editText_nickname.getText().toString();
-                final String u_introduce=editText_nickname.getText().toString();
+                final String u_introduce=editText_introduce.getText().toString();
                 if (u_phone.equals("")||u_nickname.equals("")||u_address.equals("")||u_introduce.equals("")){
                     alertDialog("欄位有空值",getResources().getString(R.string.toast_missdata),"OK");//須修正
                 }else if(!editText_phone.getText().toString().matches("[0][9][0-9]{8}")){
                     alertDialog("電話號碼輸入有誤","請在確認一次輸入的訊息","OK");
-                }else{
+                }else if(editText_introduce.length()>10){
+                    alertDialog("暱稱超過十個字","請重新輸入暱稱","OK");
+                }
+                    else{
                     String type = "member_update";
                     Backgorundwork backgorundwork = new Backgorundwork(view.getContext());
                     backgorundwork.execute(type,uid ,u_nickname,u_phone,u_address,u_introduce);

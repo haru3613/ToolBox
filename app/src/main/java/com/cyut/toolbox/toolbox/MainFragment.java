@@ -152,17 +152,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         });
 
 
-        NestedScrollView nsv = (NestedScrollView) getActivity().findViewById(R.id.fragment_container);
-        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > oldScrollY) {
-                    fab.hide();
-                } else {
-                    fab.show();
-                }
-            }
-        });
+
 
         recyclerView.addOnScrollListener(new HideShowScrollListener() {
             @Override

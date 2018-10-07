@@ -1,11 +1,15 @@
-package com.cyut.toolbox.toolbox;
+package com.cyut.toolbox.toolbox.Fragment;
+
 
 
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.cyut.toolbox.toolbox.R;
 
 
 /**

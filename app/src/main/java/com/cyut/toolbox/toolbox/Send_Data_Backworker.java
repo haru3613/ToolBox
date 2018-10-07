@@ -75,6 +75,7 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
                                 +URLEncoder.encode("u_pid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"
                                 +URLEncoder.encode("u_rid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"
                                 +URLEncoder.encode("u_uid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8");
+                Log.d(TAG, "doInBackground: "+post_data);
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
