@@ -12,6 +12,7 @@ import android.os.StrictMode;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 
 
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
+        //如果在特定Fragment FAB不顯示
         nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -176,8 +177,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         Qiscus.getChatConfig()
+                .setEnableFcmPushNotification(true)
+                .setOnlyEnablePushNotificationOutsideChatRoom(true)
                 .setStatusBarColor(R.color.colorNavHead)
                 .setAppBarColor(R.color.primaryColor)
                 .setTitleColor(R.color.primaryTextColor)
@@ -188,6 +190,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
+        //set Nav information
         if (uid!=null){
             LoadUser(uid);
         }
@@ -336,6 +339,7 @@ public class MainActivity extends AppCompatActivity
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
                             Log.d(TAG, "password: "+itemList.get(0).getPwd());
+
                             Qiscus.setUser(itemList.get(0).getMail(),itemList.get(0).getPwd())
                                     .withUsername(itemList.get(0).getName())
                                     .withAvatarUrl("https://imgur.com/"+itemList.get(0).getImage()+".jpg")
@@ -344,6 +348,7 @@ public class MainActivity extends AppCompatActivity
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(qiscusAccount  -> {
                                         Log.d(TAG,"Login Account:"+qiscusAccount);
+
                                     }, throwable -> {
                                         Log.d(TAG,"Qiscus Error:"+throwable);
 

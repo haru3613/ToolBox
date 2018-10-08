@@ -90,7 +90,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
         floatingActionButton.setVisibility(View.GONE);
 
 
-
+        //loading case
         Message(uid);
 
 
@@ -197,28 +197,37 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        SearchString=item.toString();
+
         switch (item.getItemId()) {
             case R.id.refresh:
-                SearchV(SearchString);
+                Log.d(TAG, "onOptionsItemSelected: "+SearchString);
+                if (SearchString!=null){
+                    SearchV(SearchString);
+                }
                 return true;
             case R.id.nav_1:
+                SearchString=item.toString();
                 SearchV(SearchString);
-                Log.d(TAG, item.toString());
+                Log.d(TAG, SearchString);
                 return true;
             case R.id.nav_2:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_3:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_4:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_5:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_6:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_7:
@@ -240,7 +249,6 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     @Override
     public boolean onQueryTextChange(String newText) {
         if(!newText.equals("")){
-            //TODO 字串篩選
         }
         return false;
     }

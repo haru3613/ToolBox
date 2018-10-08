@@ -67,12 +67,8 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     protected static RecyclerViewAdapter adapter;
     private RecyclerViewAdapterCategory categoryadapter;
     public static final String KEY = "STATUS";
-    final String[] items = {"我同意契約書","我會當一個稱職的工具人"};
-    final boolean[] checked= new boolean[]{
-            false, // 同意契約書
-            false, // 同意稱職
-    };
-    final List<String> seletedItems = Arrays.asList(items);
+
+
     private View view;
     String SearchString,uid;
     public MainFragment() {
@@ -89,7 +85,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // What i have added is this
+        //set Menu
         setHasOptionsMenu(true);
     }
 
@@ -189,7 +185,6 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                     byte[] u = fromHtml(response).toString().getBytes(
                             "UTF-8");
                     response = new String(u, "UTF-8");
-                    Log.d(TAG, "Response " + response);
                     GsonBuilder builder = new GsonBuilder();
                     Gson mGson = builder.create();
                     Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
@@ -272,28 +267,38 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        SearchString=item.toString();
+
         switch (item.getItemId()) {
             case R.id.refresh:
-                SearchV(SearchString);
+                Log.d(TAG, "onOptionsItemSelected: "+SearchString);
+                if (SearchString!=null){
+                    SearchV(SearchString);
+                }
+
                 return true;
             case R.id.nav_1:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 Log.d(TAG, item.toString());
                 return true;
             case R.id.nav_2:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_3:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_4:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_5:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_6:
+                SearchString=item.toString();
                 SearchV(SearchString);
                 return true;
             case R.id.nav_7:
@@ -315,7 +320,6 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     @Override
     public boolean onQueryTextChange(String newText) {
         if(!newText.equals("")){
-            //TODO 字串篩選
         }
         return false;
     }

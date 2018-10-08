@@ -122,18 +122,19 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
             public void onClick(final MaterialDialog dialog, DialogAction which) {
 
                 LoadCase(cid,r_uid);
+                if (Qiscus.hasSetupUser()) {
 
-                Qiscus.buildChatWith(mail)
-                        .build(context)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(intent -> {
-                            context.startActivity(intent);
-                        }, throwable -> {
-                            //do anything if error occurs
-                            Log.d(TAG, "onError: "+throwable);
-                        });
-
+                    Qiscus.buildChatWith(mail)
+                            .build(context)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(intent -> {
+                                context.startActivity(intent);
+                            }, throwable -> {
+                                //do anything if error occurs
+                                Log.d(TAG, "onError: " + throwable);
+                            });
+                }
 
                 Toast.makeText(context, "成功，即將開啟聊天室", Toast.LENGTH_SHORT).show();
             }

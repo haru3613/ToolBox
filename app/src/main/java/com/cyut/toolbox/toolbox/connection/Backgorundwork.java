@@ -50,7 +50,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         Log.d(Backgorundwork.ACTIVITY_TAG,"Let's run~~~~");
         String type =params[0];
-        String login_url ="http://163.17.5.182/login_finish.php";
+
         String check_id_match_mail_url = "http://163.17.5.182/check_id_match_mail_url.php";
         String changepsw = "http://163.17.5.182/changepsw.php";
         if(type.equals("login")){
@@ -58,7 +58,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             try {
                 String mail = params[1];
                 String pwd = params[2];
-
+                String login_url ="http://163.17.5.182/app/login.php";
                 URL url = new URL(login_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -723,12 +723,16 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             tochangepsw.putExtras(bundle);
             context.startActivity(tochangepsw);
             ((Activity)context).finish();
+        }else if(result.contains("尚未驗證")) {
+            Toast.makeText(context, "尚未驗證", Toast.LENGTH_SHORT).show();
         }else if(result.contains("無此帳號")) {
             Toast.makeText(context, "無此帳號", Toast.LENGTH_SHORT).show();
         }else if(result.contains("密碼不得是空值")) {
             Toast.makeText(context, "密碼不得是空值", Toast.LENGTH_SHORT).show();
         }else if(result.contains("請確認密碼相同")) {
             Toast.makeText(context, "請確認密碼相同", Toast.LENGTH_SHORT).show();
+        }else if (result.contains("已經接過這個案子") ){
+            Toast.makeText(context, "已經接過這個案子", Toast.LENGTH_SHORT).show();
         }else if(result.contains("密碼變更成功")) {
             Toast.makeText(context, "密碼變更成功", Toast.LENGTH_SHORT).show();
             Intent toLogin=new Intent(context,LoginActivity.class);

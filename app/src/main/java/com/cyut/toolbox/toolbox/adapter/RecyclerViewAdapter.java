@@ -1,7 +1,9 @@
 package com.cyut.toolbox.toolbox.adapter;
 
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,13 +19,28 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.LoginActivity;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHolders;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
+import com.cyut.toolbox.toolbox.model.Item;
 import com.cyut.toolbox.toolbox.model.ItemObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -300,7 +317,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO 檢查資料庫是否已有接案
+
                 if (sm_message.getText().toString().equals("")||sm_time.getText().toString().equals("申請時效")){
                     Toast.makeText(context,"請設定訊息及時間",Toast.LENGTH_SHORT).show();
                 }else{

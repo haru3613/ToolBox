@@ -1,6 +1,7 @@
 package com.cyut.toolbox.toolbox.Fragment;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.android.volley.VolleyLog.TAG;
 
 
@@ -36,9 +38,10 @@ import static com.android.volley.VolleyLog.TAG;
  */
 public class ChatroomFragment extends Fragment {
     private RecyclerView recyclerView;
+    public static final String KEY = "STATUS";
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapterMsgList adapter;
-
+    private String uid;
     private ArrayAdapter<String> listAdapter;
     public ChatroomFragment() {
         // Required empty public constructor
@@ -50,7 +53,7 @@ public class ChatroomFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view= inflater.inflate(R.layout.fragment_chatroom, container, false);
-
+        uid="";
         FloatingActionButton floatingActionButton=getActivity().findViewById(R.id.fab);
         floatingActionButton.setVisibility(View.GONE);
         recyclerView = (RecyclerView)view.findViewById(R.id.ryv_msglist);
@@ -58,22 +61,27 @@ public class ChatroomFragment extends Fragment {
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
+        uid=sharedPreferences.getString("uid",null);
 
-        QiscusApi.getInstance().getChatRooms(1, 20, true)
-                .doOnNext(chatRooms -> {
-                    for (QiscusChatRoom chatRoom : chatRooms) {
-                        Qiscus.getDataStore().addOrUpdate(chatRoom);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(chatRooms -> {
-                    //success
-                    adapter = new RecyclerViewAdapterMsgList(view.getContext(), chatRooms);
-                    recyclerView.setAdapter(adapter);
-                }, throwable -> {
-                    //error
-                });
+        if (Qiscus.hasSetupUser()) {
+            QiscusApi.getInstance().getChatRooms(1, 20, true)
+                    .doOnNext(chatRooms -> {
+                        for (QiscusChatRoom chatRoom : chatRooms) {
+                            Qiscus.getDataStore().addOrUpdate(chatRoom);
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(chatRooms -> {
+                        //success
+                        adapter = new RecyclerViewAdapterMsgList(view.getContext(), chatRooms,uid);
+                        recyclerView.setAdapter(adapter);
+                    }, throwable -> {
+                        //error
+                    });
+        }
+
 
 
         return view;

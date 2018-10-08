@@ -52,7 +52,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     String mail, pwd, identity, sex, name, nickname, phone, address, re_pwd,introduce,server;
 
-
     private ImageView image;
     boolean imgboo;
 
@@ -195,11 +194,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
     }
+    //產生亂數
     public String RndCode() {
         int z;
         StringBuilder sb = new StringBuilder();
         int i;
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 10; i++) {
             z = (int) ((Math.random() * 7) % 3);
 
             if (z == 1) { // 放數字
