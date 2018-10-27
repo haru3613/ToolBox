@@ -24,7 +24,7 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:cropToPadding="false"
-            android:paddingBottom="60dp"
+            android:paddingBottom="40dp"
             app:srcCompat="@drawable/ic_logo" />
 
         <LinearLayout

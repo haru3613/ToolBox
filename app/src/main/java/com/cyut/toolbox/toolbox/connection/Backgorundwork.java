@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyut.toolbox.toolbox.LoadingView;
 import com.cyut.toolbox.toolbox.LoginActivity;
+import com.cyut.toolbox.toolbox.MainActivity;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapter;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsg;
@@ -50,7 +51,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         Log.d(Backgorundwork.ACTIVITY_TAG,"Let's run~~~~");
         String type =params[0];
-        String login_url ="http://163.17.5.182/login_finish.php";
+
         String check_id_match_mail_url = "http://163.17.5.182/check_id_match_mail_url.php";
         String changepsw = "http://163.17.5.182/changepsw.php";
         if(type.equals("login")){
@@ -58,7 +59,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             try {
                 String mail = params[1];
                 String pwd = params[2];
-
+                String login_url ="http://163.17.5.182/app/login.php";
                 URL url = new URL(login_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -663,13 +664,12 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "登入中…", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = context.getSharedPreferences(KEY , MODE_PRIVATE);
             sharedPreferences.edit().putBoolean("Status" , true).apply();
-
-
             Intent toLoadView=new Intent(context,LoadingView.class);
             context.startActivity(toLoadView);
             ((Activity)context).finish();
         }else if (result.contains("登入失敗")){
             Toast.makeText(context, "登入失敗！請檢查帳號密碼是否有誤", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }
         else if (result.contains("註冊成功")){
             Toast.makeText(context, "註冊成功！請至信箱收取驗證信", Toast.LENGTH_SHORT).show();
@@ -678,10 +678,13 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             ((Activity)context).finish();
         }else if (result.contains("驗證信發送失敗")){
             Toast.makeText(context, "驗證信發送失敗，請檢查Email是否輸入錯誤", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }else if (result.contains("註冊失敗")){
-            Toast.makeText(context, "註冊失敗，請檢查重新輸入一次資料", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "註冊失敗，請重新輸入一次資料", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }else if (result.contains("此帳號已被註冊")){
             Toast.makeText(context, "此帳號已被註冊", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }else if (result.contains("收藏成功")){
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("接案成功")){
@@ -723,12 +726,16 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             tochangepsw.putExtras(bundle);
             context.startActivity(tochangepsw);
             ((Activity)context).finish();
+        }else if(result.contains("尚未驗證")) {
+            Toast.makeText(context, "尚未驗證", Toast.LENGTH_SHORT).show();
         }else if(result.contains("無此帳號")) {
             Toast.makeText(context, "無此帳號", Toast.LENGTH_SHORT).show();
         }else if(result.contains("密碼不得是空值")) {
             Toast.makeText(context, "密碼不得是空值", Toast.LENGTH_SHORT).show();
         }else if(result.contains("請確認密碼相同")) {
             Toast.makeText(context, "請確認密碼相同", Toast.LENGTH_SHORT).show();
+        }else if (result.contains("已經接過這個案子") ){
+            Toast.makeText(context, "已經接過這個案子", Toast.LENGTH_SHORT).show();
         }else if(result.contains("密碼變更成功")) {
             Toast.makeText(context, "密碼變更成功", Toast.LENGTH_SHORT).show();
             Intent toLogin=new Intent(context,LoginActivity.class);

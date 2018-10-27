@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -59,11 +58,14 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.android.support:support-core-utils:26.1.0'
     implementation 'com.qiscus.sdk:chat:2.28.1'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
 }
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
+apply plugin: 'com.google.gms.google-services'

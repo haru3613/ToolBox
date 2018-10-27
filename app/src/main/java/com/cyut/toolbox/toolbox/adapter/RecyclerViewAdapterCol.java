@@ -273,7 +273,6 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO 檢查資料庫是否已有接案
                 if (sm_message.getText().toString().equals("")||sm_time.getText().toString().equals("申請時效")){
                     Toast.makeText(context,"請設定訊息及時間",Toast.LENGTH_SHORT).show();
                 }else{

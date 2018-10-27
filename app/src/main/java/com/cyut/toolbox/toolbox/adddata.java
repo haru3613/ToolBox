@@ -29,12 +29,26 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCategory;
 import com.cyut.toolbox.toolbox.connection.Send_Data_Backworker;
+import com.cyut.toolbox.toolbox.model.Item;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
@@ -44,7 +58,7 @@ public class adddata extends AppCompatActivity{
     private TextView text_viewtime, text_until_time, text_end_until_time, text_case_done_viewtime1, text_case_done_viewtime2, text_view_done_type, textView2;
     private static final int msgKey1 = 1;
     private TimePickerDialog.OnTimeSetListener onTimeSetListener;
-    private String category;
+    private String category,total_money;
     private TimePickerDialog timePickerDialog;
     private RadioButton rb_cmp_non, rb_cmp_one, rb_cmp_local;
     private EditText edt_title,edt_money,edt_detail,spinner_other;
@@ -109,6 +123,8 @@ public class adddata extends AppCompatActivity{
         //--------------------------------------------------------------
         //--spinner類別Open~
 
+
+
         town_spinner();
         road_spinner();
         category="";
@@ -150,7 +166,7 @@ public class adddata extends AppCompatActivity{
         SharedPreferences sharedPreferences = adddata.this.getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
 
-
+        LoadUserMoney();
 
 
         //--------------------------------------------------------------
@@ -232,6 +248,9 @@ public class adddata extends AppCompatActivity{
                     Money=Integer.parseInt(edt_money.getText().toString());
                     if (Money<20){
                         erroMessage=erroMessage+"金額必須為20元以上唷\n";
+                    }else if(Money>Integer.parseInt(total_money)){
+                        Toast.makeText(adddata.this,"您的帳戶餘額不足",Toast.LENGTH_SHORT).show();
+                        erroMessage=erroMessage+"您的帳戶餘額不足\n";
                     }
                     else {
                         send_Money= String.valueOf(Money);
@@ -239,6 +258,7 @@ public class adddata extends AppCompatActivity{
                 }else{
                     erroMessage=erroMessage+"金額記得填唷\n";
                 }
+
 
                 String send_city="台中市";
                 String send_town=spinner_local.getSelectedItem().toString();
@@ -669,7 +689,8 @@ public class adddata extends AppCompatActivity{
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
         // Create a new instance of TimePickerDialog and return it
-        new TimePickerDialog(adddata.this, new TimePickerDialog.OnTimeSetListener() {
+
+        new TimePickerDialog(adddata.this , new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 text_until_time.setText("您設定的案件有效時間:" + hourOfDay + "個小時" + minute + "分");
@@ -813,7 +834,52 @@ public class adddata extends AppCompatActivity{
     }
 
 
+    public void LoadUserMoney(){
+        String url ="http://163.17.5.182/loadusername.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            List<Item> posts = new ArrayList<Item>();
+                            if (!response.contains("Undefined")){
+                                posts = Arrays.asList(mGson.fromJson(response, Item[].class));
+                                List<Item> itemList=posts;
 
+                                total_money=itemList.get(0).getMoney();
+
+                            }
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("u_uid",uid);
+                return params;
+            }
+
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(adddata.this);
+        requestQueue.add(stringRequest);
+    }
 }
 
 

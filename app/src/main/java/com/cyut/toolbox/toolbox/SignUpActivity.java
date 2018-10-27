@@ -52,7 +52,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     String mail, pwd, identity, sex, name, nickname, phone, address, re_pwd,introduce,server;
 
-
     private ImageView image;
     boolean imgboo;
 
@@ -117,7 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         identity = ((EditText) findViewById(R.id.pid)).getText().toString();
         if (pidTF(identity)) {
             if (phone.matches("[0][9][0-9]{8}")) {
-                if (mail.length() > 0) {
+                if (mail.length() > 0 && mail.contains("@")) {
                     if ((mail.substring(0, 1)).equals("s")) {
                         signup();
                     } else {
@@ -148,8 +147,6 @@ public class SignUpActivity extends AppCompatActivity {
         introduce=((EditText) findViewById(R.id.introduce)).getText().toString();
         Spinner spinner=findViewById(R.id.spinner_login);
         server=spinner.getSelectedItem().toString();
-        Log.d("pwd", pwd);
-        Log.d("repwd", re_pwd);
 
 
         if (name.equals("") || nickname.equals("") || address.equals("") ||identity.equals("")||phone.equals("")||introduce.equals("")) {
@@ -195,11 +192,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
     }
+    //產生亂數
     public String RndCode() {
         int z;
         StringBuilder sb = new StringBuilder();
         int i;
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 10; i++) {
             z = (int) ((Math.random() * 7) % 3);
 
             if (z == 1) { // 放數字
@@ -489,11 +487,11 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.d("editor", "error: " + error.toString());
                 if (error.has("data")) {
                     JSONObject data = error.optJSONObject("data");
-                    AlertDialog dialog = new AlertDialog.Builder(SignUpActivity.this)
-                            .setTitle("Error: " + statusCode + " " + e.getMessage())
-                            .setMessage(data.optString("error", ""))
-                            .setPositiveButton("確定", null)
-                            .create();
+                    MaterialDialog dialog = new MaterialDialog.Builder(SignUpActivity.this)
+                            .title("Error: " + statusCode + " " + e.getMessage())
+                            .content(data.optString("error", ""))
+                            .positiveText("確定")
+                            .build();
                     dialog.show();
                 }
             }

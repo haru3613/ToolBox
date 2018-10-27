@@ -15,6 +15,7 @@
         <item name="android:textColorSecondary">@color/primaryDarkColor</item>
         <item name="android:colorForeground">@color/colorBackground</item>
         <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
+        <item name="android:timePickerDialogTheme">@style/myTimePickerStyle</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
@@ -41,7 +42,12 @@
 
     </style>
 
-
+    <style name="myTimePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:numbersTextColor">#ffffff</item>
+        <item name="android:numbersBackgroundColor">@color/primaryColor</item>
+        <item name="android:numbersSelectorColor">@color/primaryTextColor</item>
+        <item name="android:headerBackground">@color/primaryDarkColor</item>
+    </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>

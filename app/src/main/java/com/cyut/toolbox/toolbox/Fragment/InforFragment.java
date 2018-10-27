@@ -46,6 +46,8 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.qiscus.sdk.Qiscus;
+import com.qiscus.sdk.chat.core.data.model.QiscusAccount;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -216,10 +218,11 @@ public class InforFragment extends Fragment {
                     alertDialog("欄位有空值",getResources().getString(R.string.toast_missdata),"OK");//須修正
                 }else if(!editText_phone.getText().toString().matches("[0][9][0-9]{8}")){
                     alertDialog("電話號碼輸入有誤","請在確認一次輸入的訊息","OK");
-                }else if(editText_introduce.length()>10){
+                }else if(editText_nickname.length()>10){
                     alertDialog("暱稱超過十個字","請重新輸入暱稱","OK");
                 }
                     else{
+
                     String type = "member_update";
                     Backgorundwork backgorundwork = new Backgorundwork(view.getContext());
                     backgorundwork.execute(type,uid ,u_nickname,u_phone,u_address,u_introduce);

@@ -235,7 +235,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             finish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   //TODO 把錢轉過去
+                    //把錢轉過去，並更新案件
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute("finish_case",cid,"已完成",money,rid);
                     itemList.get(position).setStatus("已完成");
@@ -260,16 +260,19 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             @Override
             public void onClick(View view) {
                 if(!tv_casename.getText().toString().equals("此案尚未有接案人")){
-                    Qiscus.buildChatWith(mail)
-                            .build(context)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(intent -> {
-                                context.startActivity(intent);
-                            }, throwable -> {
-                                //do anything if error occurs
-                                Log.d(TAG, "onError: "+throwable);
-                            });
+                    if (Qiscus.hasSetupUser()) {
+
+                        Qiscus.buildChatWith(mail)
+                                .build(context)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(intent -> {
+                                    context.startActivity(intent);
+                                }, throwable -> {
+                                    //do anything if error occurs
+                                    Log.d(TAG, "onError: " + throwable);
+                                });
+                    }
 
                     Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();
                 }
@@ -407,19 +410,22 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             public void onClick(View view) {
 
                 if(!tv_casename.getText().toString().equals("此案尚未有接案人")){
-                    Qiscus.buildChatWith(mail) //here we use email as userID. But you can make it whatever you want.
-                            .build(context, new Qiscus.ChatActivityBuilderListener() {
-                                @Override
-                                public void onSuccess(Intent intent) {
-                                    context.startActivity(intent);
-                                }
-                                @Override
-                                public void onError(Throwable throwable) {
-                                    //do anything if error occurs
-                                    Log.d(TAG, "onError: "+throwable);
-                                }
-                            });
+                    if (Qiscus.hasSetupUser()) {
 
+                        Qiscus.buildChatWith(mail) //here we use email as userID. But you can make it whatever you want.
+                                .build(context, new Qiscus.ChatActivityBuilderListener() {
+                                    @Override
+                                    public void onSuccess(Intent intent) {
+                                        context.startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        //do anything if error occurs
+                                        Log.d(TAG, "onError: " + throwable);
+                                    }
+                                });
+                    }
                     Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();
                 }
 

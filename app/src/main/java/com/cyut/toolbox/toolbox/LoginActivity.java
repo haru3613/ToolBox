@@ -3,6 +3,7 @@ package com.cyut.toolbox.toolbox;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,7 @@ import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.qiscus.sdk.Qiscus;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private static Boolean hasTask = false;
     private static final String ACTIVITY_TAG ="Logwrite";
     public static final String KEY = "STATUS";
+    public Button Login;
     String email;
     String pwd,uid;
     Timer timerExit = new Timer();
@@ -52,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             hasTask = true;
         }
     };
+
 
     //按兩次Back退出app
     @Override
@@ -82,13 +86,33 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            Toast.makeText(LoginActivity.this,"您的版本太低，請更新你的Android系統",Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
-        final Button Login=(Button)findViewById(R.id.Login);
+        //qiscus setting
+        Qiscus.init(this.getApplication(), "toolbox-mzj9nz7n85jfv");
+
+        Login=(Button)findViewById(R.id.Login);
 
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Login();
+                email = ((EditText) findViewById(R.id.email)).getText().toString();
+                pwd = ((EditText) findViewById(R.id.password)).getText().toString();
+                Log.d("AUTH", email + "/" + pwd);
+                if (pwd.length() > 5) {
+                    LoadUser(email);
+                    String type = "login";
+                    Login.setEnabled(false);
+                    Backgorundwork backgorundwork = new Backgorundwork(LoginActivity.this);
+                    backgorundwork.execute(type,email,pwd);
+                    //傳至後台處理
+
+                } else {
+                    nullAlertDialog(getResources().getString(R.string.pwd_short_title), getResources().getString(R.string.pwd_short), "OK");
+                }
             }
         }
         );
@@ -113,37 +137,19 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
         //判斷使用者是否第一次登入
 
         SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
         Boolean FirstLogin=sharedPreferences.getBoolean("Status",false);
-        Log.d("FirstLogin?",FirstLogin.toString());
+        Log.d("First Login?",FirstLogin.toString());
         if (FirstLogin){
-
             Intent toLoadView=new Intent(LoginActivity.this,LoadingView.class);
             LoginActivity.this.startActivity(toLoadView);
             finish();
         }
     }
 
-
-
-    //Login帳號偵錯
-    public void Login() {
-        email = ((EditText) findViewById(R.id.email)).getText().toString();
-        pwd = ((EditText) findViewById(R.id.password)).getText().toString();
-        Log.d("AUTH", email + "/" + pwd);
-        if (pwd.length() > 5) {
-                LoadUser(email);
-                String type = "login";
-                Backgorundwork backgorundwork = new Backgorundwork(this);
-                backgorundwork.execute(type,email,pwd);
-                //傳至後台處理
-
-            } else {
-                nullAlertDialog(getResources().getString(R.string.pwd_short_title), getResources().getString(R.string.pwd_short), "OK");
-            }
-    }
 
 
     //呼叫回傳值為null的AlertDialog
@@ -157,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
+    //忘記密碼
     public void bt_forgotpsw(View view) {
         Intent intent = new Intent();
         intent.setClass(LoginActivity.this , forgotPassword.class);
@@ -165,6 +171,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    //拿取uid
     public void LoadUser(final String mail){
         String url ="http://163.17.5.182/loaduser.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -180,11 +187,13 @@ public class LoginActivity extends AppCompatActivity {
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
                             List<Item> posts = new ArrayList<Item>();
-                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            List<Item> itemList=posts;
-                            uid=itemList.get(0).getUid();
-                            SharedPreferences sharedPreferences = getSharedPreferences(KEY , MODE_PRIVATE);
-                            sharedPreferences.edit().putString("uid" , uid).apply();
+                            if (!response.contains("Undefined")) {
+                                posts = Arrays.asList(mGson.fromJson(response, Item[].class));
+                                List<Item> itemList=posts;
+                                uid=itemList.get(0).getUid();
+                                SharedPreferences sharedPreferences = getSharedPreferences(KEY , MODE_PRIVATE);
+                                sharedPreferences.edit().putString("uid" , uid).apply();
+                            }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
