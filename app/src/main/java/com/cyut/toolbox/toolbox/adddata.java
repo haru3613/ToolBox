@@ -72,6 +72,7 @@ public class adddata extends AppCompatActivity{
     int end_Hours = 0;
     int end_Day = 0;
     int end_Way = 0;
+    int alltime=0;
     public static final String KEY = "STATUS";
     String uid;
     int casedone_hours = 0,casedone_mins = 0,casedone_Day = 0,casedone_Year = 0,casedone_Month;
@@ -242,7 +243,10 @@ public class adddata extends AppCompatActivity{
                 if (send_Title.length()<4){
                     erroMessage=erroMessage+"標題至少為四個字唷\n";
                 }else if (send_class.equals("")){
-                    erroMessage=erroMessage+"您尚未選擇分類";
+                    erroMessage=erroMessage+"您尚未選擇分類\n";
+                }
+                else if (alltime<5){
+                    erroMessage=erroMessage+"案件有效期限至少為五分鐘唷\n";
                 }
                 if (!edt_money.getText().toString().equals("")){
                     Money=Integer.parseInt(edt_money.getText().toString());
@@ -274,6 +278,7 @@ public class adddata extends AppCompatActivity{
                 String send_case_disapear=toTimeFormat(case_disapear_Year,case_disapear_Month,case_disapear_Day,case_disapear_hours,case_disapear_mins,case_disapear_Sec);
                 String send_case_finish_start=toTimeFormat1(case_finish_start_Year,case_finish_start_Month,case_finish_start_Day,case_finish_start_hours,case_finish_start_mins,case_finish_start_Sec);
                 String send_case_finish_end=toTimeFormat1(case_finish_end_Year,case_finish_end_Month,case_finish_end_Day,case_finish_end_hours,case_finish_end_mins,case_finish_end_Sec);
+                Log.d("Check time ~",send_case_disapear+"   and  "+send_case_finish_start+"  and  "+send_case_finish_end);
                 switch (radioCheck) {
                     case ("1"):
                         send_case_finish_start="";
@@ -290,6 +295,7 @@ public class adddata extends AppCompatActivity{
                         break;
                 }
                 if (erroMessage.equals("")){
+                    Log.e("Check time ~",send_case_disapear+"   and  "+send_case_finish_start+"  and  "+send_case_finish_end);
                     Send_Data_Backworker SDB = new Send_Data_Backworker(adddata.this);
                     Log.d(TAG, "onClick: uid"+uid);
                     SDB.execute(type, send_class,send_Title,send_Money,send_city,send_town,send_road,send_otherdetail,send_detail,send_case_disapear,send_case_finish_start,send_case_finish_end,uid);
@@ -696,6 +702,7 @@ public class adddata extends AppCompatActivity{
                 text_until_time.setText("您設定的案件有效時間:" + hourOfDay + "個小時" + minute + "分");
                 c_end_hours = hourOfDay;
                 c_end_mins = minute;
+                alltime=hourOfDay*60+minute;
                 Log.d("Tag", "get_time_end_hour=" + c_end_hours + "min=" + c_end_mins);
             }
         }, hour, minute, true).show();
@@ -787,6 +794,30 @@ public class adddata extends AppCompatActivity{
         String fMinute = String.valueOf(end_Minute);
         String fDay = end_Day(String.valueOf(c.get(Calendar.DAY_OF_MONTH) + this.end_Day));
         String fWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK) + this.end_Way - 1);
+        switch (fWay){
+            case "1":
+                fWay="一";
+                break;
+            case "2":
+                fWay="二";
+                break;
+            case "3":
+                fWay="三";
+                break;
+            case "4":
+                fWay="四";
+                break;
+            case "5":
+                fWay="五";
+                break;
+            case "6":
+                fWay="六";
+                break;
+            case "7":
+                fWay="日";
+                break;
+        }
+
         String mYear = String.valueOf(c.get(Calendar.YEAR));
         String mMonth = String.valueOf(c.get(Calendar.MONTH) + 1);
         String mSecond = String.valueOf(c.get(Calendar.SECOND));
