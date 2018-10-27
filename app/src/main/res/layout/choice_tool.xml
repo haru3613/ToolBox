@@ -36,6 +36,24 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="自我介紹"
+                android:textColor="@color/grayColor"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tool_introduction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/textView16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

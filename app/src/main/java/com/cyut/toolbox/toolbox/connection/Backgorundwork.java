@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyut.toolbox.toolbox.LoadingView;
 import com.cyut.toolbox.toolbox.LoginActivity;
+import com.cyut.toolbox.toolbox.MainActivity;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapter;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsg;
@@ -663,13 +664,12 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "登入中…", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = context.getSharedPreferences(KEY , MODE_PRIVATE);
             sharedPreferences.edit().putBoolean("Status" , true).apply();
-
-
             Intent toLoadView=new Intent(context,LoadingView.class);
             context.startActivity(toLoadView);
             ((Activity)context).finish();
         }else if (result.contains("登入失敗")){
             Toast.makeText(context, "登入失敗！請檢查帳號密碼是否有誤", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }
         else if (result.contains("註冊成功")){
             Toast.makeText(context, "註冊成功！請至信箱收取驗證信", Toast.LENGTH_SHORT).show();
@@ -678,10 +678,13 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             ((Activity)context).finish();
         }else if (result.contains("驗證信發送失敗")){
             Toast.makeText(context, "驗證信發送失敗，請檢查Email是否輸入錯誤", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }else if (result.contains("註冊失敗")){
-            Toast.makeText(context, "註冊失敗，請檢查重新輸入一次資料", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "註冊失敗，請重新輸入一次資料", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }else if (result.contains("此帳號已被註冊")){
             Toast.makeText(context, "此帳號已被註冊", Toast.LENGTH_SHORT).show();
+            ((LoginActivity)context).Login.setEnabled(true);
         }else if (result.contains("收藏成功")){
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("接案成功")){

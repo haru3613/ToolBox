@@ -10,6 +10,7 @@
         <item name="android:textColorSecondary">@color/material_blue_grey_90</item>
         <item name="colorButtonNormal">@color/primaryDarkColor</item>
         <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
+
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat">
@@ -28,6 +29,7 @@
         <item name="spinBars">true</item>
         <item name="color">@android:color/black</item>
     </style>
+
 
 
 

@@ -689,7 +689,8 @@ public class adddata extends AppCompatActivity{
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
         // Create a new instance of TimePickerDialog and return it
-        new TimePickerDialog(adddata.this, new TimePickerDialog.OnTimeSetListener() {
+
+        new TimePickerDialog(adddata.this , new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 text_until_time.setText("您設定的案件有效時間:" + hourOfDay + "個小時" + minute + "分");

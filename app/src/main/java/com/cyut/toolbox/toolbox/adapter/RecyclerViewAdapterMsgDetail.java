@@ -101,7 +101,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     }
 
 
-    public void dialog(String time,final String name,final String mail,final String message,final String cid,final String r_uid){
+    public void dialog(String time,final String name,final String mail,final String message,final String cid,final String r_uid,final String introduction){
         boolean wrapInScrollView = true;
 
         final View item = LayoutInflater.from(context).inflate(R.layout.choice_tool, null);
@@ -112,9 +112,11 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         TextView tv_name=(TextView)item.findViewById(R.id.tool_name);
         TextView tv_date=(TextView)item.findViewById(R.id.tool_date);
         TextView tv_message=(TextView)item.findViewById(R.id.tool_message);
+        TextView tv_introduction=(TextView)item.findViewById(R.id.tool_introduction);
         tv_name.setText(name);
-        tv_date.setText(time);
+        tv_date.setText(string_sub(time));
         tv_message.setText(message);
+        tv_introduction.setText(introduction);
         dialog.title("是否選擇此位工具人");
         dialog.positiveText("確定");
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -142,6 +144,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
         dialog.show();
     }
+
 
 
     public void LoadUser(final String uid,final RecyclerViewMsgDetailHolders holder){
@@ -210,7 +213,8 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                                 List<Item> itemList=posts;
                                 name= itemList.get(0).getName();
                                 email=itemList.get(0).getMail();
-                                dialog(time,name,email,message,cid,uid);
+                                String indroduction=itemList.get(0).getIntroduce();
+                                dialog(time,name,email,message,cid,uid,indroduction);
                                 Log.d(TAG, "onResponse:"+name+"/"+email);
                             }
 

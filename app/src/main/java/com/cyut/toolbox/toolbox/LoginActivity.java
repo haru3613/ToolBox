@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private static Boolean hasTask = false;
     private static final String ACTIVITY_TAG ="Logwrite";
     public static final String KEY = "STATUS";
+    public Button Login;
     String email;
     String pwd,uid;
     Timer timerExit = new Timer();
@@ -54,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             hasTask = true;
         }
     };
+
 
     //按兩次Back退出app
     @Override
@@ -92,12 +94,25 @@ public class LoginActivity extends AppCompatActivity {
         //qiscus setting
         Qiscus.init(this.getApplication(), "toolbox-mzj9nz7n85jfv");
 
-        final Button Login=(Button)findViewById(R.id.Login);
+        Login=(Button)findViewById(R.id.Login);
 
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Login();
+                email = ((EditText) findViewById(R.id.email)).getText().toString();
+                pwd = ((EditText) findViewById(R.id.password)).getText().toString();
+                Log.d("AUTH", email + "/" + pwd);
+                if (pwd.length() > 5) {
+                    LoadUser(email);
+                    String type = "login";
+                    Login.setEnabled(false);
+                    Backgorundwork backgorundwork = new Backgorundwork(LoginActivity.this);
+                    backgorundwork.execute(type,email,pwd);
+                    //傳至後台處理
+
+                } else {
+                    nullAlertDialog(getResources().getString(R.string.pwd_short_title), getResources().getString(R.string.pwd_short), "OK");
+                }
             }
         }
         );
@@ -135,22 +150,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Login帳號偵錯
-    public void Login() {
-        email = ((EditText) findViewById(R.id.email)).getText().toString();
-        pwd = ((EditText) findViewById(R.id.password)).getText().toString();
-        Log.d("AUTH", email + "/" + pwd);
-        if (pwd.length() > 5) {
-                LoadUser(email);
-                String type = "login";
-                Backgorundwork backgorundwork = new Backgorundwork(this);
-                backgorundwork.execute(type,email,pwd);
-                //傳至後台處理
 
-            } else {
-                nullAlertDialog(getResources().getString(R.string.pwd_short_title), getResources().getString(R.string.pwd_short), "OK");
-            }
-    }
 
     //呼叫回傳值為null的AlertDialog
     public void nullAlertDialog(String T, String M, String PB) {
@@ -187,11 +187,13 @@ public class LoginActivity extends AppCompatActivity {
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
                             List<Item> posts = new ArrayList<Item>();
-                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            List<Item> itemList=posts;
-                            uid=itemList.get(0).getUid();
-                            SharedPreferences sharedPreferences = getSharedPreferences(KEY , MODE_PRIVATE);
-                            sharedPreferences.edit().putString("uid" , uid).apply();
+                            if (!response.contains("Undefined")) {
+                                posts = Arrays.asList(mGson.fromJson(response, Item[].class));
+                                List<Item> itemList=posts;
+                                uid=itemList.get(0).getUid();
+                                SharedPreferences sharedPreferences = getSharedPreferences(KEY , MODE_PRIVATE);
+                                sharedPreferences.edit().putString("uid" , uid).apply();
+                            }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
