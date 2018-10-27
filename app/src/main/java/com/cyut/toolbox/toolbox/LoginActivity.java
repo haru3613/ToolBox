@@ -91,8 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        //qiscus setting
-        Qiscus.init(this.getApplication(), "toolbox-mzj9nz7n85jfv");
+
 
         Login=(Button)findViewById(R.id.Login);
 

@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         Umanager.checkUpdate();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        Qiscus.init(this.getApplication(), "toolbox-bsc2lxrudsdqk");
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
@@ -354,10 +354,6 @@ public class MainActivity extends AppCompatActivity
 
                                     });
 
-
-
-
-
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
@@ -383,5 +379,11 @@ public class MainActivity extends AppCompatActivity
         requestQueue.add(stringRequest);
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (Qiscus.hasSetupUser()) {
+            Qiscus.clearUser();
+        }
+    }
 }
