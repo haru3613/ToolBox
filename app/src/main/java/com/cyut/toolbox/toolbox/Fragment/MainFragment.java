@@ -231,7 +231,6 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
     @Override
     public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {
-        Log.d(TAG, "onCreateOptionsMenu: !");
         inflater.inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.search);
         SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
