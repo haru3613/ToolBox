@@ -3,6 +3,7 @@ package com.cyut.toolbox.toolbox;
 import android.Manifest;
 import android.app.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -75,8 +76,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-
-    String uid;
+    private ProgressDialog progressdialog;
+    private String uid;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -132,6 +133,8 @@ public class MainActivity extends AppCompatActivity
         //處理更新檔
         UpdateManager Umanager = new UpdateManager(MainActivity.this);
         Umanager.checkUpdate();
+
+        progressdialog= new ProgressDialog(MainActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         Qiscus.init(this.getApplication(), "toolbox-bsc2lxrudsdqk");
@@ -189,6 +192,7 @@ public class MainActivity extends AppCompatActivity
         uid=sharedPreferences.getString("uid",null);
 
 
+        progressdialog.show();
 
         //set Nav information
         if (uid!=null){
@@ -354,6 +358,7 @@ public class MainActivity extends AppCompatActivity
 
                                     });
 
+                            progressdialog.dismiss();
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 

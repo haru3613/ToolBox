@@ -14,7 +14,6 @@
         <item name="android:textColorPrimaryInverse">@color/primaryDarkColor</item>
         <item name="android:textColorSecondary">@color/primaryDarkColor</item>
         <item name="android:colorForeground">@color/colorBackground</item>
-        <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
         <item name="android:timePickerDialogTheme">@style/myTimePickerStyle</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
@@ -28,19 +27,12 @@
 
     </style>
 
-    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
-        <item name="android:background">@color/colorBackground</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowBackground">@color/transparent_color</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-
+    <style name="CustomDialog" parent="AppTheme">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorAccent">#ffE91E63</item>
     </style>
+
 
     <style name="myTimePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:numbersTextColor">#ffffff</item>
