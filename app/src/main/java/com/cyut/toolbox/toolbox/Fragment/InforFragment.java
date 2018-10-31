@@ -46,8 +46,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.chat.core.data.model.QiscusAccount;
+
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;

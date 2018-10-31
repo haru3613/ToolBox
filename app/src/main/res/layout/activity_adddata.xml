@@ -7,12 +7,14 @@
     android:background="@color/colorBackground"
     tools:context="com.cyut.toolbox.toolbox.adddata">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:fillViewport="true"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -20,113 +22,88 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="75dp">
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="選擇案件類型"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
-            </TableRow>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="選擇案件類型"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/category"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
 
-            <TableRow
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="標題"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edt_title"
+                android:layout_width="397dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:hint="標題(至少需4字元)"
+                android:inputType="textPersonName"
+                app:met_floatingLabel="normal" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="酬勞"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="標題"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/edt_title"
-                    android:layout_width="397dp"
+                    android:id="@+id/edt_money"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ems="10"
-                    android:hint="標題(至少需4字元)"
-                    android:inputType="textPersonName"
+                    android:hint="ex: 90 (至少需20元)"
+                    android:inputType="number"
                     app:met_floatingLabel="normal" />
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="酬勞"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edt_money"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="ex: 90 (至少需20元)"
-                        android:inputType="number"
-                        app:met_floatingLabel="normal" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="元(新台幣)"
-                        android:textColor="@color/primaryTextColor"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="工作地點"
+                    android:layout_weight="1"
+                    android:text="元(新台幣)"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
-            </TableRow>
+                    android:textSize="18sp" />
 
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工作地點"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,100 +134,71 @@
             </LinearLayout>
 
 
-            <TableRow
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/spinner_other"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="詳細地點(至少需2字元)"
+                android:inputType="textPersonName"
+                app:met_floatingLabel="normal" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/spinner_other"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="詳細地點(至少需2字元)"
-                    android:inputType="textPersonName"
-                    app:met_floatingLabel="normal" />
-            </TableRow>
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="詳細工作內容"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edt_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:gravity="left|top"
+                android:hint="詳細工作內容(至少需10字元)"
+                android:inputType="textMultiLine"
+                android:maxLines="10"
+                android:minLines="6"
+                android:singleLine="false"
+                app:met_floatingLabel="normal" />
 
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="詳細工作內容"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在時間"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
 
-            </TableRow>
+            <TextView
+                android:id="@+id/text_viewtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我是時間唷安安安安安"
+                android:textColor="@android:color/black" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="129dp">
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/edt_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|top"
-                    android:hint="詳細工作內容(至少需10字元)"
-                    android:inputType="textMultiLine"
-                    android:maxLines="10"
-                    android:minLines="6"
-                    android:singleLine="false"
-                    app:met_floatingLabel="normal" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tx"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="現在時間"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/text_viewtime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="我是時間唷安安安安安"
-                    android:textColor="@android:color/black" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="設定案件效期(至少為五分鐘)"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="20sp" />
-            </TableRow>
-
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="設定案件效期(至少為五分鐘)"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt_timeout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:background="@color/primaryColor"
+                android:bottomLeftRadius="10dp"
+                android:bottomRightRadius="10dp"
                 android:onClick="timeout"
                 android:text="設定案件有效期限"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
 
             <TextView
                 android:id="@+id/text_until_time"
@@ -260,53 +208,36 @@
                 android:textColor="@android:color/black" />
 
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/text_end_until_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black" />
 
-                <TextView
-                    android:id="@+id/text_end_until_time"
+
+            <RadioGroup
+                android:id="@+id/rb_group_comp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rb_cmp_non"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="不限制案件完成時間"
                     android:textColor="@android:color/black" />
-            </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <RadioGroup
-                    android:id="@+id/rb_group_comp"
+                <RadioButton
+                    android:id="@+id/rb_cmp_one"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="設定案件完成時間"
+                    android:textColor="@android:color/black" />
 
-                    <RadioButton
-                        android:id="@+id/rb_cmp_non"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="不限制案件完成時間"
-                        android:textColor="@android:color/black" />
-
-                    <RadioButton
-                        android:id="@+id/rb_cmp_one"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="設定案件完成時間"
-                        android:textColor="@android:color/black" />
-
-                    <RadioButton
-                        android:id="@+id/rb_cmp_local"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="設定案件完成區間"
-                        android:textColor="@android:color/black" />
-                </RadioGroup>
-            </TableRow>
-
+            </RadioGroup>
 
             <LinearLayout
                 android:id="@+id/liner_setting"
@@ -340,7 +271,6 @@
             </LinearLayout>
 
 
-
             <TextView
                 android:id="@+id/text_view_done_type"
                 android:layout_width="match_parent"
@@ -348,53 +278,47 @@
                 android:textColor="@android:color/black" />
 
 
-            <TableRow
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/text_case_done_viewtime1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/black" />
 
-                    <TextView
-                        android:id="@+id/text_case_done_viewtime1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
 
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/text_case_done_viewtime2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="textEnd"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-            </TableRow>
+                <TextView
+                    android:id="@+id/text_case_done_viewtime2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
 
 
             <Button
                 android:id="@+id/bt_sendcase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20dp"
                 android:background="@color/primaryColor"
                 android:text="完成"
                 android:textColor="@android:color/white" />
 
 
-        </TableLayout>
-
+        </LinearLayout>
     </ScrollView>
 
 

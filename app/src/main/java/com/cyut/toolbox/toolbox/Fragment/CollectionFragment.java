@@ -66,11 +66,13 @@ public class CollectionFragment extends Fragment {
 
 
         recyclerView = (RecyclerView)view.findViewById(R.id.RV_Coll);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(layoutManager);
-
+        recyclerView.setNestedScrollingEnabled(false);
         v=view;
         uid="";
         FloatingActionButton floatingActionButton=getActivity().findViewById(R.id.fab);

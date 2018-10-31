@@ -5,7 +5,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +33,17 @@ import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.LoginActivity;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHolders;
+import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.cyut.toolbox.toolbox.model.ItemObject;
+import com.cyut.toolbox.toolbox.model.ItemQanda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -51,6 +60,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     private EditText sm_message;
     private TextView sm_time;
     private static MaterialDialog dialog;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager layoutManager;
+    private RecyclerViewAdapterQanda adapter;
 
     int c_end_hours = 0;
     int c_end_mins = 0;
@@ -59,6 +71,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     int end_Hours = 0;
     int end_Day = 0;
     int end_Way = 0;
+
+    private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
 
     public RecyclerViewAdapter() {
@@ -73,7 +87,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     @Override
     public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, null);
+        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_main, null,false);
+        layoutView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
         RecyclerViewHolders rcv = new RecyclerViewHolders(layoutView);
 
         return rcv;
@@ -114,12 +129,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.Area.setText(Address);
         }
 
+        String lineSep = System.getProperty("line.separator");
+        String m=itemList.get(position).getDetail().replaceAll("<br />", lineSep);
+
+        holder.message.setText(m);
 
         holder.Money.setText("$"+itemList.get(position).getMoney());
 
         String status=itemList.get(position).getStatus();
         holder.Status.setText(status);
 
+
+        String short_time=string_sub(itemList.get(position).getTime());
+        String short_until=string_sub(itemList.get(position).getUntil());
+
+        holder.time.setText(short_time+" 至  "+short_until);
 
         if (status.equals("待接案")){
             holder.Status.setTextColor(Color.parseColor("#ff3333"));
@@ -132,31 +156,74 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         }else{
             holder.bg.setBackgroundColor(Color.parseColor("#dfffffff"));
         }
+        final boolean isExpanded = position==mExpandedPosition;
+        if (itemList.get(position).getStatus().equals("待接案")&&isExpanded){
+            holder.send.setVisibility(View.VISIBLE);
+            holder.like.setVisibility(View.VISIBLE);
+            holder.ans.setVisibility(View.VISIBLE);
+        }else{
+            holder.send.setVisibility(View.GONE);
+            holder.like.setVisibility(View.GONE);
+            holder.ans.setVisibility(View.GONE);
+        }
 
+
+        holder.time_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.time.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.content.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.message.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+
+
+        holder.itemView.setActivated(isExpanded);
+        if (isExpanded)
+            previousExpandedPosition = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: "+itemList.get(position).getTitle());
-                //OPEN DETAIL
-                customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),(itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+
-                        itemList.get(position).getRoad()),itemList.get(position).getMoney(),itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),
-                        itemList.get(position).getRid(),itemList.get(position).getCid(),uid,itemList.get(position).getStatus());
+                mExpandedPosition = isExpanded ? -1:position;
+                notifyItemChanged(previousExpandedPosition);
+                notifyItemChanged(position);
+
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            public boolean onLongClick(View arg0) {
+
+        holder.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                        if(uid.equals(itemList.get(position).getRid())){
+                            Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
+
+                        }else if(status.equals("待接案")){
+                            SendMessage(uid,itemList.get(position).getCid());
+                        }else{
+                            Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
+                        }
+
+            }
+        });
+
+        holder.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if(uid.equals(itemList.get(position).getPid())){
                     Toast.makeText(context,"你不能收藏自己的案子",Toast.LENGTH_SHORT).show();
                 }else {
                     normalDialogEvent(uid,itemList.get(position).getCid());
 
                 }
-
-
-                return true;
             }
         });
+
+        holder.ans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                QuestionAlert(itemList.get(position).getCid(),itemList.get(position).getPid());
+
+
+            }
+        });
+
     }
     @Override
     public int getItemCount() {
@@ -164,76 +231,58 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
 
-    private void customDialog(final String count, final String title, final String data,final String money, final String message,final String time,final String until,final String rid,final String cid,final String uid,final String status){
+    private void QuestionAlert(final String cid,final String pid){
         boolean wrapInScrollView = true;
 
-        final View item = LayoutInflater.from(context).inflate(R.layout.detaildialog, null);
+        final View item = LayoutInflater.from(context).inflate(R.layout.dialog_question, null);
 
-        final MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
-        ImageView imageView=(ImageView)item.findViewById(R.id.dialog_image);
-        ImageView send=(ImageView)item.findViewById(R.id.sendmessage);
-        TextView tv_title=(TextView)item.findViewById(R.id.dialog_title);
-        TextView tv_data=(TextView)item.findViewById(R.id.dialog_data);
-        TextView tv_message=(TextView)item.findViewById(R.id.dialog_message);
-        TextView tv_time=(TextView)item.findViewById(R.id.d_time);
-        TextView tv_umtil=(TextView)item.findViewById(R.id.d_until);
-        TextView tv_money=item.findViewById(R.id.dialog_money);
-        switch(count) {
-            case "日常":
-                imageView.setImageResource(R.drawable.life);
-                break;
-            case "接送":
-                imageView.setImageResource(R.drawable.pickup);
-                break;
-            case "外送":
-                imageView.setImageResource(R.drawable.delivery);
-                break;
-            case "課業":
-                imageView.setImageResource(R.drawable.homework);
-                break;
-            case "修繕":
-                imageView.setImageResource(R.drawable.repair);
-                break;
-            case "除蟲":
-                imageView.setImageResource(R.drawable.debug);
-                break;
-        }
-        String t;
-        if (title.length()>20){
-            t=title.substring(0,20)+"...";
-        }
-        else{
-            t=title;
-        }
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+            .title("問與答 Q&A")
+            .customView(item,false )
+            .backgroundColorRes(R.color.colorBackground)
+                .build();
 
-        tv_money.setText("$"+money);
-        tv_title.setText(t);
-        tv_data.setText(data);
-        String lineSep = System.getProperty("line.separator");
-        String m=message.replaceAll("<br />", lineSep);
-        tv_message.setText(m);
-        String short_time=string_sub(time);
-        String short_until=string_sub(until);
-        tv_time.setText("時間限制");
-        tv_umtil.setText(short_time+"\n      至\n"+short_until);
-
-
-        send.setOnClickListener(new View.OnClickListener() {
+        recyclerView = (RecyclerView)item.findViewById(R.id.dialog_recyclerview);
+        layoutManager = new LinearLayoutManager(item.getContext());
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(layoutManager);
+        FloatingActionButton fab = (FloatingActionButton)item.findViewById(R.id.question_fab);
+        NestedScrollView nsv= (NestedScrollView)item.findViewById(R.id.q_scroll);
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(uid.equals(rid)){
-                    Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
-
-                }else if(status.equals("待接案")){
-                    SendMessage(uid,cid);
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    fab.hide();
                 }else{
-                    Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
+                    fab.show();
                 }
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialDialog.Builder(context)
+                        .title("我要問問題！")
+                        .content("123")
+                        .inputType(InputType.TYPE_CLASS_TEXT )
+                        .input("要詢問雇主的事情", null, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog ddialog, CharSequence input) {
+                                // Do something
+                                Log.d(TAG, "onInput: "+input);
+                                Backgorundwork backgorundwork = new Backgorundwork(context);
+                                backgorundwork.execute("insert_qanda",input.toString(),cid,uid,pid);
+                                dialog.dismiss();
+                            }
+                        }).show();
 
             }
         });
+        LoadQuestion(cid);
 
 
 
@@ -353,5 +402,55 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         return formatetime;
     }
 
+    public void LoadQuestion(final String cid){
+        String url ="http://163.17.5.182/app/load_question.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            Type listType = new TypeToken<ArrayList<ItemQanda>>() {}.getType();
+                            ArrayList<ItemQanda> posts = new ArrayList<ItemQanda>();
+                            if (!response.contains("Undefined")){
+                                posts = mGson.fromJson(response, listType);
+                            }
+
+                            if (posts.isEmpty()){
+                                Toast.makeText(context,"尚未有人詢問",Toast.LENGTH_SHORT).show();
+                            }else{
+                                adapter = new RecyclerViewAdapterQanda(context, posts,uid);
+                                recyclerView.setAdapter(adapter);
+                            }
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("q_cid",cid);
+                return params;
+            }
+
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
 
 }

@@ -3,7 +3,6 @@ package com.cyut.toolbox.toolbox;
 import android.Manifest;
 import android.app.Activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,7 +12,6 @@ import android.os.StrictMode;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 
 
@@ -46,7 +44,8 @@ import com.cyut.toolbox.toolbox.Fragment.ChatroomFragment;
 import com.cyut.toolbox.toolbox.Fragment.CollectionFragment;
 import com.cyut.toolbox.toolbox.Fragment.InforFragment;
 import com.cyut.toolbox.toolbox.Fragment.MainFragment;
-import com.cyut.toolbox.toolbox.Fragment.SendFragment;
+import com.cyut.toolbox.toolbox.Fragment.PostFragment;
+import com.cyut.toolbox.toolbox.Fragment.ReportFragment;
 import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.google.gson.Gson;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private ProgressDialog progressdialog;
+
     private String uid;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -134,10 +133,12 @@ public class MainActivity extends AppCompatActivity
         UpdateManager Umanager = new UpdateManager(MainActivity.this);
         Umanager.checkUpdate();
 
-        progressdialog= new ProgressDialog(MainActivity.this);
+
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Qiscus.init(this.getApplication(), "toolbox-bsc2lxrudsdqk");
+
+
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
@@ -180,19 +181,19 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        Qiscus.getChatConfig()
+        /*Qiscus.getChatConfig()
                 .setEnableFcmPushNotification(true)
                 .setOnlyEnablePushNotificationOutsideChatRoom(true)
                 .setStatusBarColor(R.color.colorNavHead)
                 .setAppBarColor(R.color.primaryColor)
                 .setTitleColor(R.color.primaryTextColor)
-                .setRightBubbleTextColor(R.color.primaryTextColor);
+                .setRightBubbleTextColor(R.color.primaryTextColor);*/
 
         SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
 
 
-        progressdialog.show();
+
 
         //set Nav information
         if (uid!=null){
@@ -269,11 +270,15 @@ public class MainActivity extends AppCompatActivity
             CollectionFragment fragment=new CollectionFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
-        } else if (id == R.id.nav_send) {
-            SendFragment fragment = new SendFragment();
+        } else if (id == R.id.nav_post) {
+            PostFragment fragment = new PostFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
-        }  else if (id == R.id.nav_chatlist) {
+        }  else if (id == R.id.nav_report) {
+            ReportFragment fragment = new ReportFragment();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
+        } else if (id == R.id.nav_chatlist) {
             ChatroomFragment fragment=new ChatroomFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
@@ -344,7 +349,7 @@ public class MainActivity extends AppCompatActivity
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
                             Log.d(TAG, "password: "+itemList.get(0).getPwd());
 
-                            Qiscus.setUser(itemList.get(0).getMail(),itemList.get(0).getPwd())
+                            /*Qiscus.setUser(itemList.get(0).getMail(),itemList.get(0).getPwd())
                                     .withUsername(itemList.get(0).getName())
                                     .withAvatarUrl("https://imgur.com/"+itemList.get(0).getImage()+".jpg")
                                     .save()
@@ -356,9 +361,9 @@ public class MainActivity extends AppCompatActivity
                                     }, throwable -> {
                                         Log.d(TAG,"Qiscus Error:"+throwable);
 
-                                    });
+                                    });*/
 
-                            progressdialog.dismiss();
+
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 

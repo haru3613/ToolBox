@@ -7,8 +7,19 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.021">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,15 +34,15 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:text="工具人選"
-                android:textColor="@color/grayColor"
+                android:textColor="@color/primaryTextColor"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tool_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
                 android:paddingBottom="10dp"
+                android:text="123"
                 android:textColor="@color/primaryColor"
                 android:textSize="16sp" />
 
@@ -41,33 +52,15 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:text="自我介紹"
-                android:textColor="@color/grayColor"
+                android:textColor="@color/primaryTextColor"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tool_introduction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
                 android:paddingBottom="10dp"
-                android:textColor="@color/primaryColor"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="截止日期"
-                android:textColor="@color/grayColor"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tool_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingBottom="10dp"
+                android:text="123"
                 android:textColor="@color/primaryColor"
                 android:textSize="16sp" />
 
@@ -77,20 +70,71 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:text="打招呼的話"
-                android:textColor="@color/grayColor"
+                android:textColor="@color/primaryTextColor"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tool_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
                 android:paddingBottom="10dp"
+                android:text="123"
+                android:textColor="@color/primaryColor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="截止日期"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tool_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="123"
                 android:textColor="@color/primaryColor"
                 android:textSize="16sp" />
 
 
         </LinearLayout>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/choice_this"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/choice" />
+
+    <TextView
+        android:id="@+id/tool_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="取消"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/choice_this"
+        app:layout_constraintEnd_toStartOf="@+id/choice_this"
+        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+        app:layout_constraintVertical_bias="0.92" />
 
 </android.support.constraint.ConstraintLayout>

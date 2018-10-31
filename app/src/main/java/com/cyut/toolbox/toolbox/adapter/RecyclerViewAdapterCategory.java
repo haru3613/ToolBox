@@ -57,6 +57,16 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
 
 
         switch (itemList.get(position)) {
+            case "全部":
+                holder.imag.setImageResource(R.drawable.all);
+                holder.categoryText.setText("全部");
+                if (lastIndex==position) {
+                    holder.imag.setAlpha(1f);
+                }else{
+                    holder.imag.setAlpha(0.4f);
+                }
+
+                break;
             case "日常":
                 holder.imag.setImageResource(R.drawable.life);
                 holder.categoryText.setText("日常");

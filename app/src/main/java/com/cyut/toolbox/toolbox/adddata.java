@@ -116,7 +116,6 @@ public class adddata extends AppCompatActivity{
         //RadioButton
         rb_cmp_non = (RadioButton) findViewById(R.id.rb_cmp_non);
         rb_cmp_one = (RadioButton) findViewById(R.id.rb_cmp_one);
-        rb_cmp_local = (RadioButton) findViewById(R.id.rb_cmp_local);
         //Button
         bt_case_done_A = findViewById(R.id.bt_case_done_A);
         bt_case_done_B = findViewById(R.id.bt_case_done_B);
@@ -216,16 +215,7 @@ public class adddata extends AppCompatActivity{
                         text_view_done_type.setText("以下為您指定的完成時間");
                         Log.d("TAG", "one");
                         break;
-                    case (R.id.rb_cmp_local):
-                        radioCheck="3";
-                        textView2.setText("~");
-                        bt_case_done_A.setText("設定起始區間");
-                        bt_case_done_B.setText("設定最終區間");
-                        bt_case_done_A.setVisibility(View.VISIBLE);
-                        bt_case_done_B.setVisibility(View.VISIBLE);
-                        text_view_done_type.setText("以下為您指定的完成區間");
-                        Log.d("TAG", "local");
-                        break;
+
                 }
             }
         });

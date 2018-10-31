@@ -7,6 +7,7 @@
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondaryInverse">@color/material_blue_grey_90</item>
         <item name="android:textColorPrimaryInverse">@color/material_blue_grey_90</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:textColorSecondary">@color/material_blue_grey_90</item>
         <item name="colorButtonNormal">@color/primaryDarkColor</item>
         <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
@@ -19,6 +20,14 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/primaryDarkColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">

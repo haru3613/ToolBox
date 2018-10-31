@@ -6,6 +6,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:colorBackground">@color/colorBackground</item>
@@ -14,6 +15,7 @@
         <item name="android:textColorPrimaryInverse">@color/primaryDarkColor</item>
         <item name="android:textColorSecondary">@color/primaryDarkColor</item>
         <item name="android:colorForeground">@color/colorBackground</item>
+        <item name="colorButtonNormal">@color/primaryDarkColor</item>
         <item name="android:timePickerDialogTheme">@style/myTimePickerStyle</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
@@ -27,12 +29,12 @@
 
     </style>
 
-    <style name="CustomDialog" parent="AppTheme">
-        <item name="android:backgroundDimEnabled">false</item>
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/primaryDarkColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:gravity">center</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="colorAccent">#ffE91E63</item>
     </style>
-
 
     <style name="myTimePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:numbersTextColor">#ffffff</item>

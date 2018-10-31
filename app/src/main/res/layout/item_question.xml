@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingTop="4dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="4dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        app:cardBackgroundColor="@color/qiscus_white"
+        app:cardCornerRadius="4dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/q_ans"
+                android:layout_width="161dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="123555555555555555555555555555555"
+                android:textColor="@color/primaryColor"
+                android:textSize="14dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/ans_this"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/q_headpic"
+                app:layout_constraintTop_toBottomOf="@+id/q_nickname" />
+
+            <ImageView
+                android:id="@+id/q_headpic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/q_id" />
+
+            <TextView
+                android:id="@+id/q_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="10/29 10:10"
+                android:textColor="@color/grayColor"
+                android:textSize="14dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/q_headpic"
+                app:layout_constraintTop_toBottomOf="@+id/q_ans" />
+
+            <TextView
+                android:id="@+id/q_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="Harvey"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/ans_this"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/q_headpic"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ans_this"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/q_time"
+                app:layout_constraintTop_toTopOf="@+id/q_nickname"
+                app:srcCompat="@drawable/ans_question" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/ans_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/q_headpic"
+                app:layout_constraintTop_toBottomOf="@+id/q_time">
+
+                <ImageView
+                    android:id="@+id/a_headpic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/a_id" />
+
+                <TextView
+                    android:id="@+id/a_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="TextView"
+                    android:textColor="@color/primaryTextColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/a_headpic"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/a_ans"
+                    android:layout_width="91dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+
+                    android:text="1230000000000000"
+                    android:textColor="@color/primaryColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/a_nickname"
+                    app:layout_constraintTop_toBottomOf="@+id/a_nickname" />
+
+                <TextView
+                    android:id="@+id/a_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+
+                    android:text="TextView"
+                    android:textColor="@color/grayColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/a_ans"
+                    app:layout_constraintTop_toBottomOf="@+id/a_ans" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

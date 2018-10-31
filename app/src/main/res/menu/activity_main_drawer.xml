@@ -11,9 +11,13 @@
             android:icon="@drawable/ic_menu_infor"
             android:title="@string/menu_infor" />
         <item
-            android:id="@+id/nav_send"
+            android:id="@+id/nav_post"
             android:icon="@drawable/ic_menu_message"
-            android:title="@string/menu_send" />
+            android:title="我的發案" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/myreport"
+            android:title="我的接案" />
         <item
             android:id="@+id/nav_collection"
             android:icon="@drawable/ic_menu_collection"

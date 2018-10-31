@@ -29,10 +29,10 @@ import com.google.gson.GsonBuilder;
 
 
 import com.google.gson.reflect.TypeToken;
-import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
-import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
-import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
+import com.qiscus.sdk.data.model.QiscusChatRoom;
+import com.qiscus.sdk.data.remote.QiscusApi;
 import com.qiscus.sdk.ui.QiscusGroupChatActivity;
+import com.qiscus.sdk.util.QiscusRxExecutor;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;

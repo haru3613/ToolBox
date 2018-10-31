@@ -28,13 +28,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.MainActivity;
 import com.cyut.toolbox.toolbox.R;
-import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsg;
 import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
+import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMyPost;
 import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -49,16 +48,16 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SendFragment extends Fragment implements SearchView.OnQueryTextListener{
+public class PostFragment extends Fragment implements SearchView.OnQueryTextListener{
     private View view;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    protected static RecyclerViewAdapterMsg adapter;
+    protected static RecyclerViewAdapterMyPost adapter;
     String uid;
     View v;
     String SearchString;
     public static final String KEY = "STATUS";
-    public SendFragment() {
+    public PostFragment() {
         // Required empty public constructor
     }
 
@@ -73,15 +72,18 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =inflater.inflate(R.layout.fragment_send, container, false);
+        view =inflater.inflate(R.layout.fragment_post, container, false);
         v=view;
         uid="";
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_message);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(view.getContext()));
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(layoutManager);
 
 
@@ -101,7 +103,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
 
     public void Message(final String uid){
         Log.d(TAG, "Message: uid"+uid);
-        String url ="http://163.17.5.182/message.php";
+        String url ="http://163.17.5.182/app/mypost.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -123,7 +125,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             if (posts.isEmpty()){
                                 Toast.makeText(v.getContext(),"尚無案件",Toast.LENGTH_SHORT).show();
                             }else{
-                                adapter = new RecyclerViewAdapterMsg(v.getContext(), posts,uid);
+                                adapter = new RecyclerViewAdapterMyPost(v.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
 
@@ -256,7 +258,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     public void SearchV(final String SearchString){
         Log.d(TAG, "SearchV: "+SearchString);
         Log.d(TAG, "SearchV: uid"+uid);
-        String url ="http://163.17.5.182/app/message_search.php";
+        String url ="http://163.17.5.182/app/myport_cate_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -277,7 +279,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             if (posts.isEmpty()){
                                 Toast.makeText(view.getContext(),"尚未有此類型的案件",Toast.LENGTH_SHORT).show();
                             }else{
-                                adapter = new RecyclerViewAdapterMsg(view.getContext(), posts,uid);
+                                adapter = new RecyclerViewAdapterMyPost(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
                         } catch (UnsupportedEncodingException e) {
@@ -311,7 +313,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
     public void SearchQuery(final String SearchString){
         Log.d(TAG, "SearchQuery: "+SearchString);
         Log.d(TAG, "SearchV: uid"+uid);
-        String url ="http://163.17.5.182/app/message_querysearch.php";
+        String url ="http://163.17.5.182/app/myport_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -328,7 +330,7 @@ public class SendFragment extends Fragment implements SearchView.OnQueryTextList
                             ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
-                                adapter = new RecyclerViewAdapterMsg(view.getContext(), posts,uid);
+                                adapter = new RecyclerViewAdapterMyPost(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }else{
                                 Toast.makeText(getContext(),"沒有搜尋到相關案件",Toast.LENGTH_SHORT).show();

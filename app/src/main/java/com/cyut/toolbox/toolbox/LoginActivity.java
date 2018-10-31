@@ -86,11 +86,12 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             Toast.makeText(LoginActivity.this,"您的版本太低，請更新你的Android系統",Toast.LENGTH_SHORT).show();
             finish();
         }
 
+       // Qiscus.init(getApplication(), "toolbox-mzj9nz7n85jfv");
 
 
         Login=(Button)findViewById(R.id.Login);

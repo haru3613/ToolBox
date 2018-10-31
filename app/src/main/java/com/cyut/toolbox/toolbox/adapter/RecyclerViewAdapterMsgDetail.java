@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -106,25 +107,28 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
         final View item = LayoutInflater.from(context).inflate(R.layout.choice_tool, null);
 
-        MaterialDialog.Builder dialog =new MaterialDialog.Builder(context);
-        dialog.customView(item,wrapInScrollView);
-        dialog.backgroundColorRes(R.color.colorBackground);
+        MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .title("工具人申請表")
+                .customView(item,wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
         TextView tv_name=(TextView)item.findViewById(R.id.tool_name);
         TextView tv_date=(TextView)item.findViewById(R.id.tool_date);
         TextView tv_message=(TextView)item.findViewById(R.id.tool_message);
         TextView tv_introduction=(TextView)item.findViewById(R.id.tool_introduction);
+        ImageView im_choice=item.findViewById(R.id.choice_this);
+        TextView cancel=item.findViewById(R.id.tool_cancel);
         tv_name.setText(name);
         tv_date.setText(string_sub(time));
         tv_message.setText(message);
         tv_introduction.setText(introduction);
-        dialog.title("是否選擇此位工具人");
-        dialog.positiveText("確定");
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(final MaterialDialog dialog, DialogAction which) {
 
+
+        im_choice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 LoadCase(cid,r_uid);
-                if (Qiscus.hasSetupUser()) {
+               /* if (Qiscus.hasSetupUser()) {
 
                     Qiscus.buildChatWith(mail)
                             .build(context)
@@ -137,11 +141,17 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                                 Log.d(TAG, "onError: " + throwable);
                             });
                 }
-
+*/
                 Toast.makeText(context, "成功，即將開啟聊天室", Toast.LENGTH_SHORT).show();
             }
         });
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 

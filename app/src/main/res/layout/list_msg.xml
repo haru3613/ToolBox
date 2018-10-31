@@ -21,17 +21,13 @@
             android:textColor="@color/primaryColor"
             android:textSize="13sp" />
 
-        <TextView
+        <ImageView
             android:id="@+id/ap_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
             android:layout_weight="5"
-            android:gravity="right"
-
-            android:paddingRight="20dp"
-            android:text="查看詳情"
-            android:textColor="@color/primaryColor"
-            android:textSize="13sp" />
+            android:scaleType="fitEnd"
+            app:srcCompat="@drawable/viewdetail" />
 
 
     </LinearLayout>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHolders;
+import com.cyut.toolbox.toolbox.RecyclerViewHoldersColl;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -26,7 +27,7 @@ import java.util.Calendar;
 
 import static android.content.ContentValues.TAG;
 
-public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHolders> {
+public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHoldersColl> {
     public ArrayList<ItemObject> itemList ;
     private String uid;
     private Context context;
@@ -40,6 +41,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     int end_Way = 0;
     private static MaterialDialog dialog;
     String message;
+    private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
     public RecyclerViewAdapterCol() {
 
@@ -51,14 +53,14 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     }
 
     @Override
-    public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, null);
-        RecyclerViewHolders rcv = new RecyclerViewHolders(layoutView);
-
+    public RecyclerViewHoldersColl onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_collection, null,false);
+        layoutView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+        RecyclerViewHoldersColl rcv = new RecyclerViewHoldersColl(layoutView);
         return rcv;
     }
     @Override
-    public void onBindViewHolder(final RecyclerViewHolders holder, final int position) {
+    public void onBindViewHolder(final RecyclerViewHoldersColl holder, final int position) {
 
 
         switch (itemList.get(position).getCategoryImage()) {
@@ -87,18 +89,6 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             holder.Title.setText(itemList.get(position).getTitle());
         }
 
-
-
-        String status=itemList.get(position).getStatus();
-        holder.Status.setText(status);
-
-        holder.Money.setText("$"+itemList.get(position).getMoney());
-        if (status.equals("待接案")){
-            holder.Status.setTextColor(Color.parseColor("#ff3333"));
-        }else{
-            holder.Status.setTextColor(Color.parseColor("#908e8d"));
-        }
-
         String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
         if (Address.length()>10){
             holder.Area.setText(Address.substring(0,10)+"...");
@@ -106,21 +96,87 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             holder.Area.setText(Address);
         }
 
+        String lineSep = System.getProperty("line.separator");
+        String m=itemList.get(position).getDetail().replaceAll("<br />", lineSep);
+
+        holder.message.setText(m);
+
+        holder.Money.setText("$"+itemList.get(position).getMoney());
+
+        String status=itemList.get(position).getStatus();
+        holder.Status.setText(status);
+
+
+        String short_time=string_sub(itemList.get(position).getTime());
+        String short_until=string_sub(itemList.get(position).getUntil());
+
+        holder.time.setText(short_time+" 至  "+short_until);
+
+        if (status.equals("待接案")){
+            holder.Status.setTextColor(Color.parseColor("#ff3333"));
+        }else{
+            holder.Status.setTextColor(Color.parseColor("#908e8d"));
+        }
+
+        if (itemList.get(position).getPid().equals(uid)){
+            holder.bg.setBackgroundColor(Color.parseColor("#72c6cc"));
+        }else{
+            holder.bg.setBackgroundColor(Color.parseColor("#dfffffff"));
+        }
+
+        final boolean isExpanded = position==mExpandedPosition;
+        if (itemList.get(position).getStatus().equals("待接案")&&isExpanded){
+            holder.send.setVisibility(View.VISIBLE);
+            holder.ans.setVisibility(View.VISIBLE);
+        }else{
+            holder.send.setVisibility(View.GONE);
+            holder.ans.setVisibility(View.GONE);
+        }
+        holder.time_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.time.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.content.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.message.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.itemView.setActivated(isExpanded);
+        if (isExpanded)
+            previousExpandedPosition = position;
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: "+itemList.get(position).getTitle());
-                //OPEN DETAIL
-                customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),(itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+
-                        itemList.get(position).getRoad()),itemList.get(position).getMoney(),itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),
-                        itemList.get(position).getRid(),itemList.get(position).getCid(),uid,itemList.get(position).getStatus());
+                mExpandedPosition = isExpanded ? -1:position;
+                notifyItemChanged(previousExpandedPosition);
+                notifyItemChanged(position);
+            }
+        });
+
+
+        holder.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(uid.equals(itemList.get(position).getRid())){
+                    Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
+
+                }else if(status.equals("待接案")){
+                    SendMessage(uid,itemList.get(position).getCid());
+                }else{
+                    Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
 
 
+        holder.ans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
+
+
     @Override
     public int getItemCount() {
         return this.itemList.size();

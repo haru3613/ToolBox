@@ -10,21 +10,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RecyclerViewHolders extends RecyclerView.ViewHolder{
-    public ImageView CategoryImage,send,like,ans;
+public class RecyclerViewHoldersMyPost extends RecyclerView.ViewHolder{
+    public ImageView CategoryImage, finished,unfinish,tomessage;
     public TextView Title;
     public TextView Area;
-    public TextView Status;
-    public TextView message;
+    public TextView Status,progress_title,progress;
+    public TextView message,tool_title,tool;
     public TextView Money,time,content,time_title;
-    public ConstraintLayout bg;
-    public RecyclerViewHolders(View itemView) {
+    public RecyclerView mypost_ryv;
+    public RecyclerViewHoldersMyPost(View itemView) {
         super(itemView);
-
         CategoryImage = (ImageView)itemView.findViewById(R.id.a_headpic);
-        send = (ImageView)itemView.findViewById(R.id.card_send);
-        ans = (ImageView)itemView.findViewById(R.id.card_ans);
-        like = (ImageView)itemView.findViewById(R.id.card_like);
+        finished = (ImageView)itemView.findViewById(R.id.card_finish);
+        unfinish = (ImageView)itemView.findViewById(R.id.card_unfinish);
         Title = (TextView)itemView.findViewById(R.id.a_nickname);
         content = (TextView)itemView.findViewById(R.id.card_content);
         Area = (TextView)itemView.findViewById(R.id.a_ans);
@@ -33,9 +31,12 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder{
         message=(TextView)itemView.findViewById(R.id.card_message);
         time=(TextView)itemView.findViewById(R.id.card_until);
         Money=itemView.findViewById(R.id.moneyTxt);
-        bg=itemView.findViewById(R.id.bg);
-
-
+        tomessage=itemView.findViewById(R.id.card_tomessage);
+        progress=itemView.findViewById(R.id.card_progress);
+        progress_title=itemView.findViewById(R.id.card_progress_title);
+        tool=itemView.findViewById(R.id.card_tool);
+        tool_title=itemView.findViewById(R.id.card_tool_title);
+        mypost_ryv=itemView.findViewById(R.id.recycler_mypost);
     }
 
 

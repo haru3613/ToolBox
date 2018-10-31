@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHoldersMyPost;
+import com.cyut.toolbox.toolbox.RecyclerViewHoldersMyReport;
 import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
@@ -46,7 +47,7 @@ import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
 
-public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHoldersMyPost> {
+public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerViewHoldersMyReport> {
     public ArrayList<ItemObject> itemList;
     private Context context;
     private String uid;
@@ -57,25 +58,26 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     public static final String KEY = "STATUS";
     private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
-    public RecyclerViewAdapterMsg() {
+    public RecyclerViewAdapterMyReport() {
 
     }
 
-    public RecyclerViewAdapterMsg(Context context, ArrayList<ItemObject> itemList,String uid) {
+    public RecyclerViewAdapterMyReport(Context context, ArrayList<ItemObject> itemList, String uid) {
         this.itemList = itemList;
         this.context = context;
         this.uid=uid;
     }
     String name,mail;
     @Override
-    public RecyclerViewHoldersMyPost onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, null);
-        RecyclerViewHoldersMyPost rcv = new RecyclerViewHoldersMyPost(layoutView);
+    public RecyclerViewHoldersMyReport onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_myreport, null,false);
+        layoutView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+        RecyclerViewHoldersMyReport rcv = new RecyclerViewHoldersMyReport(layoutView);
 
         return rcv;
     }
     @Override
-    public void onBindViewHolder(RecyclerViewHoldersMyPost holder, final int position) {
+    public void onBindViewHolder(RecyclerViewHoldersMyReport holder, final int position) {
 
         switch (itemList.get(position).getCategoryImage()) {
             case "日常":
@@ -121,6 +123,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         String status=itemList.get(position).getStatus();
         holder.Status.setText(status);
 
+        LoadUserName(itemList.get(position).getPid(),holder);
 
         String short_time=string_sub(itemList.get(position).getTime());
         String short_until=string_sub(itemList.get(position).getUntil());
@@ -134,13 +137,71 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         }
 
 
-        final boolean isExpanded = position==mExpandedPosition;
 
+
+        final boolean isExpanded = position==mExpandedPosition;
+        if (itemList.get(position).getStatus().equals("確認中")&&isExpanded){
+           // holder.finished.setImageResource(R.drawable.unfinish);
+            holder.finished.setVisibility(View.GONE);
+            holder.tool.setVisibility(View.VISIBLE);
+            /*holder.finished.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("case_status",itemList.get(position).getCid(),"進行中");
+                    itemList.get(position).setStatus("進行中");
+                    notifyItemChanged(position);
+                }
+            });*/
+
+        }else if(itemList.get(position).getStatus().equals("待接案")&&isExpanded){
+            layoutManager = new LinearLayoutManager(context);
+            holder.tool.setVisibility(View.VISIBLE);
+            holder.finished.setVisibility(View.GONE);
+            holder.tomessage.setVisibility(View.GONE);
+        }else if (itemList.get(position).getStatus().equals("進行中")&&isExpanded){
+           // holder.finished.setImageResource(R.drawable.finished);
+            holder.tool.setVisibility(View.VISIBLE);
+            holder.finished.setVisibility(View.VISIBLE);
+            holder.finished.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MaterialDialog dialog=new MaterialDialog.Builder(context)
+                            .title("是否已完成")
+                            .positiveText("確認")
+                            .negativeText("未完成")
+                            .content("請詳細檢查是否已完成，選擇完後即不可退回")
+                            .backgroundColorRes(R.color.colorBackground)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                                    backgorundwork.execute("case_status",itemList.get(position).getCid(),"確認中");
+                                    itemList.get(position).setStatus("確認中");
+                                    notifyItemChanged(position);
+                                }
+                            })
+                            .build( );
+                    dialog.show();
+                }
+            });
+        }else if (itemList.get(position).getStatus().equals("已完成")&&isExpanded){
+            holder.tool.setVisibility(View.VISIBLE);
+            holder.finished.setVisibility(View.GONE);
+            holder.progress.setText("已完成");
+        }else{
+            holder.finished.setVisibility(View.GONE);
+            holder.tool.setVisibility(View.GONE);
+        }
         holder.time_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.time.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.content.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.message.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.progress_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.progress.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.tool_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
 
+        holder.tomessage.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);
         if (isExpanded)
             previousExpandedPosition = position;
@@ -154,8 +215,28 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
             }
         });
 
+        holder.tomessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*if (Qiscus.hasSetupUser()) {
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    Qiscus.buildChatWith(mail)
+                            .build(context)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(intent -> {
+                                context.startActivity(intent);
+                            }, throwable -> {
+                                //do anything if error occurs
+                                Log.d(TAG, "onError: " + throwable);
+                            });
+                }*/
+
+                Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: "+itemList.get(position).getPid());
@@ -175,7 +256,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                 }
 
             }
-        });
+        });*/
 
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -247,12 +328,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         tv_time.setText("時間限制");
         tv_umtil.setText(short_time+"\n      至\n"+short_until);
 
-        if (!rid.equals(uid)){
-            LoadUserName(rid,item);
 
-        }else {
-            tv_casename.setText("此案尚未有接案人");
-        }
 
         if (status.equals("確認中")){
             confirm.setVisibility(View.VISIBLE);
@@ -315,7 +391,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         if (status.equals("待接案")){
             Log.d(TAG, "CID: "+cid);
             check_before.setVisibility(View.VISIBLE);
-            MessageLoad(cid);
+           // MessageLoad(cid);
         }else{
             check_before.setVisibility(View.GONE);
         }
@@ -386,7 +462,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
         tv_umtil.setText(short_time+"\n      至\n"+short_until);
 
 
-        LoadUserName(pid,item);
+
 
 
 
@@ -418,7 +494,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                                     notifyItemChanged(position);
                                 }
                             })
-                            .build( );
+                            .build();
                     dialog.show();
 
                 }else if(cancel.getText().equals("我還沒做完")) {
@@ -494,7 +570,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     }
 
     //讀取接案人名稱及訊息
-    public void MessageLoad(final String cid){
+    public void MessageLoad(final String cid,final RecyclerViewHoldersMyPost holder){
         String url ="http://163.17.5.182/messagedetail.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -512,7 +588,10 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                             if (!response.contains("Undefined")){
                                 posts = Arrays.asList(mGson.fromJson(response, ItemMsg[].class));
                                 adapter = new RecyclerViewAdapterMsgDetail(context, posts,uid);
-                                recyclerView.setAdapter(adapter);
+                                holder.mypost_ryv.setAdapter(adapter);
+                                holder.tool.setVisibility(View.GONE);
+                            }else{
+                                holder.tool.setText("此案尚未有工具人");
                             }
 
                         } catch (UnsupportedEncodingException e) {
@@ -541,7 +620,7 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
     }
 
 
-    public void LoadUserName(final String uid,final View item){
+    public void LoadUserName(final String uid,final RecyclerViewHoldersMyReport holder){
         String url ="http://163.17.5.182/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -560,10 +639,8 @@ public class RecyclerViewAdapterMsg extends RecyclerView.Adapter<RecyclerViewHol
                                 posts = Arrays.asList(mGson.fromJson(response, Item[].class));
                                 List<Item> itemList=posts;
                                 name= itemList.get(0).getName();
-                                final TextView tv_casename=(TextView)item.findViewById(R.id.case_name);
-                                tv_casename.setText(name);
+                                holder.tool.setText(name);
                                 mail=itemList.get(0).getMail();
-                                Log.d(TAG, "onResponse:"+name);
                             }
 
                         } catch (UnsupportedEncodingException e) {

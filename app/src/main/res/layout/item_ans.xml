@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        app:cardBackgroundColor="@color/qiscus_white"
+        app:cardCornerRadius="4dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/a_ans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="你是男的嗎"
+                android:textColor="@color/primaryColor"
+                android:textSize="14dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/a_time"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/a_nickname"
+                app:layout_constraintTop_toBottomOf="@+id/a_nickname" />
+
+            <ImageView
+                android:id="@+id/a_headpic"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/a_id" />
+
+            <TextView
+                android:id="@+id/a_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="10/29 10:10"
+                android:textColor="@color/grayColor"
+                android:textSize="14dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/a_headpic"
+                app:layout_constraintTop_toBottomOf="@+id/a_ans" />
+
+            <TextView
+                android:id="@+id/a_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="Harvey"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="20dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/a_headpic"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

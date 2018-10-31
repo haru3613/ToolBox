@@ -18,10 +18,8 @@ import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsgList;
 import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
-import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
-import com.qiscus.sdk.chat.core.util.QiscusRxExecutor;
-
+import com.qiscus.sdk.data.model.QiscusChatRoom;
+import com.qiscus.sdk.data.remote.QiscusApi;
 
 
 import java.util.List;
@@ -64,7 +62,7 @@ public class ChatroomFragment extends Fragment {
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
 
-        if (Qiscus.hasSetupUser()) {
+        /*if (Qiscus.hasSetupUser()) {
             QiscusApi.getInstance().getChatRooms(1, 20, true)
                     .doOnNext(chatRooms -> {
                         for (QiscusChatRoom chatRoom : chatRooms) {
@@ -80,7 +78,7 @@ public class ChatroomFragment extends Fragment {
                     }, throwable -> {
                         //error
                     });
-        }
+        }*/
 
 
 

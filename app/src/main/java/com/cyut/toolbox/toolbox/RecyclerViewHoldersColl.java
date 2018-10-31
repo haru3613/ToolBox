@@ -10,21 +10,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RecyclerViewHolders extends RecyclerView.ViewHolder{
-    public ImageView CategoryImage,send,like,ans;
+public class RecyclerViewHoldersColl extends RecyclerView.ViewHolder{
+    public ImageView CategoryImage,send,ans;
     public TextView Title;
     public TextView Area;
     public TextView Status;
     public TextView message;
     public TextView Money,time,content,time_title;
     public ConstraintLayout bg;
-    public RecyclerViewHolders(View itemView) {
+    public RecyclerViewHoldersColl(View itemView) {
         super(itemView);
 
         CategoryImage = (ImageView)itemView.findViewById(R.id.a_headpic);
         send = (ImageView)itemView.findViewById(R.id.card_send);
         ans = (ImageView)itemView.findViewById(R.id.card_ans);
-        like = (ImageView)itemView.findViewById(R.id.card_like);
         Title = (TextView)itemView.findViewById(R.id.a_nickname);
         content = (TextView)itemView.findViewById(R.id.card_content);
         Area = (TextView)itemView.findViewById(R.id.a_ans);

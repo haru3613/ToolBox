@@ -3,7 +3,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.cyut.toolbox.toolbox"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 8
         versionName "8.0"
@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.github.rey5137:material:1.2.4'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.android.support:support-core-utils:26.1.0'
-    implementation 'com.qiscus.sdk:chat:2.28.2'
+    implementation 'com.qiscus.sdk:chat:2.23.1'
     implementation 'com.google.firebase:firebase-core:16.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
