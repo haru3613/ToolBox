@@ -48,9 +48,8 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
         String send_otherdetail=strings[7];
         String send_detail=strings[8];
         String send_case_disapear=strings[9];
-        String send_case_finish_start=strings[10];
-        String send_case_finish_end=strings[11];
-        String uid=strings[12];
+        String send_case_finish_end=strings[10];
+        String uid=strings[11];
 
         String login_url ="http://163.17.5.182/addcase_for_android.php";
         if(type.equals("check_ok")){
@@ -72,7 +71,6 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
                                 +URLEncoder.encode("c_address","UTF-8")+"="+URLEncoder.encode(send_otherdetail,"UTF-8")+"&"
                                 +URLEncoder.encode("c_detail","UTF-8")+"="+URLEncoder.encode(send_detail,"UTF-8")+"&"
                                 +URLEncoder.encode("c_until","UTF-8")+"="+URLEncoder.encode(send_case_disapear,"UTF-8")+"&"
-                                +URLEncoder.encode("setstart","UTF-8")+"="+URLEncoder.encode(send_case_finish_start,"UTF-8")+"&"
                                 +URLEncoder.encode("setend","UTF-8")+"="+URLEncoder.encode(send_case_finish_end,"UTF-8")+"&"
                                 +URLEncoder.encode("u_pid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"
                                 +URLEncoder.encode("u_rid","UTF-8")+"="+URLEncoder.encode(uid,"UTF-8")+"&"

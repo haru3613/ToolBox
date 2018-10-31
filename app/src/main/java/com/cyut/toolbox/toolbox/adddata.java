@@ -76,13 +76,13 @@ public class adddata extends AppCompatActivity{
     public static final String KEY = "STATUS";
     String uid;
     int casedone_hours = 0,casedone_mins = 0,casedone_Day = 0,casedone_Year = 0,casedone_Month;
-    String case_disapear_hours,case_disapear_mins,case_disapear_Day,case_disapear_Year,case_disapear_Month,case_disapear_Sec;
+    String case_disapear_hours,case_disapear_mins,case_disapear_Day,case_disapear_Week,case_disapear_Year,case_disapear_Month,case_disapear_Sec;
     int case_finish_start_hours,case_finish_start_mins,case_finish_start_Day,case_finish_start_Year,case_finish_start_Month,case_finish_start_Sec;
     int case_finish_end_hours,case_finish_end_mins,case_finish_end_Day,case_finish_end_Year,case_finish_end_Month,case_finish_end_Sec;
     String date_time_1 = "";
     String date_time_2 = "";
     String erroMessage="";
-    String radioCheck="0";
+    String radioCheck="1";
     MaterialDialog.Builder alertDialog;
     private RecyclerViewAdapterCategory adapter;
     @Override
@@ -266,29 +266,24 @@ public class adddata extends AppCompatActivity{
                     erroMessage=erroMessage+"詳細工作內容至少需要10個字唷\n";
                 }
                 String send_case_disapear=toTimeFormat(case_disapear_Year,case_disapear_Month,case_disapear_Day,case_disapear_hours,case_disapear_mins,case_disapear_Sec);
-                String send_case_finish_start=toTimeFormat1(case_finish_start_Year,case_finish_start_Month,case_finish_start_Day,case_finish_start_hours,case_finish_start_mins,case_finish_start_Sec);
                 String send_case_finish_end=toTimeFormat1(case_finish_end_Year,case_finish_end_Month,case_finish_end_Day,case_finish_end_hours,case_finish_end_mins,case_finish_end_Sec);
-                Log.d("Check time ~",send_case_disapear+"   and  "+send_case_finish_start+"  and  "+send_case_finish_end);
+                Log.e("Check time ~",send_case_disapear  +"   and   "+send_case_finish_end);
                 switch (radioCheck) {
                     case ("1"):
-                        send_case_finish_start="";
                         send_case_finish_end="";
                         break;
                     case("2"):
-                        send_case_finish_end=send_case_finish_start;
-                        send_case_finish_start="";
-                        break;
-                    case("3"):
-                        if (send_case_finish_start.equals("0000-00-00 00:00:00")||send_case_finish_end.equals("0000-00-00 00:00:00")){
-                            erroMessage=erroMessage+"案件完成區間有尚未填到的唷\n";
+                        if (send_case_finish_end.equals("0-0-0 0:0:0")){
+                            erroMessage=erroMessage+"您有限制案件完成時間但尚未選取時間\n";
                         }
                         break;
                 }
+                Log.e("Check radioCheck ~",radioCheck  +"   and   ````````````````"+send_case_finish_end);
                 if (erroMessage.equals("")){
-                    Log.e("Check time ~",send_case_disapear+"   and  "+send_case_finish_start+"  and  "+send_case_finish_end);
+                    Log.e("Check time ~",send_case_disapear+"  and  "+send_case_finish_end);
                     Send_Data_Backworker SDB = new Send_Data_Backworker(adddata.this);
                     Log.d(TAG, "onClick: uid"+uid);
-                    SDB.execute(type, send_class,send_Title,send_Money,send_city,send_town,send_road,send_otherdetail,send_detail,send_case_disapear,send_case_finish_start,send_case_finish_end,uid);
+                    SDB.execute(type, send_class,send_Title,send_Money,send_city,send_town,send_road,send_otherdetail,send_detail,send_case_disapear,send_case_finish_end,uid);
                     Intent intent=new Intent(adddata.this,MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -311,11 +306,6 @@ public class adddata extends AppCompatActivity{
 
         });
     }
-
-
-    //----------------------------------------------------------------------------------
-
-
 
     //------------------------跟php要鄉鎮資料 to Spinner_town----------------------------------------
     private void town_spinner() {
@@ -528,9 +518,6 @@ public class adddata extends AppCompatActivity{
         Complete_case_datePicker1();
     }
 
-    public void bt_complete_B(View view) {
-        Complete_case_datePicker2();
-    }
     private void Complete_case_datePicker1(){
 
         // Get Current Date
@@ -538,16 +525,16 @@ public class adddata extends AppCompatActivity{
         casedone_Year = c.get(Calendar.YEAR);
         casedone_Month = c.get(Calendar.MONTH);
         casedone_Day = c.get(Calendar.DAY_OF_MONTH);
-
+        case_finish_end_Sec=c.get(Calendar.SECOND);
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int year,int monthOfYear, int dayOfMonth) {
                         date_time_1 =year + "年"+(monthOfYear + 1) + "月" +dayOfMonth+"號";
-                        case_finish_start_Year=year;
-                        case_finish_start_Month=monthOfYear+1;
-                        case_finish_start_Day=dayOfMonth;
+                        case_finish_end_Year=year;
+                        case_finish_end_Month=monthOfYear+1;
+                        case_finish_end_Day=dayOfMonth;
                         //*************Call Time Picker Here ********************
                         Complete_case_tiemPicker1();
                     }
@@ -568,54 +555,10 @@ public class adddata extends AppCompatActivity{
                     public void onTimeSet(TimePicker view, int hourOfDay,int minute) {
                         casedone_hours = hourOfDay;
                         casedone_mins = minute;
-                        case_finish_start_hours=hourOfDay;
-                        case_finish_start_mins=minute;
-                        date_time_2=date_time_1+hourOfDay + "點" + minute+"分";
-                        text_case_done_viewtime1.setText(date_time_2);
-                    }
-                }, casedone_hours, casedone_mins, true);
-        timePickerDialog.show();
-    }
-    private void Complete_case_datePicker2(){
-
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        casedone_Year = c.get(Calendar.YEAR);
-        casedone_Month = c.get(Calendar.MONTH);
-        casedone_Day = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,int monthOfYear, int dayOfMonth) {
-                        date_time_1 =year + "年"+(monthOfYear + 1) + "月" +dayOfMonth+"號";
-                        case_finish_end_Year=year;
-                        case_finish_end_Month=monthOfYear+1;
-                        case_finish_end_Day=dayOfMonth;
-                        //*************Call Time Picker Here ********************
-                        Complete_case_tiemPicker2();
-                    }
-                },  casedone_Year,  casedone_Month,  casedone_Day);
-        datePickerDialog.show();
-    }
-    private void Complete_case_tiemPicker2(){
-        final Calendar c = Calendar.getInstance();
-        casedone_hours = c.get(Calendar.HOUR_OF_DAY);
-        casedone_mins = c.get(Calendar.MINUTE);
-
-        // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                new TimePickerDialog.OnTimeSetListener() {
-
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay,int minute) {
-                        casedone_hours = hourOfDay;
-                        casedone_mins = minute;
                         case_finish_end_hours=hourOfDay;
                         case_finish_end_mins=minute;
                         date_time_2=date_time_1+hourOfDay + "點" + minute+"分";
-                        text_case_done_viewtime2.setText(date_time_2);
+                        text_case_done_viewtime1.setText(date_time_2);
                     }
                 }, casedone_hours, casedone_mins, true);
         timePickerDialog.show();
@@ -672,13 +615,13 @@ public class adddata extends AppCompatActivity{
 
     //---------------- SetTimeout--------Choose the time to end case-----------------------------------------------------
     public void timeout(View view) {
-        this.c_end_hours = 0;
-        this.c_end_mins = 0;
-        this.time_check_status = 0;
-        this.end_Minute = 0;
-        this.end_Hours = 0;
-        this.end_Day = 0;
-        this.end_Way = 0;
+        c_end_hours = 0;
+        c_end_mins = 0;
+        time_check_status = 0;
+        end_Minute = 0;
+        end_Hours = 0;
+        end_Day = 0;
+        end_Way = 0;
         bt_timeout = (Button) findViewById(R.id.bt_timeout);
         text_end_until_time.setText("正在設定時間");
         final Calendar c = Calendar.getInstance();
@@ -742,83 +685,18 @@ public class adddata extends AppCompatActivity{
 
 
     public String end_getTime() {
-        final Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        if (time_check_status == 0) {
-            int end_Minute = 0;
-            int end_Hours = 0;
-            int end_Day = 0;
-            int end_Way = 0;
-            int m_add_Hour = 0;
+        c.add(Calendar.MINUTE, alltime);
+        case_disapear_Year=String.valueOf(c.get(Calendar.YEAR));
+        case_disapear_Month=String.valueOf(c.get(Calendar.MONTH) + 1);
+        case_disapear_Day=String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+        case_disapear_Week=String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+        case_disapear_hours=String.valueOf(c.get(Calendar.HOUR));
+        case_disapear_mins=String.valueOf(c.get(Calendar.MINUTE));
+        case_disapear_Sec=String.valueOf(c.get(Calendar.SECOND));
 
-            int d_Minute = c.get(Calendar.MINUTE) + c_end_mins;
-            //-------最後要加總或減的值---------------------
-
-            //-----------判斷是否超出常理時間------------------
-            if (d_Minute > 59) {
-                m_add_Hour = 1;
-                end_Minute = d_Minute - 60;
-                this.end_Minute = end_Minute;
-            } else {
-
-                end_Minute = d_Minute;
-                this.end_Minute = end_Minute;
-            }
-            int d_Hour = c.get(Calendar.HOUR_OF_DAY) + c_end_hours + m_add_Hour;
-            if (d_Hour >= 24) {
-                end_Hours = Math.abs(d_Hour - 24);
-                this.end_Hours = end_Hours;
-                end_Day = 1;
-                this.end_Day = end_Day;
-                end_Way = 1;
-                this.end_Way = end_Way;
-            } else {
-                end_Hours = d_Hour;
-                this.end_Hours = end_Hours;
-            }
-            time_check_status = 1;
-        }
-
-
-        String fHour = String.valueOf(end_Hours);
-        String fMinute = String.valueOf(end_Minute);
-        String fDay = end_Day(String.valueOf(c.get(Calendar.DAY_OF_MONTH) + this.end_Day));
-        String fWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK) + this.end_Way - 1);
-        switch (fWay){
-            case "1":
-                fWay="一";
-                break;
-            case "2":
-                fWay="二";
-                break;
-            case "3":
-                fWay="三";
-                break;
-            case "4":
-                fWay="四";
-                break;
-            case "5":
-                fWay="五";
-                break;
-            case "6":
-                fWay="六";
-                break;
-            case "7":
-                fWay="日";
-                break;
-        }
-
-        String mYear = String.valueOf(c.get(Calendar.YEAR));
-        String mMonth = String.valueOf(c.get(Calendar.MONTH) + 1);
-        String mSecond = String.valueOf(c.get(Calendar.SECOND));
-        this.case_disapear_Year=mYear;
-        this.case_disapear_Month=mMonth;
-        this.case_disapear_Day=fDay;
-        this.case_disapear_hours=fHour;
-        this.case_disapear_mins=fMinute;
-        this.case_disapear_Sec=mSecond;
-
-        return mYear + "年" + mMonth + "月" + fDay + "日" + "  " + "星期" + fWay + "  " + fHour + ":" + fMinute + ":" + mSecond;
+        return case_disapear_Year + "年" + case_disapear_Month + "月" + case_disapear_Day + "日" + "  "+ "星期" + end_Day(case_disapear_Week)+"  " + case_disapear_hours + ":" + case_disapear_mins + ":" + case_disapear_Sec;
 
 
     }
