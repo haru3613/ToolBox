@@ -42,6 +42,7 @@ import com.cyut.toolbox.toolbox.RecylerItemClickListener;
 import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.cyut.toolbox.toolbox.adddata;
 import com.cyut.toolbox.toolbox.model.ItemObject;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -70,7 +71,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
     public static final String KEY = "STATUS";
 
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     private View view;
     String SearchString,uid;
     public MainFragment() {
@@ -113,6 +114,9 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
         requestJsonObject(v);
 
         ArrayList<String> categorylist=new ArrayList<String>();
+
+
+
 
         categorylist.add("全部");
         categorylist.add("日常");

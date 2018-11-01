@@ -267,7 +267,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             public void onClick(View view) {
                 new MaterialDialog.Builder(context)
                         .title("我要問問題！")
-                        .content("123")
                         .inputType(InputType.TYPE_CLASS_TEXT )
                         .input("要詢問雇主的事情", null, new MaterialDialog.InputCallback() {
                             @Override

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -48,6 +49,15 @@ import com.cyut.toolbox.toolbox.Fragment.PostFragment;
 import com.cyut.toolbox.toolbox.Fragment.ReportFragment;
 import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
 import com.cyut.toolbox.toolbox.model.Item;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -75,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-
+    private FirebaseAuth mAuth;
     private String uid;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -122,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        mAuth = FirebaseAuth.getInstance();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
@@ -160,6 +170,24 @@ public class MainActivity extends AppCompatActivity
         manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
 
 
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         //如果在特定Fragment FAB不顯示
         nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -347,7 +375,23 @@ public class MainActivity extends AppCompatActivity
                             TextMoney.setText("$"+itemList.get(0).getMoney());
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
-                            Log.d(TAG, "password: "+itemList.get(0).getPwd());
+
+
+                            mAuth.createUserWithEmailAndPassword(itemList.get(0).getMail(), itemList.get(0).getPwd())
+                                    .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                // Sign in success, update UI with the signed-in user's information
+                                                Log.d(TAG, "createUserWithEmail:success");
+
+                                            } else {
+                                                // If sign in fails, display a message to the user.
+                                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                            }
+
+                                        }
+                                    });
 
                             /*Qiscus.setUser(itemList.get(0).getMail(),itemList.get(0).getPwd())
                                     .withUsername(itemList.get(0).getName())

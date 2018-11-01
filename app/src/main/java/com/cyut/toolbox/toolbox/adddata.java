@@ -292,7 +292,7 @@ public class adddata extends AppCompatActivity{
 
                     alertDialog = new MaterialDialog.Builder(adddata.this)
                             .title("發案內容錯誤")
-                            .content("****請檢查以下有可能的錯誤:****\n"+erroMessage)
+                            .content("請檢查以下有可能的錯誤:\n"+erroMessage)
                             .positiveText("確定");
                     alertDialog.backgroundColorRes(R.color.colorBackground);
                     MaterialDialog dialog = alertDialog.build();
