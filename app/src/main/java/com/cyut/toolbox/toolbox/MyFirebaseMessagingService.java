@@ -17,11 +17,11 @@ import com.firebase.jobdispatcher.Job;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.qiscus.sdk.service.QiscusFirebaseService;
+
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
-    private static final String FRIENDLY_ENGAGE_TOPIC = "friendly_engage";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // TODO(developer): Handle FCM messages here.
@@ -55,8 +55,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         Log.d(TAG, "Refreshed token: " + token);
-        FirebaseMessaging.getInstance()
-                .subscribeToTopic(FRIENDLY_ENGAGE_TOPIC);
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.

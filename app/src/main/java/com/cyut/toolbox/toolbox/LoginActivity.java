@@ -35,7 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.qiscus.sdk.Qiscus;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final String KEY = "STATUS";
     private FirebaseAuth mAuth;
     public Button Login;
+    private EditText username,password;
     String email;
     String pwd,uid;
     Timer timerExit = new Timer();
@@ -111,33 +112,14 @@ public class LoginActivity extends AppCompatActivity {
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = ((EditText) findViewById(R.id.email)).getText().toString();
-                pwd = ((EditText) findViewById(R.id.password)).getText().toString();
+                username=findViewById(R.id.email);
+                email =  username.getText().toString().trim();
+                password=findViewById(R.id.password);
+                pwd = password.getText().toString().trim();
+                createAccount(email,pwd);
                 Log.d("AUTH", email + "/" + pwd);
                 if (pwd.length() > 5) {
                     LoadUser(email);
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user!=null){
-                        Log.d(TAG, "Firebase have been SignUp ");
-                    }else{
-
-                        mAuth.createUserWithEmailAndPassword(email, pwd)
-                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d(TAG, "createUserWithEmail:success");
-
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                        }
-
-                                    }
-                                });
-                    }
-
 
                     String type = "login";
                     Login.setEnabled(false);
@@ -205,7 +187,32 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+    private void createAccount(String email, String password) {
+        Log.d(TAG, "createAccount:" + email);
 
+
+        // [START create_user_with_email]
+        mAuth.signInWithEmailAndPassword(email+"@gm.cyut.edu.tw", password)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "loginUserWithEmail:success");
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "loginUserWithEmail:failure", task.getException());
+
+                        }
+
+                        // [START_EXCLUDE]
+
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END create_user_with_email]
+    }
     //拿取uid
     public void LoadUser(final String mail){
         String url ="http://163.17.5.182/loaduser.php";

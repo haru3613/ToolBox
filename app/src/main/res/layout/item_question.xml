@@ -16,7 +16,7 @@
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:stateListAnimator="@drawable/lift_on_touch"
-        app:cardBackgroundColor="@color/qiscus_white"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="4dp">
 
         <android.support.constraint.ConstraintLayout

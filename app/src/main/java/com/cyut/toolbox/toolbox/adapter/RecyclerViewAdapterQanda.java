@@ -31,7 +31,7 @@ import com.cyut.toolbox.toolbox.model.ItemMsg;
 import com.cyut.toolbox.toolbox.model.ItemQanda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.qiscus.sdk.Qiscus;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -40,8 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
 

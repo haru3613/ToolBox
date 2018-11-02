@@ -41,7 +41,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.cyut.toolbox.toolbox.Fragment.ChatroomFragment;
 import com.cyut.toolbox.toolbox.Fragment.CollectionFragment;
 import com.cyut.toolbox.toolbox.Fragment.InforFragment;
 import com.cyut.toolbox.toolbox.Fragment.MainFragment;
@@ -51,19 +50,18 @@ import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-import com.qiscus.sdk.Qiscus;
+
 
 
 import com.squareup.picasso.Picasso;
@@ -76,9 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
 
@@ -189,6 +184,7 @@ public class MainActivity extends AppCompatActivity
                         //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+
 
         //如果在特定Fragment FAB不顯示
         nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -307,13 +303,7 @@ public class MainActivity extends AppCompatActivity
             ReportFragment fragment = new ReportFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
-        } else if (id == R.id.nav_chatlist) {
-            ChatroomFragment fragment=new ChatroomFragment();
-            FragmentManager manager=getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
-        }else if (id == R.id.nav_about) {
-            Intent intent=new Intent(this,ChatroomActivity.class);
-            startActivity(intent);
+        } else if (id == R.id.nav_about) {
             aboutFragment fragment=new aboutFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
@@ -323,13 +313,11 @@ public class MainActivity extends AppCompatActivity
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/forms/WbSE9qmsQl654TLS2"));
             startActivity(browserIntent);
         } else if (id== R.id.nav_signout){
-            if (Qiscus.hasSetupUser()) {
-                Qiscus.clearUser();
-            }
             SharedPreferences sharedPreferences = this.getSharedPreferences(KEY , MODE_PRIVATE);
             sharedPreferences.edit().putBoolean("Status" , false).apply();
             Intent toLogin=new Intent(this,LoginActivity.class);
             startActivity(toLogin);
+            FirebaseAuth.getInstance().signOut();
             finish();
         }
 
@@ -370,12 +358,10 @@ public class MainActivity extends AppCompatActivity
                             final TextView TextNickname=hView.findViewById(R.id.nick_name);
                             final TextView TextName=hView.findViewById(R.id.nav_name);
                             final TextView TextMail=hView.findViewById(R.id.mail);
-                            final TextView TextMoney=hView.findViewById(R.id.money);
                             final ImageView iv=hView.findViewById(R.id.hIV) ;
                             TextName.setText(itemList.get(0).getName());
                             TextNickname.setText(itemList.get(0).getNickname());
                             TextMail.setText(itemList.get(0).getMail());
-                            TextMoney.setText("$"+itemList.get(0).getMoney());
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
 
@@ -443,8 +429,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (Qiscus.hasSetupUser()) {
-            Qiscus.clearUser();
-        }
+
     }
 }

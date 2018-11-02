@@ -12,10 +12,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyut.toolbox.toolbox.LoadingView;
 import com.cyut.toolbox.toolbox.LoginActivity;
-import com.cyut.toolbox.toolbox.MainActivity;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapter;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
-import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterMsg;
 import com.cyut.toolbox.toolbox.changepassword;
 
 
@@ -791,8 +789,6 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "決定失敗", Toast.LENGTH_SHORT).show();
         }else if(result.contains("更新成功")){
             Toast.makeText(context, "更新成功", Toast.LENGTH_SHORT).show();
-            RecyclerViewAdapterMsg adapterMsg=new RecyclerViewAdapterMsg();
-            adapterMsg.dissmissDialog();
         }else if(result.contains("更新失敗")) {
             Toast.makeText(context, "更新失敗", Toast.LENGTH_SHORT).show();
         }else if(result.contains("檢查失敗")) {

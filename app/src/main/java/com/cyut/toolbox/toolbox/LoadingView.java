@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.qiscus.sdk.Qiscus;
+
 
 /**
  * Created by Haru on 2017/5/10.

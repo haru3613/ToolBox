@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,10 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -47,11 +52,13 @@ import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.content.ContentValues.TAG;
+
 
 public class SignUpActivity extends AppCompatActivity {
 
     String mail, pwd, identity, sex, name, nickname, phone, address, re_pwd,introduce,server;
-
+    private FirebaseAuth mAuth;
     private ImageView image;
     boolean imgboo;
 
@@ -74,6 +81,8 @@ public class SignUpActivity extends AppCompatActivity {
                 R.array.login_option,
                 R.layout.spinner_item);
         spinner.setAdapter(loginList);
+
+        mAuth = FirebaseAuth.getInstance();
 
         TextView UseStatement=(TextView)findViewById(R.id.UseStatement);
         UseStatement.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
         identity = ((EditText) findViewById(R.id.pid)).getText().toString();
         if (pidTF(identity)) {
             if (phone.matches("[0][9][0-9]{8}")) {
-                if (mail.length() > 0 && mail.contains("@")) {
+                if (mail.length() > 0) {
                     if ((mail.substring(0, 1)).equals("s")) {
                         signup();
                     } else {
@@ -476,6 +485,7 @@ public class SignUpActivity extends AppCompatActivity {
                 u_image = link.substring(link.length() - 11, link.length() - 4);//取得imgur網址後七碼
                 //連結php
                 String type = "signup";
+                createAccount(mail,pwd);
                 Backgorundwork backgorundwork = new Backgorundwork(SignUpActivity.this);
                 backgorundwork.execute(type,mail , pwd, identity, sex, name, nickname, phone, address, u_image, u_verify, u_verityCode,introduce,server);
                 Log.d("imgur", "onSuccess: " + u_image);
@@ -503,6 +513,32 @@ public class SignUpActivity extends AppCompatActivity {
         Calendar mCal = Calendar.getInstance();
         CharSequence s = DateFormat.format("yyyy-MM-dd kk:mm:ss", mCal.getTime());    // kk:24小時制, hh:12小時制
         return s.toString();
+    }
+    private void createAccount(String email, String password) {
+        Log.d(TAG, "createAccount:" + email);
+
+
+        // [START create_user_with_email]
+        mAuth.createUserWithEmailAndPassword(email+"@gm.cyut.edu.tw", password)
+                .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "loginUserWithEmail:success");
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "loginUserWithEmail:failure", task.getException());
+
+                        }
+
+                        // [START_EXCLUDE]
+
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END create_user_with_email]
     }
 }
 

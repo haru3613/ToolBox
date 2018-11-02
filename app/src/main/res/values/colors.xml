@@ -8,6 +8,7 @@
   <color name="colorBackground">#dfffffff</color>
   <color name="colorNavHead">#df87cfe5</color>
     <color name="secondaryTextColor">#000000</color>
+  <color name="white">#ffffff</color>
     <color name="secondaryColor">#99ccff</color>
     <color name="secondaryLightColor">#ccffff</color>
   <color name="secondaryDarkColor">#679bcc</color>

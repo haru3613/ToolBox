@@ -121,6 +121,7 @@ public class InforFragment extends Fragment {
                             final TextView textView_phone=(TextView)view.findViewById(R.id.textView_phone);
                             final TextView textView_pid=(TextView)view.findViewById(R.id.textView_pid);
                             final TextView textView_area=(TextView)view.findViewById(R.id.textView_area);
+                            final TextView textView_money=(TextView)view.findViewById(R.id.textView_money);
                             final TextView textView_introduce=(TextView)view.findViewById(R.id.textView_introduce);
                             imageButton=(ImageView)view.findViewById(R.id.imageView8) ;
                             imageView=view.findViewById(R.id.imageView);
@@ -132,6 +133,7 @@ public class InforFragment extends Fragment {
                             textView_phone.setText(itemList.get(0).getPhone());
                             textView_pid.setText(itemList.get(0).getIdentity());
                             textView_area.setText(itemList.get(0).getAddress());
+                            textView_money.setText(itemList.get(0).getMoney());
                             String lineSep = System.getProperty("line.separator");
                             String m=itemList.get(0).getIntroduce().replaceAll("<br />", lineSep);
                             textView_introduce.setText(m);

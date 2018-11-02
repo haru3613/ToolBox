@@ -33,13 +33,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
+
 import com.cyut.toolbox.toolbox.model.FriendlyMessage;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,6 +59,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.storage.FirebaseStorage;
@@ -146,11 +146,14 @@ public class ChatroomActivity extends AppCompatActivity  {
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
 
-        mUsername = mFirebaseUser.getDisplayName();
-        Log.d(TAG, "onCreate: "+mUsername);
-        if (mFirebaseUser.getPhotoUrl() != null) {
-            mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+        if (mFirebaseUser!=null){
+            mUsername = mFirebaseUser.getDisplayName();
+            Log.d(TAG, "onCreate: "+mUsername);
+            if (mFirebaseUser.getPhotoUrl() != null) {
+                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+            }
         }
+
 
 
 
@@ -183,7 +186,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                 new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                         .setQuery(messagesRef, parser)
                         .build();
-
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
 
             @Override
@@ -198,7 +201,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                                             FriendlyMessage friendlyMessage) {
 
                 Log.d(TAG, "onBindViewHolder: "+friendlyMessage.getText());
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
@@ -214,6 +217,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if (task.isSuccessful()) {
                                             String downloadUrl = task.getResult().toString();
+                                            Log.d(TAG, "onComplete: "+downloadUrl);
                                             Picasso.get().load(downloadUrl).fit().centerInside().into(viewHolder.messengerImageView);
                                         } else {
                                             Log.w(TAG, "Getting download url was not successful.",
@@ -232,7 +236,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                 if (friendlyMessage.getPhotoUrl() == null)
                 {
                     viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(ChatroomActivity.this,
-                            R.drawable.pickup));
+                            R.drawable.ic_logo));
                 } else
 
                 {
@@ -351,7 +355,17 @@ public class ChatroomActivity extends AppCompatActivity  {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername,
                         mPhotoUrl, null);
 
-
+                FirebaseMessaging.getInstance().subscribeToTopic(ROOM_ID)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                String msg = mMessageEditText.getText().toString();
+                                if (!task.isSuccessful()) {
+                                    msg = "null";
+                                }
+                                Log.d(TAG, msg);
+                            }
+                        });
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ROOM_ID).push().setValue(friendlyMessage);
                 Log.d(TAG, "onClick: "+mFirebaseDatabaseReference);
                 mMessageEditText.setText("");
@@ -536,6 +550,7 @@ public class ChatroomActivity extends AppCompatActivity  {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+
 
     private void putImageInStorage(StorageReference storageReference, Uri uri, final String key) {
         storageReference.putFile(uri).addOnCompleteListener(ChatroomActivity.this,

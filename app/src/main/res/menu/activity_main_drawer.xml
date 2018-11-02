@@ -22,10 +22,6 @@
             android:id="@+id/nav_collection"
             android:icon="@drawable/ic_menu_collection"
             android:title="@string/menu_collection" />
-        <item
-            android:id="@+id/nav_chatlist"
-            android:icon="@drawable/ic_menu_chatlist"
-            android:title="訊息列表" />
 
     </group>
 

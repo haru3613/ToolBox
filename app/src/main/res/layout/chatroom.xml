@@ -29,7 +29,7 @@
             android:id="@+id/addMessageImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_logo" />
+            android:src="@drawable/send_message" />
 
         <EditText
             android:layout_width="0dp"
