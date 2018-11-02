@@ -3,8 +3,10 @@ package com.cyut.toolbox.toolbox;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +27,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qiscus.sdk.Qiscus;
@@ -38,11 +46,14 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.content.ContentValues.TAG;
+
 public class LoginActivity extends AppCompatActivity {
     private static Boolean isExit = false;
     private static Boolean hasTask = false;
     private static final String ACTIVITY_TAG ="Logwrite";
     public static final String KEY = "STATUS";
+    private FirebaseAuth mAuth;
     public Button Login;
     String email;
     String pwd,uid;
@@ -85,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAuth = FirebaseAuth.getInstance();
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             Toast.makeText(LoginActivity.this,"您的版本太低，請更新你的Android系統",Toast.LENGTH_SHORT).show();
@@ -104,6 +116,29 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("AUTH", email + "/" + pwd);
                 if (pwd.length() > 5) {
                     LoadUser(email);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user!=null){
+                        Log.d(TAG, "Firebase have been SignUp ");
+                    }else{
+
+                        mAuth.createUserWithEmailAndPassword(email, pwd)
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d(TAG, "createUserWithEmail:success");
+
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        }
+
+                                    }
+                                });
+                    }
+
+
                     String type = "login";
                     Login.setEnabled(false);
                     Backgorundwork backgorundwork = new Backgorundwork(LoginActivity.this);

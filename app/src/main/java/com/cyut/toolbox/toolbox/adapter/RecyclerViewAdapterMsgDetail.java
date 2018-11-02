@@ -1,6 +1,7 @@
 package com.cyut.toolbox.toolbox.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.ChatroomActivity;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewMsgDetailHolders;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
@@ -74,7 +76,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
             @Override
             public void onClick(View view) {
 
-                LoadUserName(itemList.get(position).getUid(),itemList.get(position).getTime(),itemList.get(position).getMessage(),itemList.get(position).getCid());
+                LoadUserName(itemList.get(position).getUid(),itemList.get(position).getTime(),itemList.get(position).getMessage(),itemList.get(position).getCid(),position);
 
             }
         });
@@ -102,7 +104,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     }
 
 
-    public void dialog(String time,final String name,final String mail,final String message,final String cid,final String r_uid,final String introduction){
+    public void dialog(String time,final String name,final String mail,final String message,final String cid,final String r_uid,final String introduction,final int position){
         boolean wrapInScrollView = true;
 
         final View item = LayoutInflater.from(context).inflate(R.layout.choice_tool, null);
@@ -128,6 +130,11 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
             @Override
             public void onClick(View view) {
                 LoadCase(cid,r_uid);
+
+                Intent intent = new Intent();
+                intent.setClass(context,ChatroomActivity.class);
+                intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
+                context.startActivity(intent);
                /* if (Qiscus.hasSetupUser()) {
 
                     Qiscus.buildChatWith(mail)
@@ -203,7 +210,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }
-    public void LoadUserName(final String uid,final String time,final String message,final String cid){
+    public void LoadUserName(final String uid,final String time,final String message,final String cid,final int position){
         String url ="http://163.17.5.182/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -224,7 +231,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                                 name= itemList.get(0).getName();
                                 email=itemList.get(0).getMail();
                                 String indroduction=itemList.get(0).getIntroduce();
-                                dialog(time,name,email,message,cid,uid,indroduction);
+                                dialog(time,name,email,message,cid,uid,indroduction,position);
                                 Log.d(TAG, "onResponse:"+name+"/"+email);
                             }
 

@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cyut.toolbox.toolbox.ChatroomActivity;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHoldersMyPost;
 import com.cyut.toolbox.toolbox.RecyclerViewHoldersMyReport;
@@ -218,6 +219,10 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         holder.tomessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(context,ChatroomActivity.class);
+                intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
+                context.startActivity(intent);
                 /*if (Qiscus.hasSetupUser()) {
 
                     Qiscus.buildChatWith(mail)

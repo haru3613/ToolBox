@@ -55,6 +55,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private FirebaseAuth mAuth;
+
     private String uid;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
+
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -311,6 +312,8 @@ public class MainActivity extends AppCompatActivity
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
         }else if (id == R.id.nav_about) {
+            Intent intent=new Intent(this,ChatroomActivity.class);
+            startActivity(intent);
             aboutFragment fragment=new aboutFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
@@ -377,21 +380,25 @@ public class MainActivity extends AppCompatActivity
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
 
 
-                            mAuth.createUserWithEmailAndPassword(itemList.get(0).getMail(), itemList.get(0).getPwd())
-                                    .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (task.isSuccessful()) {
-                                                // Sign in success, update UI with the signed-in user's information
-                                                Log.d(TAG, "createUserWithEmail:success");
-
-                                            } else {
-                                                // If sign in fails, display a message to the user.
-                                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(itemList.get(0).getName())
+                                        .setPhotoUri(Uri.parse("https://imgur.com/"+itemList.get(0).getImage()+".jpg"))
+                                        .build();
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, "User profile updated.");
+                                                }
                                             }
+                                        });
+                            }
 
-                                        }
-                                    });
+
+
 
                             /*Qiscus.setUser(itemList.get(0).getMail(),itemList.get(0).getPwd())
                                     .withUsername(itemList.get(0).getName())
