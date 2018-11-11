@@ -158,6 +158,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.show();
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

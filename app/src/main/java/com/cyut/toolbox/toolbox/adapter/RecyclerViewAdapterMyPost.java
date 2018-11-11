@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.cyut.toolbox.toolbox.model.ItemMsg;
 import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 
 
 import java.io.UnsupportedEncodingException;
@@ -155,6 +158,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                     backgorundwork.execute("finish_case",itemList.get(position).getCid(),"已完成",itemList.get(position).getMoney(),itemList.get(position).getRid());
                     itemList.get(position).setStatus("已完成");
                     notifyItemChanged(position);
+                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage());
                 }
             });
             holder.unfinish.setOnClickListener(new View.OnClickListener() {
@@ -223,46 +227,10 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                 intent.setClass(context,ChatroomActivity.class);
                 intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
                 context.startActivity(intent);
-
-                /*if (Qiscus.hasSetupUser()) {
-
-                    Qiscus.buildChatWith(mail)
-                            .build(context)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(intent -> {
-                                context.startActivity(intent);
-                            }, throwable -> {
-                                //do anything if error occurs
-                                Log.d(TAG, "onError: " + throwable);
-                            });
-                }*/
-
                 Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();
             }
         });
 
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: "+itemList.get(position).getPid());
-                Log.d(TAG, "onClick: "+itemList.get(position).getRid());
-                if (itemList.get(position).getPid().equals(uid) ){
-                    //我發的
-                    customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad()),itemList.get(position).getMoney(),
-                            itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getStatus(),itemList.get(position).getRid(),position);
-                }else if(itemList.get(position).getRid().equals(uid)){
-                    //我接的
-                    myRidDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad()),itemList.get(position).getMoney(),
-                            itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getPid(),itemList.get(position).getStatus(),position);
-                }
-
-            }
-        });*/
 
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -413,10 +381,32 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
     }
 
 
+    private void showRatingDialog(String uid,String category){
+        Log.d(TAG, "接案人:"+uid);
+        Log.d(TAG, "分類:"+category);
+        boolean wrapInScrollView = true;
+        MaterialDialog dialog=new MaterialDialog.Builder(context)
+                .customView(R.layout.dialog_rating, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+        final View item = dialog.getCustomView();
+        RatingBar ratingBar=item.findViewById(R.id.ratingBar);
+        EditText content=item.findViewById(R.id.content);
+        Button send=item.findViewById(R.id.sendout);
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Backgorundwork backgorundwork=new Backgorundwork(context);
+                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),uid,category);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     String getItemCid(int position) {
         return itemList.get(position).getCid();
     }
-
-
 
 }

@@ -226,7 +226,7 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/moneyTxt"
-                app:layout_constraintStart_toEndOf="@+id/imageView10"
+                app:layout_constraintStart_toEndOf="@+id/rating_life"
                 app:layout_constraintTop_toTopOf="@+id/card_progress_title"
                 app:srcCompat="@drawable/finished" />
 

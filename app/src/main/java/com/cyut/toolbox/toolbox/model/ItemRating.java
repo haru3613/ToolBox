@@ -7,50 +7,66 @@ package com.cyut.toolbox.toolbox.model;
 import com.google.gson.annotations.SerializedName;
 
 
-public class ItemMsg {
+public class ItemRating {
 
-    @SerializedName("c_cid")
+    @SerializedName("rt_id")
+    private String rt_id;
+    @SerializedName("category")
+    private String category;
+    @SerializedName("grade")
+    private String grade;
+    @SerializedName("rid")
+    private String rid;
+    @SerializedName("cid")
     private String cid;
-    @SerializedName("m_mid")
-    private String mid;
-    @SerializedName("fc_cid")
-    private String fcid;
-    @SerializedName("u_uid")
-    private String uid;
-    @SerializedName("m_message")
-    private String message;
-    @SerializedName("m_time")
+    @SerializedName("pid")
+    private String pid;
+    @SerializedName("content")
+    private String content;
+    @SerializedName("time")
     private String time;
 
 
-    public ItemMsg(String cid,String mid,String fcid,String uid,String message,String time) {
-        this.mid=mid;
-        this.fcid=fcid;
-        this.message=message;
-        this.uid=uid;
-        this.time=time;
+    public ItemRating(String rt_id, String category, String grade, String rid,String content,String pid,String cid,String time) {
+        this.rt_id=rt_id;
+        this.category=category;
+        this.grade=grade;
+        this.rid=rid;
+        this.pid=pid;
         this.cid=cid;
+        this.content=content;
+        this.time=time;
     }
-    public String getMid() {
-        return mid;
+
+    public String getRt_id() {
+        return rt_id;
     }
-    public String getFcid() {
-        return fcid;
+
+    public String getCategory() {
+        return category;
     }
-    public String getUid() {
-        return uid;
+
+    public String getGrade() {
+        return grade;
     }
-    public String getMessage() {
-        return message;
+
+    public String getRid() {
+        return rid;
     }
-    public String getTime() {
-        return time;
-    }
+
     public String getCid() {
         return cid;
     }
 
+    public String getPid() {
+        return pid;
+    }
 
+    public String getContent() {
+        return content;
+    }
 
-
+    public String getTime() {
+        return time;
+    }
 }

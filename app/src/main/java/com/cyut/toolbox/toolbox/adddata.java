@@ -692,7 +692,7 @@ public class adddata extends AppCompatActivity{
         case_disapear_Month=String.valueOf(c.get(Calendar.MONTH) + 1);
         case_disapear_Day=String.valueOf(c.get(Calendar.DAY_OF_MONTH));
         case_disapear_Week=String.valueOf(c.get(Calendar.DAY_OF_WEEK));
-        case_disapear_hours=String.valueOf(c.get(Calendar.HOUR));
+        case_disapear_hours=String.valueOf(c.get(Calendar.HOUR_OF_DAY));
         case_disapear_mins=String.valueOf(c.get(Calendar.MINUTE));
         case_disapear_Sec=String.valueOf(c.get(Calendar.SECOND));
 

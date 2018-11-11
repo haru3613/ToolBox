@@ -154,6 +154,7 @@ public class InforFragment extends Fragment {
 
 
                             FloatingActionButton floatingActionButton=(FloatingActionButton)getActivity().findViewById(R.id.fab);
+                            floatingActionButton.show();
                             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
