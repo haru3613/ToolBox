@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -142,6 +144,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
            // holder.finished.setImageResource(R.drawable.unfinish);
             holder.finished.setVisibility(View.GONE);
             holder.tool.setVisibility(View.VISIBLE);
+            holder.progress.setText("正在等待雇主進行確認");
             /*holder.finished.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -176,6 +179,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
                                     Backgorundwork backgorundwork = new Backgorundwork(context);
                                     backgorundwork.execute("case_status",itemList.get(position).getCid(),"確認中");
                                     itemList.get(position).setStatus("確認中");
+                                    showRatingDialog(itemList.get(position).getPid(),itemList.get(position).getCategoryImage());
                                     notifyItemChanged(position);
                                 }
                             })
@@ -220,45 +224,13 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
                 intent.setClass(context,ChatroomActivity.class);
                 intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
                 context.startActivity(intent);
-                /*if (Qiscus.hasSetupUser()) {
 
-                    Qiscus.buildChatWith(mail)
-                            .build(context)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(intent -> {
-                                context.startActivity(intent);
-                            }, throwable -> {
-                                //do anything if error occurs
-                                Log.d(TAG, "onError: " + throwable);
-                            });
-                }*/
 
                 Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();
             }
         });
 
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: "+itemList.get(position).getPid());
-                Log.d(TAG, "onClick: "+itemList.get(position).getRid());
-                if (itemList.get(position).getPid().equals(uid) ){
-                    //我發的
-                    customDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad()),itemList.get(position).getMoney(),
-                            itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getStatus(),itemList.get(position).getRid(),position);
-                }else if(itemList.get(position).getRid().equals(uid)){
-                    //我接的
-                    myRidDialog(itemList.get(position).getCategoryImage(),itemList.get(position).getTitle(),
-                            (itemList.get(position).getCity()+itemList.get(position).getTown()+"\n"+itemList.get(position).getRoad()),itemList.get(position).getMoney(),
-                            itemList.get(position).getDetail(),itemList.get(position).getTime(),itemList.get(position).getUntil(),itemList.get(position).getCid(),
-                            itemList.get(position).getPid(),itemList.get(position).getStatus(),position);
-                }
 
-            }
-        });*/
 
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -305,55 +277,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    //讀取接案人名稱及訊息
-    public void MessageLoad(final String cid,final RecyclerViewHoldersMyPost holder){
-        String url ="http://163.17.5.182/messagedetail.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:",response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            Log.d(TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            List<ItemMsg> posts = new ArrayList<ItemMsg>();
-                            if (!response.contains("Undefined")){
-                                posts = Arrays.asList(mGson.fromJson(response, ItemMsg[].class));
-                                adapter = new RecyclerViewAdapterMsgDetail(context, posts,uid);
-                                holder.mypost_ryv.setAdapter(adapter);
-                                holder.tool.setVisibility(View.GONE);
-                            }else{
-                                holder.tool.setText("此案尚未有工具人");
-                            }
 
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("c_cid",cid);
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-    }
 
 
     public void LoadUserName(final String uid,final RecyclerViewHoldersMyReport holder){
@@ -414,7 +338,32 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         notifyItemRemoved(index);
     }
 
+    private void showRatingDialog(String uid,String category){
+        Log.d(TAG, "接案人:"+uid);
+        Log.d(TAG, "分類:"+category);
+        boolean wrapInScrollView = true;
+        MaterialDialog dialog=new MaterialDialog.Builder(context)
+                .customView(R.layout.dialog_rating, wrapInScrollView)
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+        final View item = dialog.getCustomView();
+        TextView title=item.findViewById(R.id.rating_title);
+        RatingBar ratingBar=item.findViewById(R.id.ratingBar);
+        EditText content=item.findViewById(R.id.content);
+        Button send=item.findViewById(R.id.sendout);
 
+        title.setText("給予雇主評價");
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Backgorundwork backgorundwork=new Backgorundwork(context);
+                backgorundwork.execute("insert_rating_boss",Float.toString(ratingBar.getRating()),content.getText().toString(),uid,category);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
     String getItemCid(int position) {
         return itemList.get(position).getCid();
     }

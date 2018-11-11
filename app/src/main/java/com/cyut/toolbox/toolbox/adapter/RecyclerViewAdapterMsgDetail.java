@@ -115,12 +115,15 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         TextView tv_date=(TextView)item.findViewById(R.id.tool_date);
         TextView tv_message=(TextView)item.findViewById(R.id.tool_message);
         TextView tv_introduction=(TextView)item.findViewById(R.id.tool_introduction);
+        String lineSep = System.getProperty("line.separator");
+        String m=message.replaceAll("<br />", lineSep);
+        String intr=introduction.replaceAll("<br />", lineSep);
         ImageView im_choice=item.findViewById(R.id.choice_this);
         TextView cancel=item.findViewById(R.id.tool_cancel);
         tv_name.setText(name);
         tv_date.setText(string_sub(time));
-        tv_message.setText(message);
-        tv_introduction.setText(introduction);
+        tv_message.setText(m);
+        tv_introduction.setText(intr);
 
 
         im_choice.setOnClickListener(new View.OnClickListener() {
@@ -132,21 +135,10 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                 intent.setClass(context,ChatroomActivity.class);
                 intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
                 context.startActivity(intent);
-               /* if (Qiscus.hasSetupUser()) {
 
-                    Qiscus.buildChatWith(mail)
-                            .build(context)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(intent -> {
-                                context.startActivity(intent);
-                            }, throwable -> {
-                                //do anything if error occurs
-                                Log.d(TAG, "onError: " + throwable);
-                            });
-                }
-*/
                 Toast.makeText(context, "成功，即將開啟聊天室", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                //TODO 讓我的發案列表更新
             }
         });
 

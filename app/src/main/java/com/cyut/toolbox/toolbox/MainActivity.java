@@ -45,6 +45,7 @@ import com.cyut.toolbox.toolbox.Fragment.CollectionFragment;
 import com.cyut.toolbox.toolbox.Fragment.InforFragment;
 import com.cyut.toolbox.toolbox.Fragment.MainFragment;
 import com.cyut.toolbox.toolbox.Fragment.PostFragment;
+import com.cyut.toolbox.toolbox.Fragment.RatingFragment;
 import com.cyut.toolbox.toolbox.Fragment.ReportFragment;
 import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
 import com.cyut.toolbox.toolbox.model.Item;
@@ -299,6 +300,10 @@ public class MainActivity extends AppCompatActivity
             PostFragment fragment = new PostFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
+        } else if (id == R.id.nav_rating) {
+            RatingFragment fragment = new RatingFragment();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
         }  else if (id == R.id.nav_report) {
             ReportFragment fragment = new ReportFragment();
             FragmentManager manager=getSupportFragmentManager();
@@ -365,6 +370,14 @@ public class MainActivity extends AppCompatActivity
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
 
+                            iv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    InforFragment fragment=new InforFragment();
+                                    FragmentManager manager=getSupportFragmentManager();
+                                    manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                }
+                            });
 
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {

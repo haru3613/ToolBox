@@ -331,20 +331,6 @@ public class ChatroomActivity extends AppCompatActivity  {
 
 
 
-
-        mAddMessageImageView = (ImageView)
-                findViewById(R.id.addMessageImageView);
-        mAddMessageImageView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE);
-            }
-        });
-
         mSendButton = (Button)
                 findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener()
@@ -454,43 +440,6 @@ public class ChatroomActivity extends AppCompatActivity  {
                 });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
-        if (requestCode == REQUEST_IMAGE) {
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    final Uri uri = data.getData();
-                    Log.d(TAG, "Uri: " + uri.toString());
-                    FriendlyMessage tempMessage = new FriendlyMessage(null, mUsername, mPhotoUrl,
-                            LOADING_IMAGE_URL);
-                    mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ROOM_ID).push()
-                            .setValue(tempMessage, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(DatabaseError databaseError,
-                                                       DatabaseReference databaseReference) {
-                                    if (databaseError == null) {
-                                        String key = databaseReference.getKey();
-                                        StorageReference storageReference =
-                                                FirebaseStorage.getInstance()
-                                                        .getReference(mFirebaseUser.getUid())
-                                                        .child(key)
-                                                        .child(uri.getLastPathSegment());
-
-                                        putImageInStorage(storageReference, uri, key);
-                                    } else {
-                                        Log.w(TAG, "Unable to write message to database.",
-                                                databaseError.toException());
-                                    }
-                                }
-                            });
-
-                }
-            }
-        }
-    }
 
 
     /**
@@ -503,72 +452,4 @@ public class ChatroomActivity extends AppCompatActivity  {
         Log.d(TAG, "FML is: " + friendly_msg_length);
     }
 
-
-    public void LoadUser(final String uid) {
-        String url = "http://163.17.5.182/app/loaduser.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:", response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            Log.d(TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            List<Item> posts = new ArrayList<Item>();
-                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            List<Item> itemList = posts;
-                            FriendlyMessage tempMessage = new FriendlyMessage();
-                            tempMessage.setImageUrl("https://imgur.com/" + itemList.get(0).getImage() + ".jpg");
-                            tempMessage.setName(itemList.get(0).getName());
-                            tempMessage.setPhotoUrl("https://imgur.com/" + itemList.get(0).getImage() + ".jpg");
-
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("uid", uid);
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-
-
-    private void putImageInStorage(StorageReference storageReference, Uri uri, final String key) {
-        storageReference.putFile(uri).addOnCompleteListener(ChatroomActivity.this,
-                new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            FriendlyMessage friendlyMessage =
-                                    new FriendlyMessage(null, mUsername, mPhotoUrl,
-                                            task.getResult().getDownloadUrl()
-                                                    .toString());
-                            mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ROOM_ID).child(key)
-                                    .setValue(friendlyMessage);
-                        } else {
-                            Log.w(TAG, "Image upload task was not successful.",
-                                    task.getException());
-                        }
-                    }
-                });
-    }
 }

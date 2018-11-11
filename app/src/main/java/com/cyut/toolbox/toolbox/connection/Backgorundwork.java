@@ -723,6 +723,94 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("insert_rating")) {
+
+            String content = params[2];
+            String rating = params[1];
+            String uid = params[3];
+            String category = params[4];
+
+            String delete_url = "http://163.17.5.182/app/insert_rating.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("category", "UTF-8") + "=" + URLEncoder.encode(category, "UTF-8") + "&" +
+                        URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
+                        URLEncoder.encode("rating", "UTF-8") + "=" + URLEncoder.encode(rating, "UTF-8")+ "&" +
+                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(type.equals("insert_rating_boss")) {
+
+            String content = params[2];
+            String rating = params[1];
+            String uid = params[3];
+            String category = params[4];
+
+            String delete_url = "http://163.17.5.182/app/insert_rating_boss.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("category", "UTF-8") + "=" + URLEncoder.encode(category, "UTF-8") + "&" +
+                        URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
+                        URLEncoder.encode("rating", "UTF-8") + "=" + URLEncoder.encode(rating, "UTF-8")+ "&" +
+                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -824,6 +912,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "詢問成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("qupdate success")) {
             Toast.makeText(context, "回答成功", Toast.LENGTH_SHORT).show();
+        }else if(result.contains("評分成功")) {
+            Toast.makeText(context, "評分成功", Toast.LENGTH_SHORT).show();
         }else if (result.contains("DOCTYPE")){
             Log.d("Result", "onPostExecute: "+result);
             Toast.makeText(context, "系統出錯，請再試一次", Toast.LENGTH_SHORT).show();
