@@ -669,7 +669,7 @@ public class adddata extends AppCompatActivity{
             super.handleMessage(msg);
             switch (msg.what) {
                 case msgKey1:
-                    if (c_end_hours != 0 && c_end_mins != 0) {
+                    if (c_end_hours != 0 || c_end_mins != 0) {
                         text_end_until_time.setText(end_getTime());
                     } else {
                         text_end_until_time.setText("");
