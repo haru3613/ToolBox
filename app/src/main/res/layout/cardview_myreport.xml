@@ -26,6 +26,53 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/card_rating_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="雇主評價"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_message" />
+
+            <RatingBar
+                android:id="@+id/card_rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:stepSize="1.0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_rating_title" />
+
+            <ImageView
+                android:id="@+id/view_rating"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/card_rating"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/moneyTxt"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/viewdetail" />
+
+            <TextView
                 android:id="@+id/card_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +84,7 @@
                 android:textSize="16dp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_message" />
+                app:layout_constraintTop_toBottomOf="@+id/card_rating" />
 
             <TextView
                 android:id="@+id/card_tool_title"

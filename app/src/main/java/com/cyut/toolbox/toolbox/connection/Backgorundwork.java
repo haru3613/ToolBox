@@ -729,7 +729,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String rating = params[1];
             String uid = params[3];
             String category = params[4];
-
+            String muid = params[5];
+            String cid=params[6];
             String delete_url = "http://163.17.5.182/app/insert_rating.php";
             try {
 
@@ -744,51 +745,9 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 String post_data = URLEncoder.encode("category", "UTF-8") + "=" + URLEncoder.encode(category, "UTF-8") + "&" +
                         URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
                         URLEncoder.encode("rating", "UTF-8") + "=" + URLEncoder.encode(rating, "UTF-8")+ "&" +
-                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8");
-
-                Log.d("POST_DATA", "doInBackground: " + post_data);
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                String result = "";
-                String line = null;
-                while ((line = bufferedReader.readLine()) != null) {
-                    result += line;
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-                return result;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else if(type.equals("insert_rating_boss")) {
-
-            String content = params[2];
-            String rating = params[1];
-            String uid = params[3];
-            String category = params[4];
-
-            String delete_url = "http://163.17.5.182/app/insert_rating_boss.php";
-            try {
-
-                URL url = new URL(delete_url);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("category", "UTF-8") + "=" + URLEncoder.encode(category, "UTF-8") + "&" +
-                        URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
-                        URLEncoder.encode("rating", "UTF-8") + "=" + URLEncoder.encode(rating, "UTF-8")+ "&" +
-                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8");
+                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8")+ "&" +
+                        URLEncoder.encode("muid", "UTF-8") + "=" + URLEncoder.encode(muid, "UTF-8")+ "&" +
+                        URLEncoder.encode("cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8");
 
                 Log.d("POST_DATA", "doInBackground: " + post_data);
                 bufferedWriter.write(post_data);

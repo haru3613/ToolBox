@@ -11,19 +11,19 @@ public class ItemRating {
 
     @SerializedName("rt_id")
     private String rt_id;
-    @SerializedName("category")
+    @SerializedName("rt_category")
     private String category;
-    @SerializedName("grade")
+    @SerializedName("rt_grade")
     private String grade;
-    @SerializedName("rid")
+    @SerializedName("rt_rid")
     private String rid;
-    @SerializedName("cid")
+    @SerializedName("rt_cid")
     private String cid;
-    @SerializedName("pid")
+    @SerializedName("rt_pid")
     private String pid;
-    @SerializedName("content")
+    @SerializedName("rt_content")
     private String content;
-    @SerializedName("time")
+    @SerializedName("rt_time")
     private String time;
 
 

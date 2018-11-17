@@ -1,10 +1,12 @@
 package com.cyut.toolbox.toolbox.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +36,14 @@ import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.cyut.toolbox.toolbox.model.ItemMsg;
 import com.cyut.toolbox.toolbox.model.ItemObject;
+import com.cyut.toolbox.toolbox.model.ItemRating;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import com.google.gson.reflect.TypeToken;
 
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -112,7 +116,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         }else{
             holder.Area.setText(Address);
         }
-
+        LoadEvaluation(itemList.get(position).getPid(),holder);
 
         String lineSep = System.getProperty("line.separator");
         String m=itemList.get(position).getDetail().replaceAll("<br />", lineSep);
@@ -129,6 +133,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         String short_until=string_sub(itemList.get(position).getUntil());
 
         holder.time.setText(short_time+" 至  "+short_until);
+
 
         if (status.equals("待接案")){
             holder.Status.setTextColor(Color.parseColor("#ff3333"));
@@ -158,7 +163,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                     backgorundwork.execute("finish_case",itemList.get(position).getCid(),"已完成",itemList.get(position).getMoney(),itemList.get(position).getRid());
                     itemList.get(position).setStatus("已完成");
                     notifyItemChanged(position);
-                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage());
+                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid());
                 }
             });
             holder.unfinish.setOnClickListener(new View.OnClickListener() {
@@ -204,9 +209,11 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         holder.content.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.message.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.progress_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.ratingBar.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.progress.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.tool_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-
+        holder.rating_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.view_rating.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);
         if (isExpanded)
             previousExpandedPosition = position;
@@ -381,8 +388,59 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    private void showRatingDialog(String uid,String category){
-        Log.d(TAG, "接案人:"+uid);
+    public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
+        Log.d(ContentValues.TAG, "uid："+uid);
+        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
+                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
+                            if (!response.contains("Undefined")) {
+                                posts = mGson.fromJson(response, listType);
+                            }
+                            if (posts.isEmpty()){
+                                holder.ratingBar.setRating(0);
+                            }else{
+                                if (!TextUtils.isEmpty(posts.get(0).getGrade()))
+                                    holder.ratingBar.setRating(Float.parseFloat(posts.get(0).getGrade()));
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",uid);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    private void showRatingDialog(String suid,String category,String cid){
+        Log.d(TAG, "接案人:"+suid);
         Log.d(TAG, "分類:"+category);
         boolean wrapInScrollView = true;
         MaterialDialog dialog=new MaterialDialog.Builder(context)
@@ -398,7 +456,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View view) {
                 Backgorundwork backgorundwork=new Backgorundwork(context);
-                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),uid,category);
+                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid);
                 dialog.dismiss();
             }
         });
