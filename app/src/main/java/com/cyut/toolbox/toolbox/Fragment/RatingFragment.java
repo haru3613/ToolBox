@@ -287,7 +287,8 @@ public class RatingFragment extends Fragment {
             //執行後 完成背景任務
             Log.d(TAG, "onPostExecute: "+result);
             if (result==null || result.equals("")){
-                tv_total.setText("你尚未獲得評價");
+                tv_total.setText("0");
+                Toast.makeText(v.getContext(),"你尚未獲得評價",Toast.LENGTH_SHORT).show();
             }
             else if (category.equals("全部")){
                 tv_total.setText(result.substring(0,3));

@@ -39,7 +39,6 @@ public class RecyclerViewAdapterRating extends RecyclerView.Adapter<RecyclerView
     public ArrayList<ItemRating> itemList;
     private Context context;
     String name , email,uid;
-    private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -83,9 +82,11 @@ public class RecyclerViewAdapterRating extends RecyclerView.Adapter<RecyclerView
                 break;
         }
 
-        if (itemList.get(position).getPid().equals("")){
+        if (itemList.get(position).getPid().equals(uid)){
+            Log.d(TAG, "onBindViewHolder: "+itemList.get(position).getRid());
             LoadName(itemList.get(position).getRid(),holder);
-        }else{
+        }else if (itemList.get(position).getRid().equals(uid)){
+            Log.d(TAG, "onBindViewHolder: "+itemList.get(position).getPid());
             LoadName(itemList.get(position).getPid(),holder);
         }
 
