@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +74,7 @@ public class RatingFragment extends Fragment {
     private Button toolman,boss;
     private String classs,total,category;
     private TextView tv_total;
+
     public RatingFragment() {
         // Required empty public constructor
     }
@@ -364,6 +366,7 @@ public class RatingFragment extends Fragment {
                                 adapter = new RecyclerViewAdapterRating(v.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
+
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 

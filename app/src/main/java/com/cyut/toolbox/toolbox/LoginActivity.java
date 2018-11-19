@@ -156,11 +156,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //判斷使用者是否第一次登入
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
         Boolean FirstLogin=sharedPreferences.getBoolean("Status",false);
         Log.d("First Login?",FirstLogin.toString());
-        if (FirstLogin){
+        if (FirstLogin && user!=null){
             Intent toLoadView=new Intent(LoginActivity.this,LoadingView.class);
             LoginActivity.this.startActivity(toLoadView);
             finish();

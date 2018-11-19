@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.cyut.toolbox.toolbox.Fragment.InforFragment;
 import com.cyut.toolbox.toolbox.model.FriendlyMessage;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -55,10 +58,14 @@ import com.google.firebase.appindexing.builders.PersonBuilder;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -69,7 +76,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -109,7 +129,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
 
     private String mUsername;
-    private String mPhotoUrl;
+    private String mPhotoUrl,Token;
     private SharedPreferences mSharedPreferences;
     private String uid;
     private Button mSendButton;
@@ -141,6 +161,7 @@ public class ChatroomActivity extends AppCompatActivity  {
 
         ROOM_ID = intent.getStringExtra("cid");
 
+        String other_uid = intent.getStringExtra("other_uid");
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -155,7 +176,7 @@ public class ChatroomActivity extends AppCompatActivity  {
         }
 
 
-
+        LoadUser(other_uid);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -167,6 +188,8 @@ public class ChatroomActivity extends AppCompatActivity  {
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ROOM_ID);
+
+
         SnapshotParser<FriendlyMessage> parser = new SnapshotParser<FriendlyMessage>() {
             @Override
             public FriendlyMessage parseSnapshot(DataSnapshot dataSnapshot) {
@@ -340,18 +363,14 @@ public class ChatroomActivity extends AppCompatActivity  {
                 Log.d(TAG, "Send Message");
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername,
                         mPhotoUrl, null);
+                try {
+                    if (!Token.equals(""))
+                        send_message(Token,friendlyMessage.getName(),friendlyMessage.getText());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
-                FirebaseMessaging.getInstance().subscribeToTopic(ROOM_ID)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                String msg = mMessageEditText.getText().toString();
-                                if (!task.isSuccessful()) {
-                                    msg = "null";
-                                }
-                                Log.d(TAG, msg);
-                            }
-                        });
+
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ROOM_ID).push().setValue(friendlyMessage);
                 Log.d(TAG, "onClick: "+mFirebaseDatabaseReference);
                 mMessageEditText.setText("");
@@ -452,4 +471,100 @@ public class ChatroomActivity extends AppCompatActivity  {
         Log.d(TAG, "FML is: " + friendly_msg_length);
     }
 
+    private void send_message(String topic,String title,String body) throws JSONException {
+        HttpURLConnection urlConnection;
+        JSONObject json = new JSONObject();
+        JSONObject info = new JSONObject();
+        info.put("title", title);   // Notification title
+        info.put("body", body); // Notification body
+        json.put("notification", info);
+        json.put("to", topic);
+
+
+        String data = json.toString();
+        String result = null;
+        try {
+            //Connect
+
+            urlConnection = (HttpURLConnection) ((new URL("https://fcm.googleapis.com/fcm/send").openConnection()));
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestProperty("Authorization", "key=AAAAEFD1c04:APA91bGG5zG2wjf5M0BQtIHlB4VInlb-VhUtM9YkKcBEIz-xA5lgVk0ouQifciHUgchg-pMdLbYzc3b2IuSRlrhWPr7qIXieEXAqktNiOBYu7Y1SgcYES1EastyZrAEREJOdRtqdK2yF");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //Write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+            Log.d(TAG, "send_message: "+result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void LoadUser(final String other_uid){
+        String url ="http://163.17.5.182/app/loaduser.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            List<Item> posts = new ArrayList<Item>();
+                            posts = Arrays.asList(mGson.fromJson(response, Item[].class));
+                            if (posts.get(0).getToken()==null){
+                                Token="";
+                            }else
+                                Token=posts.get(0).getToken();
+
+
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",other_uid);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
 }

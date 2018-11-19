@@ -36,21 +36,18 @@
                 android:id="@+id/nav_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/nick_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Android Studio"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/mail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="android.studio@android.com"
                 android:textSize="12sp" />
 
 

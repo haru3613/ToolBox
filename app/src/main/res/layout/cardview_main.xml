@@ -25,13 +25,24 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
+            <ImageView
+                android:id="@+id/report_icon"
+                android:layout_width="20dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/a_nickname"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/dotdot" />
+
             <TextView
                 android:id="@+id/card_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="時間限制"
                 android:textColor="@color/primaryTextColor"
@@ -103,9 +114,9 @@
                 android:id="@+id/a_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="Name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -122,9 +133,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:gravity="top|right"
                 android:paddingRight="5dp"
@@ -156,9 +167,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:text="雇主評價"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="18dp"
@@ -173,12 +184,11 @@
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:isIndicator="false"
                 android:numStars="5"
                 android:stepSize="1.0"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -191,9 +201,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:paddingBottom="10dp"
                 android:text="TextView"
@@ -208,9 +218,9 @@
                 android:id="@+id/card_send"
                 android:layout_width="73dp"
                 android:layout_height="47dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -233,8 +243,8 @@
                 android:id="@+id/card_ans"
                 android:layout_width="72dp"
                 android:layout_height="47dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -245,13 +255,41 @@
                 android:id="@+id/view_rating"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/card_rating"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/moneyTxt"
                 app:layout_constraintVertical_bias="1.0"
                 app:srcCompat="@drawable/viewdetail" />
+
+            <LinearLayout
+                android:id="@+id/report_case"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/report_icon">
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    app:srcCompat="@drawable/report_icon" />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="檢舉"
+                    android:textColor="@color/primaryTextColor" />
+            </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>
 

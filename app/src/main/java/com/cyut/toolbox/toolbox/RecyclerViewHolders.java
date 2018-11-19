@@ -8,11 +8,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class RecyclerViewHolders extends RecyclerView.ViewHolder{
-    public ImageView CategoryImage,send,like,ans,view_rating;
+    public ImageView CategoryImage,send,like,ans,view_rating,report;
     public TextView Title;
     public TextView Area;
     public TextView Status;
@@ -20,6 +21,7 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder{
     public TextView Money,time,content,time_title;
     public RatingBar ratingBar;
     public ConstraintLayout bg;
+    public LinearLayout linearLayout;
     public RecyclerViewHolders(View itemView) {
         super(itemView);
         view_rating=itemView.findViewById(R.id.view_rating);
@@ -38,8 +40,8 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder{
         Money=itemView.findViewById(R.id.moneyTxt);
         bg=itemView.findViewById(R.id.bg);
         ratingBar=itemView.findViewById(R.id.card_rating);
-
-
+        report=itemView.findViewById(R.id.report_icon);
+        linearLayout=itemView.findViewById(R.id.report_case);
     }
 
 

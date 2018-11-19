@@ -42,6 +42,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_message" />
 
+            <ImageView
+                android:id="@+id/report_icon"
+                android:layout_width="20dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/a_nickname"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/dotdot" />
+
             <RatingBar
                 android:id="@+id/card_rating"
                 style="?android:attr/ratingBarStyleSmall"
@@ -52,7 +63,6 @@
                 android:layout_marginEnd="8dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:isIndicator="false"
                 android:numStars="5"
                 android:stepSize="1.0"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -326,6 +336,34 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_tool_title" />
+
+            <LinearLayout
+                android:id="@+id/report_case"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/report_icon">
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    app:srcCompat="@drawable/report_icon" />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="檢舉"
+                    android:textColor="@color/primaryTextColor" />
+            </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>
 

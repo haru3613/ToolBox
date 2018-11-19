@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -68,7 +69,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapter adapter;
     private RecyclerViewAdapterCategory categoryadapter;
-
+    private ProgressBar progressBar;
     public static final String KEY = "STATUS";
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -115,7 +116,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
         ArrayList<String> categorylist=new ArrayList<String>();
 
-
+        progressBar=v.findViewById(R.id.main_loading);
 
 
         categorylist.add("全部");
@@ -211,7 +212,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                         adapter = new RecyclerViewAdapter(v.getContext(), posts, uid);
                         recyclerView.setAdapter(adapter);
                     }
-
+                    progressBar.setVisibility(View.GONE);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
 

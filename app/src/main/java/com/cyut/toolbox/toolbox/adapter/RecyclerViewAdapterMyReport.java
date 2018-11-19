@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,11 +58,13 @@ import static android.content.ContentValues.TAG;
 public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerViewHoldersMyReport> {
     public ArrayList<ItemObject> itemList;
     private Context context;
-    private String uid;
+    private String uid,report_reason;
+    private View item_report;
     private RecyclerViewAdapterMsgDetail adapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private static MaterialDialog RidDialog;
+
+    private RecyclerViewAdapterRating adapterRating;
     public static final String KEY = "STATUS";
     private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
@@ -214,6 +218,8 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         holder.rating_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.view_rating.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.tomessage.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.report.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.linearLayout.setVisibility(View.GONE);
         holder.itemView.setActivated(isExpanded);
         if (isExpanded)
             previousExpandedPosition = position;
@@ -233,19 +239,40 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
                 Intent intent = new Intent();
                 intent.setClass(context,ChatroomActivity.class);
                 intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
+                if (itemList.get(position).getPid().equals(uid))
+                    intent.putExtra("other_uid", itemList.get(position).getRid());
+                else
+                    intent.putExtra("other_uid", itemList.get(position).getPid());
                 context.startActivity(intent);
 
 
                 Toast.makeText(context, "即將開啟聊天室", Toast.LENGTH_SHORT).show();
             }
         });
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
 
-
+            }
+        });
+        holder.view_rating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RatingAlert(itemList.get(position).getPid());
+            }
+        });
 
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View arg0) {
-                normalDialogEvent(itemList.get(position).getCid(),uid,position);
+                //normalDialogEvent(itemList.get(position).getCid(),uid,position);
                 return true;
             }
         });
@@ -281,11 +308,6 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         dialog.show();
     }
 
-    public static void dissmissDialog() {
-        if(RidDialog!=null){
-            RidDialog.dismiss();
-        }
-    }
 
 
 
@@ -347,7 +369,83 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         itemList.remove(index);
         notifyItemRemoved(index);
     }
+    private void ReportAlert(final String cid,final String uid,final String pid){
+        boolean wrapInScrollView = true;
 
+        item_report = LayoutInflater.from(context).inflate(R.layout.dialog_report, null);
+
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .customView(item_report,wrapInScrollView )
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+
+        ImageView send=item_report.findViewById(R.id.correct_send);
+        TextView cancel=item_report.findViewById(R.id.cancel);
+        RadioButton rb01=item_report.findViewById(R.id.rb01);
+        RadioButton rb02=item_report.findViewById(R.id.rb02);
+        RadioButton rb03=item_report.findViewById(R.id.rb03);
+        RadioButton rb04=item_report.findViewById(R.id.rb04);
+        RadioButton rb05=item_report.findViewById(R.id.rb05);
+        RadioButton rb06=item_report.findViewById(R.id.rb06);
+
+        rb01.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        rb02.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        rb03.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        rb04.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        rb05.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        rb06.setOnCheckedChangeListener(mOnCheckedChangeListener);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!report_reason.equals("")){
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason);
+                }else{
+                    Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.rb01:
+                    report_reason="案件含有不雅名稱";
+                    break;
+                case R.id.rb02:
+                    report_reason="態度惡劣";
+                    break;
+                case R.id.rb03:
+                    report_reason="持續騷擾";
+                    break;
+                case R.id.rb04:
+                    report_reason="未達成工作需求";
+                    break;
+                case R.id.rb05:
+                    report_reason="遲遲不肯按確認鍵";
+                    break;
+                case R.id.rb06:
+                    EditText editText=item_report.findViewById(R.id.other_reason);
+                    report_reason=editText.getText().toString();
+                    break;
+            }
+        }
+    };
     private void showRatingDialog(String suid,String category,String cid){
         Log.d(TAG, "接案人:"+uid);
         Log.d(TAG, "分類:"+category);
@@ -377,7 +475,34 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
     String getItemCid(int position) {
         return itemList.get(position).getCid();
     }
+    private void RatingAlert(final String pid){
+        boolean wrapInScrollView = true;
 
+        final View item = LayoutInflater.from(context).inflate(R.layout.dialog_rating_view, null);
+
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .title("雇主評價")
+                .customView(item,wrapInScrollView )
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+
+        recyclerView = (RecyclerView)item.findViewById(R.id.dialog_recyclerview);
+        layoutManager = new LinearLayoutManager(item.getContext());
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
+        recyclerView.setLayoutManager(layoutManager);
+
+        LoadEvaluation(pid);
+
+
+
+        dialog.show();
+
+    }
 
     public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyReport holder){
         Log.d(ContentValues.TAG, "uid："+uid);
@@ -429,6 +554,55 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }
+    public void LoadEvaluation(final String uid){
+        Log.d(ContentValues.TAG, "uid："+uid);
+        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
+                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
+                            if (!response.contains("Undefined")) {
+                                posts = mGson.fromJson(response, listType);
+                            }
+                            if (posts.isEmpty()){
+                                Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
+                            }else{
+                                adapterRating = new RecyclerViewAdapterRating(context, posts,uid);
+                                recyclerView.setAdapter(adapterRating);
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
 
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",uid);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
 
 }

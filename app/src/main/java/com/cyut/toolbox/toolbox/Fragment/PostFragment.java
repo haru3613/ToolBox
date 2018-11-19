@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -53,6 +54,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapterMyPost adapter;
+    private ProgressBar progressBar;
     String uid;
     View v;
     String SearchString;
@@ -85,7 +87,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(layoutManager);
-
+        progressBar=v.findViewById(R.id.post_loading);
 
 
         FloatingActionButton floatingActionButton=(FloatingActionButton)getActivity().findViewById(R.id.fab);
@@ -128,7 +130,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
                                 adapter = new RecyclerViewAdapterMyPost(v.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
-
+                            progressBar.setVisibility(View.GONE);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 

@@ -7,17 +7,19 @@ package com.cyut.toolbox.toolbox;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class RecyclerViewHoldersMyReport extends RecyclerView.ViewHolder{
-    public ImageView CategoryImage, finished,tomessage,view_rating;
+    public ImageView CategoryImage, finished,tomessage,view_rating,report;
     public TextView Title;
     public TextView Area;
     public TextView Status,progress_title,progress,rating_title;
     public TextView message,tool_title,tool;
     public TextView Money,time,content,time_title;
     public RatingBar ratingBar;
+    public LinearLayout linearLayout;
     public RecyclerViewHoldersMyReport(View itemView) {
         super(itemView);
         CategoryImage = (ImageView)itemView.findViewById(R.id.a_headpic);
@@ -38,6 +40,8 @@ public class RecyclerViewHoldersMyReport extends RecyclerView.ViewHolder{
         tool_title=itemView.findViewById(R.id.card_tool_title);
         ratingBar=itemView.findViewById(R.id.card_rating);
         view_rating=itemView.findViewById(R.id.view_rating);
+        report=itemView.findViewById(R.id.report_icon);
+        linearLayout=itemView.findViewById(R.id.report_case);
     }
 
 

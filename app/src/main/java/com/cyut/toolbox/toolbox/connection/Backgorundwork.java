@@ -15,7 +15,10 @@ import com.cyut.toolbox.toolbox.LoginActivity;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapter;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
 import com.cyut.toolbox.toolbox.changepassword;
+import com.google.android.gms.common.util.IOUtils;
 
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -477,6 +480,45 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("update_user")) {
+
+            String token = params[1];
+            String uid=params[2];
+            String delete_url = "http://163.17.5.182/app/update_token.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("token", "UTF-8") + "=" + URLEncoder.encode(token, "UTF-8")+"&"+
+                        URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else if(type.equals("case_status")) {
             String c_status = params[2];
             String c_cid = params[1];
@@ -770,6 +812,49 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("insert_report")) {
+
+            String content = params[4];
+            String pid=params[3];
+            String uid = params[2];
+            String cid=params[1];
+            String delete_url = "http://163.17.5.182/app/insert_report.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
+                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8")+ "&" +
+                        URLEncoder.encode("pid", "UTF-8") + "=" + URLEncoder.encode(pid, "UTF-8")+ "&" +
+                        URLEncoder.encode("cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -873,13 +958,12 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "回答成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("評分成功")) {
             Toast.makeText(context, "評分成功", Toast.LENGTH_SHORT).show();
-        }else if (result.contains("DOCTYPE")){
-            Log.d("Result", "onPostExecute: "+result);
+        }else if (result.contains("DOCTYPE")) {
+            Log.d("Result", "onPostExecute: " + result);
             Toast.makeText(context, "系統出錯，請再試一次", Toast.LENGTH_SHORT).show();
-        }
-        else
+        }else
         {
-            alertDialog.show();
+            Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
             Log.d("Result", "onPostExecute: "+result);
         }
 

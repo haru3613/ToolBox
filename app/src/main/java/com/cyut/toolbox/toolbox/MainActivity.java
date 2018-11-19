@@ -48,6 +48,7 @@ import com.cyut.toolbox.toolbox.Fragment.PostFragment;
 import com.cyut.toolbox.toolbox.Fragment.RatingFragment;
 import com.cyut.toolbox.toolbox.Fragment.ReportFragment;
 import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
+import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -141,7 +142,16 @@ public class MainActivity extends AppCompatActivity
         Umanager.checkUpdate();
 
 
+        SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
+        uid=sharedPreferences.getString("uid",null);
 
+
+
+
+        //set Nav information
+        if (uid!=null){
+            LoadUser(uid);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -178,13 +188,16 @@ public class MainActivity extends AppCompatActivity
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-
+                        String type = "update_user";
+                        Backgorundwork backgorundwork = new Backgorundwork(MainActivity.this);
+                        backgorundwork.execute(type,token,uid);
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d(TAG, msg);
                         //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+
 
 
         //如果在特定Fragment FAB不顯示
@@ -215,16 +228,7 @@ public class MainActivity extends AppCompatActivity
                 .setTitleColor(R.color.primaryTextColor)
                 .setRightBubbleTextColor(R.color.primaryTextColor);*/
 
-        SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
-        uid=sharedPreferences.getString("uid",null);
 
-
-
-
-        //set Nav information
-        if (uid!=null){
-            LoadUser(uid);
-        }
 
 
 
