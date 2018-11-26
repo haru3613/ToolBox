@@ -30,12 +30,13 @@
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="257dp"
-        android:layout_height="271dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView24">
 
@@ -44,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onSelect"
             android:text="案件名稱不雅"
             android:textColor="@color/primaryColor" />
 
@@ -53,7 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onSelect"
             android:text="態度惡劣"
             android:textColor="@color/primaryColor" />
 
@@ -62,7 +61,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onSelect"
             android:text="持續騷擾"
             android:textColor="@color/primaryColor" />
 
@@ -71,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onSelect"
             android:text="未達成工作需求"
             android:textColor="@color/primaryColor" />
 
@@ -80,7 +77,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onSelect"
             android:text="遲遲不肯按確認鍵"
             android:textColor="@color/primaryColor" />
 
@@ -89,7 +85,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onSelect"
             android:text="其他"
             android:textColor="@color/primaryColor" />
     </RadioGroup>

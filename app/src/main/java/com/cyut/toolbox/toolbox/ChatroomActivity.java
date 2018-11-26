@@ -129,7 +129,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
 
     private String mUsername;
-    private String mPhotoUrl,Token;
+    private String mPhotoUrl,MToken,WToken;
     private SharedPreferences mSharedPreferences;
     private String uid;
     private Button mSendButton;
@@ -364,8 +364,11 @@ public class ChatroomActivity extends AppCompatActivity  {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername,
                         mPhotoUrl, null);
                 try {
-                    if (!Token.equals(""))
-                        send_message(Token,friendlyMessage.getName(),friendlyMessage.getText());
+                    if (!WToken.equals("")||MToken.equals("")){
+                        send_message(MToken,friendlyMessage.getName(),friendlyMessage.getText());
+                        send_message(WToken,friendlyMessage.getName(),friendlyMessage.getText());
+                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -471,14 +474,18 @@ public class ChatroomActivity extends AppCompatActivity  {
         Log.d(TAG, "FML is: " + friendly_msg_length);
     }
 
-    private void send_message(String topic,String title,String body) throws JSONException {
+    private void send_message(String token,String title,String body ) throws JSONException {
         HttpURLConnection urlConnection;
         JSONObject json = new JSONObject();
         JSONObject info = new JSONObject();
+        JSONObject datas = new JSONObject();
+        datas.put("caseID",ROOM_ID);
         info.put("title", title);   // Notification title
         info.put("body", body); // Notification body
         json.put("notification", info);
-        json.put("to", topic);
+        json.put("data",datas);
+        json.put("to", token);
+
 
 
         String data = json.toString();
@@ -536,11 +543,13 @@ public class ChatroomActivity extends AppCompatActivity  {
                             Gson mGson = builder.create();
                             List<Item> posts = new ArrayList<Item>();
                             posts = Arrays.asList(mGson.fromJson(response, Item[].class));
-                            if (posts.get(0).getToken()==null){
-                                Token="";
-                            }else
-                                Token=posts.get(0).getToken();
-
+                            if (posts.get(0).getMtoken()==null&&posts.get(0).getWtoken()==null){
+                                MToken="";
+                                WToken="";
+                            }else{
+                                MToken=posts.get(0).getMtoken();
+                                WToken=posts.get(0).getWtoken();
+                            }
 
 
                         } catch (UnsupportedEncodingException e) {
