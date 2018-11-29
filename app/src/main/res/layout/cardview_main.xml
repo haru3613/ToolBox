@@ -87,11 +87,13 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/a_time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_launcher" />
@@ -114,17 +116,14 @@
                 android:id="@+id/a_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Name"
+                android:text="Nameeeeeeeeeeeee"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/primaryTextColor"
-                android:textSize="20dp"
+                android:textSize="18sp"
                 android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/a_headpic"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -160,7 +159,7 @@
                 android:textSize="18dp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/a_headpic" />
+                app:layout_constraintTop_toBottomOf="@+id/a_time" />
 
             <TextView
                 android:id="@+id/card_rating_title"

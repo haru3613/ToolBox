@@ -29,7 +29,7 @@
         <RatingBar
             android:id="@+id/item_rating_ratingbar"
             style="@style/Widget.AppCompat.RatingBar.Small"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
