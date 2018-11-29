@@ -129,17 +129,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 break;
         }
         if (itemList.get(position).getTitle().length()>8){
-            holder.Title.setText(itemList.get(position).getTitle().substring(0,8)+"...");
+            holder.Title.setText(itemList.get(position).getTitle().substring(0,8)+"\n"+itemList.get(position).getTitle().substring(8));
         }else{
             holder.Title.setText(itemList.get(position).getTitle());
         }
 
         String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
-        if (Address.length()>10){
-            holder.Area.setText(Address.substring(0,10)+"...");
-        }else{
-            holder.Area.setText(Address);
-        }
+        holder.Area.setText(Address);
 
         String lineSep = System.getProperty("line.separator");
         String m=itemList.get(position).getDetail().replaceAll("<br />", lineSep);

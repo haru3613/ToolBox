@@ -3,6 +3,7 @@ package com.cyut.toolbox.toolbox.Fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -114,6 +115,7 @@ public class RatingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 classs="工具人";
+                category="全部";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_toolman.php");
                 LoadEvaluation(uid,"http://163.17.5.182/app/load_my_toolman_evaluation.php");
@@ -124,6 +126,7 @@ public class RatingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 classs="雇主";
+                category="全部";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_boss.php");
                 LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");
@@ -288,6 +291,9 @@ public class RatingFragment extends Fragment {
         protected void onPostExecute(String result) {
             //執行後 完成背景任務
             Log.d(TAG, "onPostExecute: "+result);
+
+
+
             if (result==null || result.equals("")){
                 tv_total.setText("0");
                 Toast.makeText(v.getContext(),"你尚未獲得評價",Toast.LENGTH_SHORT).show();
@@ -295,13 +301,15 @@ public class RatingFragment extends Fragment {
             else if (category.equals("全部")){
                 tv_total.setText(result.substring(0,3));
             }else{
-                showRatingDialog(result,category);
+                String[] s;
+                s=result.split(";");
+                showRatingDialog(s[0],category,s[1]);
             }
         }
     }
 
 
-    private void showRatingDialog(String value,String category){
+    private void showRatingDialog(String value,String category,String count){
         Log.d(ContentValues.TAG, "接案人:"+uid);
         Log.d(ContentValues.TAG, "分類:"+category);
         boolean wrapInScrollView = true;
@@ -310,6 +318,7 @@ public class RatingFragment extends Fragment {
                 .backgroundColorRes(R.color.colorBackground)
                 .build();
         final View item = dialog.getCustomView();
+        TextView pr=item.findViewById(R.id.pr_value);
         RatingBar ratingBar=item.findViewById(R.id.value_ratingbar);
         ImageView imageView=item.findViewById(R.id.value_category);
         switch (category) {
@@ -335,6 +344,11 @@ public class RatingFragment extends Fragment {
 
         if (!value.equals("")){
             ratingBar.setRating(Float.parseFloat(value.substring(0,3)));
+        }
+        int c=Integer.parseInt(count);
+        if (c>10){
+        }else{
+            pr.setText("由於案件低於十件，所以尚未進行排名");
         }
 
 
