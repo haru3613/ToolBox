@@ -387,7 +387,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         RadioButton rb04=item_report.findViewById(R.id.rb04);
         RadioButton rb05=item_report.findViewById(R.id.rb05);
         RadioButton rb06=item_report.findViewById(R.id.rb06);
-
+        EditText detail_content=item_report.findViewById(R.id.detail_content);
         rb01.setOnCheckedChangeListener(mOnCheckedChangeListener);
         rb02.setOnCheckedChangeListener(mOnCheckedChangeListener);
         rb03.setOnCheckedChangeListener(mOnCheckedChangeListener);
@@ -406,8 +406,9 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void onClick(View view) {
                 if (!report_reason.equals("")){
+                    String Detail=detail_content.getText().toString();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
-                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason);
+                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason,Detail);
                 }else{
                     Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
                 }
@@ -423,24 +424,30 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            EditText editText=item_report.findViewById(R.id.other_reason);
             switch (buttonView.getId()) {
                 case R.id.rb01:
+                    editText.setVisibility(View.INVISIBLE);
                     report_reason="案件含有不雅名稱";
                     break;
                 case R.id.rb02:
+                    editText.setVisibility(View.INVISIBLE);
                     report_reason="態度惡劣";
                     break;
                 case R.id.rb03:
+                    editText.setVisibility(View.INVISIBLE);
                     report_reason="持續騷擾";
                     break;
                 case R.id.rb04:
+                    editText.setVisibility(View.INVISIBLE);
                     report_reason="未達成工作需求";
                     break;
                 case R.id.rb05:
+                    editText.setVisibility(View.INVISIBLE);
                     report_reason="遲遲不肯按確認鍵";
                     break;
                 case R.id.rb06:
-                    EditText editText=item_report.findViewById(R.id.other_reason);
+                    editText.setVisibility(View.VISIBLE);
                     report_reason=editText.getText().toString();
                     break;
             }

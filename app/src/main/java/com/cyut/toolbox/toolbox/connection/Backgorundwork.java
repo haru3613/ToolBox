@@ -818,6 +818,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String pid=params[3];
             String uid = params[2];
             String cid=params[1];
+            String detail=params[5];
             String delete_url = "http://163.17.5.182/app/insert_report.php";
             try {
 
@@ -832,8 +833,8 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 String post_data = URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
                         URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8")+ "&" +
                         URLEncoder.encode("pid", "UTF-8") + "=" + URLEncoder.encode(pid, "UTF-8")+ "&" +
-                        URLEncoder.encode("cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8");
-
+                        URLEncoder.encode("cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8")+ "&" +
+                        URLEncoder.encode("detail", "UTF-8") + "=" + URLEncoder.encode(detail, "UTF-8");
                 Log.d("POST_DATA", "doInBackground: " + post_data);
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
