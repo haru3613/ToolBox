@@ -22,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -66,7 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public ArrayList<ItemObject> itemList;
     private Context context;
     private String uid,report_reason;
-    private EditText sm_message;
+    private EditText sm_message, editText;
     private TextView sm_time;
     private static MaterialDialog dialog;
     private RecyclerView recyclerView;
@@ -328,22 +329,51 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 .customView(item_report,wrapInScrollView )
                 .backgroundColorRes(R.color.colorBackground)
                 .build();
-
+        editText=item_report.findViewById(R.id.other_reason);
         ImageView send=item_report.findViewById(R.id.correct_send);
         TextView cancel=item_report.findViewById(R.id.cancel);
-        RadioButton rb01=item_report.findViewById(R.id.rb01);
-        RadioButton rb02=item_report.findViewById(R.id.rb02);
-        RadioButton rb03=item_report.findViewById(R.id.rb03);
-        RadioButton rb04=item_report.findViewById(R.id.rb04);
-        RadioButton rb05=item_report.findViewById(R.id.rb05);
-        RadioButton rb06=item_report.findViewById(R.id.rb06);
+        RadioGroup radioGroup=item_report.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                View radioButton = radioGroup.findViewById(i);
+                int index = radioGroup.indexOfChild(radioButton);
+                switch (index) {
+                    case 0: // first button
+                        report_reason="案件含有不雅名稱";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 1: // secondbutton
+                        report_reason="態度惡劣";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 2:
+                        report_reason="持續騷擾";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 3:
+                        report_reason="未達成工作需求";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 4:
+                        report_reason="遲遲不肯按確認鍵";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 5:
+                        report_reason="other";
+                        editText.setVisibility(View.VISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                }
+            }
+        });
+        EditText detail_content=item_report.findViewById(R.id.detail_content);
 
-        rb01.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        rb02.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        rb03.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        rb04.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        rb05.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        rb06.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,8 +386,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             @Override
             public void onClick(View view) {
                 if (!report_reason.equals("")){
+                    String Detail=detail_content.getText().toString();
+                    if (report_reason.equals("other"))
+                        report_reason=editText.getText().toString();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
-                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason);
+                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason,Detail);
                 }else{
                     Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
                 }
@@ -369,33 +402,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     }
 
-    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
 
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            switch (buttonView.getId()) {
-                case R.id.rb01:
-                    report_reason="案件含有不雅名稱";
-                    break;
-                case R.id.rb02:
-                    report_reason="態度惡劣";
-                    break;
-                case R.id.rb03:
-                    report_reason="持續騷擾";
-                    break;
-                case R.id.rb04:
-                    report_reason="未達成工作需求";
-                    break;
-                case R.id.rb05:
-                    report_reason="遲遲不肯按確認鍵";
-                    break;
-                case R.id.rb06:
-                    EditText editText=item_report.findViewById(R.id.other_reason);
-                    report_reason=editText.getText().toString();
-                    break;
-            }
-        }
-    };
     private void RatingAlert(final String pid){
         boolean wrapInScrollView = true;
 
