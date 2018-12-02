@@ -44,8 +44,19 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -161,10 +172,17 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View view) {
                     //把錢轉過去，並更新案件
                     Backgorundwork backgorundwork = new Backgorundwork(context);
-                    backgorundwork.execute("finish_case",itemList.get(position).getCid(),"已完成",itemList.get(position).getMoney(),itemList.get(position).getRid());
-                    itemList.get(position).setStatus("已完成");
+                    backgorundwork.execute("finish_case",itemList.get(position).getCid(),"評價中",itemList.get(position).getMoney(),itemList.get(position).getRid());
+                    itemList.get(position).setStatus("評價中");
                     notifyItemChanged(position);
-                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid());
+
+                    try {
+                        line_notify(itemList.get(position).getRid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_score");
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                 }
             });
             holder.unfinish.setOnClickListener(new View.OnClickListener() {
@@ -224,9 +242,14 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mExpandedPosition = isExpanded ? -1:position;
-                notifyItemChanged(previousExpandedPosition);
-                notifyItemChanged(position);
+                if (itemList.get(position).getStatus().equals("評價中")){
+                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid());
+                }else{
+                    mExpandedPosition = isExpanded ? -1:position;
+                    notifyItemChanged(previousExpandedPosition);
+                    notifyItemChanged(position);
+                }
+
             }
         });
 
@@ -653,5 +676,57 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
+    }
+    private void line_notify(final String account,final String url,final String cid,final String type ) throws JSONException {
+        HttpURLConnection urlConnection;
+
+
+        JSONObject datas = new JSONObject();
+        datas.put("caseID",cid);
+        datas.put("account",account);
+        datas.put("type",type);
+
+
+        Log.d(TAG, "line_notify: "+datas);
+
+
+        String data = datas.toString();
+        String result = null;
+        try {
+            //Connect
+
+            urlConnection = (HttpURLConnection) ((new URL(url).openConnection()));
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //Write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+            urlConnection.disconnect();
+            Log.d(TAG, "send_message: "+result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

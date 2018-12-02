@@ -111,11 +111,16 @@ public class RatingFragment extends Fragment {
 
         LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");
 
+        toolman.setBackgroundResource(R.color.white);
+        boss.setBackgroundResource(R.color.primaryDarkColor);
+
         toolman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 classs="工具人";
                 category="全部";
+                toolman.setBackgroundResource(R.color.primaryDarkColor);
+                boss.setBackgroundResource(R.color.white);
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_toolman.php");
                 LoadEvaluation(uid,"http://163.17.5.182/app/load_my_toolman_evaluation.php");
@@ -127,6 +132,8 @@ public class RatingFragment extends Fragment {
             public void onClick(View view) {
                 classs="雇主";
                 category="全部";
+                toolman.setBackgroundResource(R.color.white);
+                boss.setBackgroundResource(R.color.primaryDarkColor);
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_boss.php");
                 LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");

@@ -36,8 +36,19 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -177,6 +188,12 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                     Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
 
                 }else if(status.equals("待接案")){
+                    try {
+                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     SendMessage(uid,itemList.get(position).getCid());
                 }else{
                     Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
@@ -410,5 +427,58 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
     public String getItemCid(int position) {
         return itemList.get(position).getCid();
+    }
+
+    private void line_notify(final String account,final String url,final String cid,final String type ) throws JSONException {
+        HttpURLConnection urlConnection;
+
+
+        JSONObject datas = new JSONObject();
+        datas.put("caseID",cid);
+        datas.put("account",account);
+        datas.put("type",type);
+
+
+        Log.d(TAG, "line_notify: "+datas);
+
+
+        String data = datas.toString();
+        String result = null;
+        try {
+            //Connect
+
+            urlConnection = (HttpURLConnection) ((new URL(url).openConnection()));
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //Write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+            urlConnection.disconnect();
+            Log.d(TAG, "send_message: "+result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

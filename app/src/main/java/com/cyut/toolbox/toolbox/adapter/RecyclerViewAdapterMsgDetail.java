@@ -1,7 +1,9 @@
 package com.cyut.toolbox.toolbox.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,21 +19,39 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.ChatroomActivity;
+import com.cyut.toolbox.toolbox.Fragment.RatingFragment;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewMsgDetailHolders;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.cyut.toolbox.toolbox.model.ItemMsg;
 import com.cyut.toolbox.toolbox.model.ItemObject;
+import com.cyut.toolbox.toolbox.model.ItemRating;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -134,10 +154,39 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                 Intent intent = new Intent();
                 intent.setClass(context,ChatroomActivity.class);
                 intent.putExtra("cid", itemList.get(position).getCid());//此方式可以放所有基本型別
+                String  account="";
+
+                for (int i=0;i<=itemList.size()-1;i++){
+                    if (!itemList.get(i).getUid().equals(itemList.get(position).getUid())){
+                        Log.d(TAG, "acc: "+itemList.get(i).getUid());
+                        account=account+itemList.get(i).getUid()+",";
+                    }
+
+                }
+
+                try {
+                    if (!account.equals("")){
+                        account=account.substring(0,account.length()-1);
+                        line_notify(account,"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_wastaked");
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                try {
+                    line_notify_this(itemList.get(position).getUid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_taker");
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 context.startActivity(intent);
+
 
                 Toast.makeText(context, "成功，即將開啟聊天室", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+
+                notifyDataSetChanged();
                 //TODO 讓我的發案列表更新
             }
         });
@@ -296,5 +345,108 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     }
 
 
+    private void line_notify(final String account,final String url,final String cid,final String type ) throws JSONException {
+        HttpURLConnection urlConnection;
 
+
+        JSONObject datas = new JSONObject();
+        datas.put("caseID",cid);
+        datas.put("account",account);
+        datas.put("type",type);
+
+
+        Log.d(TAG, "line_notify: "+datas);
+
+
+        String data = datas.toString();
+        String result = null;
+        try {
+            //Connect
+
+            urlConnection = (HttpURLConnection) ((new URL(url).openConnection()));
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //Write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+            urlConnection.disconnect();
+            Log.d(TAG, "send_message: "+result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void line_notify_this(final String account,final String url,final String cid,final String type ) throws JSONException {
+        HttpURLConnection urlConnection;
+
+
+        JSONObject datas = new JSONObject();
+        datas.put("caseID",cid);
+        datas.put("account",account);
+        datas.put("type",type);
+
+
+        Log.d(TAG, "line_notify: "+datas);
+
+
+        String data = datas.toString();
+        String result = null;
+        try {
+            //Connect
+
+            urlConnection = (HttpURLConnection) ((new URL(url).openConnection()));
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //Write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+            urlConnection.disconnect();
+            Log.d(TAG, "send_message: "+result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

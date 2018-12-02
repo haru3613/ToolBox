@@ -278,6 +278,8 @@ public class adddata extends AppCompatActivity{
                         }
                         break;
                 }
+                if (send_case_disapear.equals(""))
+                    erroMessage=erroMessage+"請確認時間";
                 Log.e("Check radioCheck ~",radioCheck  +"   and   ````````````````"+send_case_finish_end);
                 if (erroMessage.equals("")){
                     Log.e("Check time ~",send_case_disapear+"  and  "+send_case_finish_end);
