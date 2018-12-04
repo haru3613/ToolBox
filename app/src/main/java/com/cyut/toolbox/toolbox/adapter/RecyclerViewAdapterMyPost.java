@@ -175,7 +175,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                     backgorundwork.execute("finish_case",itemList.get(position).getCid(),"評價中",itemList.get(position).getMoney(),itemList.get(position).getRid());
                     itemList.get(position).setStatus("評價中");
                     notifyItemChanged(position);
-
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                     try {
                         line_notify(itemList.get(position).getRid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_score");
 
@@ -243,7 +243,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View view) {
                 if (itemList.get(position).getStatus().equals("評價中")){
-                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid());
+                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid(),itemList.get(position).getPid());
                 }else{
                     mExpandedPosition = isExpanded ? -1:position;
                     notifyItemChanged(previousExpandedPosition);
@@ -600,7 +600,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         dialog.show();
 
     }
-    private void showRatingDialog(String suid,String category,String cid){
+    private void showRatingDialog(String suid,String category,String cid,String pid){
         Log.d(TAG, "接案人:"+suid);
         Log.d(TAG, "分類:"+category);
         boolean wrapInScrollView = true;
@@ -617,7 +617,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View view) {
                 Backgorundwork backgorundwork=new Backgorundwork(context);
-                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid);
+                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid,pid);
                 dialog.dismiss();
             }
         });

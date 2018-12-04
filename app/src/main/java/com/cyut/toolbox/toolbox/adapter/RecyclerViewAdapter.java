@@ -233,13 +233,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                             Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
 
                         }else if(status.equals("待接案")){
-                            try {
-                                line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
 
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            SendMessage(uid,itemList.get(position).getCid());
+                            SendMessage(uid,itemList.get(position).getCid(),position);
                         }else{
                             Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
                         }
@@ -466,7 +461,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         dialog.show();
     }
 
-    public void SendMessage(final String uid,final String cid) {
+    public void SendMessage(final String uid,final String cid,int position) {
         boolean wrapInScrollView = true;
 
         dialog=new MaterialDialog.Builder(context)
@@ -526,7 +521,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     String sm =sm_message.getText().toString();
                     Log.d(TAG, "onClick: "+sm);
                     String type = "sendmessage";
+                    try {
+                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
 
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
                 }
