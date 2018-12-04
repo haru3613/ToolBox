@@ -308,15 +308,15 @@ public class RatingFragment extends Fragment {
             else if (category.equals("全部")){
                 tv_total.setText(result.substring(0,3));
             }else{
-                String[] s;
-                s=result.split(";");
-                showRatingDialog(s[0],category,s[1]);
+
+
+                showRatingDialog(result,category);
             }
         }
     }
 
 
-    private void showRatingDialog(String value,String category,String count){
+    private void showRatingDialog(String value,String category){
         Log.d(ContentValues.TAG, "接案人:"+uid);
         Log.d(ContentValues.TAG, "分類:"+category);
         boolean wrapInScrollView = true;
@@ -325,7 +325,7 @@ public class RatingFragment extends Fragment {
                 .backgroundColorRes(R.color.colorBackground)
                 .build();
         final View item = dialog.getCustomView();
-        TextView pr=item.findViewById(R.id.pr_value);
+
         RatingBar ratingBar=item.findViewById(R.id.value_ratingbar);
         ImageView imageView=item.findViewById(R.id.value_category);
         switch (category) {
@@ -352,11 +352,7 @@ public class RatingFragment extends Fragment {
         if (!value.equals("")){
             ratingBar.setRating(Float.parseFloat(value.substring(0,3)));
         }
-        int c=Integer.parseInt(count);
-        if (c>10){
-        }else{
-            pr.setText("由於案件低於十件，所以尚未進行排名");
-        }
+
 
 
         dialog.show();

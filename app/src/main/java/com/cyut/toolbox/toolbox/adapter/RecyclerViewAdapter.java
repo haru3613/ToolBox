@@ -233,13 +233,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                             Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
 
                         }else if(status.equals("待接案")){
-                            try {
-                                line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
 
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            SendMessage(uid,itemList.get(position).getCid());
+                            SendMessage(uid,itemList.get(position).getCid(),position);
                         }else{
                             Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
                         }
@@ -466,7 +461,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         dialog.show();
     }
 
-    public void SendMessage(final String uid,final String cid) {
+    public void SendMessage(final String uid,final String cid,int position) {
         boolean wrapInScrollView = true;
 
         dialog=new MaterialDialog.Builder(context)
@@ -526,7 +521,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     String sm =sm_message.getText().toString();
                     Log.d(TAG, "onClick: "+sm);
                     String type = "sendmessage";
+                    try {
+                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
 
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
                 }
@@ -609,7 +609,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     public void LoadEvaluation(final String uid,final RecyclerViewHolders holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        String url="http://163.17.5.182/app/avg_grade_boss.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -620,19 +620,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                     "UTF-8");
                             response = new String(u, "UTF-8");
                             Log.d(ContentValues.TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
-                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
-                            if (!response.contains("Undefined")) {
-                                posts = mGson.fromJson(response, listType);
-                            }
-                            if (posts.isEmpty()){
+
+                            if (response.isEmpty()){
                                 holder.ratingBar.setRating(0);
                             }else{
-                                if (!TextUtils.isEmpty(posts.get(0).getGrade())){
-                                    Log.d(TAG, "onResponse: "+Float.parseFloat(posts.get(0).getGrade()));
-                                    holder.ratingBar.setRating(Float.parseFloat(posts.get(0).getGrade()));
+                                if (!TextUtils.isEmpty(response)){
+                                    Log.d(TAG, "onResponse: "+Float.parseFloat(response));
+                                    holder.ratingBar.setRating(Float.parseFloat(response));
                                 }
 
                             }
@@ -652,6 +646,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("uid",uid);
+                params.put("category","全部");
                 return params;
             }
 

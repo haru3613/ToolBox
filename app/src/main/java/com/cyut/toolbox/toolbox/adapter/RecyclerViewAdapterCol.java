@@ -1,6 +1,7 @@
 package com.cyut.toolbox.toolbox.adapter;
 
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
@@ -8,12 +9,15 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -28,9 +32,11 @@ import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHolders;
 import com.cyut.toolbox.toolbox.RecyclerViewHoldersColl;
+import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.cyut.toolbox.toolbox.model.ItemQanda;
+import com.cyut.toolbox.toolbox.model.ItemRating;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -56,14 +62,17 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
-public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHoldersColl> {
+public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHolders> {
     public ArrayList<ItemObject> itemList ;
-    private String uid;
+    private String uid,report_reason;
     private Context context;
+    private EditText sm_message, editText;
 
+    private RecyclerViewAdapterRating adapterRating;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private RecyclerViewAdapterQanda adapter;
+    private View item_report;
 
     int c_end_hours = 0;
     int c_end_mins = 0;
@@ -86,14 +95,14 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     }
 
     @Override
-    public RecyclerViewHoldersColl onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_collection, null,false);
+    public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_main, null,false);
         layoutView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        RecyclerViewHoldersColl rcv = new RecyclerViewHoldersColl(layoutView);
+        RecyclerViewHolders rcv = new RecyclerViewHolders(layoutView);
         return rcv;
     }
     @Override
-    public void onBindViewHolder(final RecyclerViewHoldersColl holder, final int position) {
+    public void onBindViewHolder(final RecyclerViewHolders holder, final int position) {
 
 
         switch (itemList.get(position).getCategoryImage()) {
@@ -129,7 +138,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
         String lineSep = System.getProperty("line.separator");
         String m=itemList.get(position).getDetail().replaceAll("<br />", lineSep);
-
+        LoadEvaluation(itemList.get(position).getPid(),holder);
         holder.message.setText(m);
 
         holder.Money.setText("$"+itemList.get(position).getMoney());
@@ -163,10 +172,16 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             holder.send.setVisibility(View.GONE);
             holder.ans.setVisibility(View.GONE);
         }
+        holder.view_rating.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.rating_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.ratingBar.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.time_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.time.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.content.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.message.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.report.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.like.setVisibility(View.GONE);
+        holder.linearLayout.setVisibility(View.GONE);
         holder.itemView.setActivated(isExpanded);
         if (isExpanded)
             previousExpandedPosition = position;
@@ -188,13 +203,8 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                     Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
 
                 }else if(status.equals("待接案")){
-                    try {
-                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
 
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    SendMessage(uid,itemList.get(position).getCid());
+                    SendMessage(uid,itemList.get(position).getCid(),position);
                 }else{
                     Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
                 }
@@ -210,13 +220,25 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
             }
         });
-
-        holder.ans.setOnClickListener(new View.OnClickListener() {
+        holder.view_rating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                RatingAlert(itemList.get(position).getPid());
             }
         });
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+            }
+        });
+
 
     }
 
@@ -290,7 +312,131 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
             dialog.dismiss();
         }
     }
+    public void LoadEvaluation(final String uid){
+        Log.d(ContentValues.TAG, "uid："+uid);
+        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
+                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
+                            if (!response.contains("Undefined")) {
+                                posts = mGson.fromJson(response, listType);
+                            }
+                            if (posts.isEmpty()){
+                                Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
+                            }else{
+                                adapterRating = new RecyclerViewAdapterRating(context, posts,uid);
+                                recyclerView.setAdapter(adapterRating);
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
 
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",uid);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+    private void RatingAlert(final String pid){
+        boolean wrapInScrollView = true;
+
+        final View item = LayoutInflater.from(context).inflate(R.layout.dialog_rating_view, null);
+
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .title("雇主評價")
+                .customView(item,wrapInScrollView )
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+
+        recyclerView = (RecyclerView)item.findViewById(R.id.dialog_recyclerview);
+        layoutManager = new LinearLayoutManager(item.getContext());
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
+        recyclerView.setLayoutManager(layoutManager);
+
+        LoadEvaluation(pid);
+
+
+
+        dialog.show();
+
+    }
+    public void LoadEvaluation(final String uid,final RecyclerViewHolders holder){
+        Log.d(ContentValues.TAG, "uid："+uid);
+        String url="http://163.17.5.182/app/avg_grade_boss.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+                            if (response.isEmpty()){
+                                holder.ratingBar.setRating(0);
+                            }else{
+                                if (!TextUtils.isEmpty(response)){
+                                    Log.d(TAG, "onResponse: "+Float.parseFloat(response));
+                                    holder.ratingBar.setRating(Float.parseFloat(response));
+                                }
+
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",uid);
+                params.put("category","全部");
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
     public void LoadQuestion(final String cid){
         String url ="http://163.17.5.182/app/load_question.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -348,7 +494,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         return original.substring(start_index+1,last_index);
     }
 
-    public void SendMessage(final String uid,final String cid) {
+    public void SendMessage(final String uid,final String cid,int position) {
         boolean wrapInScrollView = true;
 
         dialog=new MaterialDialog.Builder(context)
@@ -407,6 +553,12 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                 }else{
                     String sm =sm_message.getText().toString();
                     Log.d(TAG, "onClick: "+sm);
+                    try {
+                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     String type = "sendmessage";
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
@@ -417,7 +569,87 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         dialog.show();
 
     }
+    private void ReportAlert(final String cid,final String uid,final String pid){
+        boolean wrapInScrollView = true;
 
+        item_report = LayoutInflater.from(context).inflate(R.layout.dialog_report, null);
+
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .customView(item_report,wrapInScrollView )
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+        editText=item_report.findViewById(R.id.other_reason);
+        ImageView send=item_report.findViewById(R.id.correct_send);
+        TextView cancel=item_report.findViewById(R.id.cancel);
+        RadioGroup radioGroup=item_report.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                View radioButton = radioGroup.findViewById(i);
+                int index = radioGroup.indexOfChild(radioButton);
+                switch (index) {
+                    case 0: // first button
+                        report_reason="案件含有不雅名稱";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 1: // secondbutton
+                        report_reason="態度惡劣";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 2:
+                        report_reason="持續騷擾";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 3:
+                        report_reason="未達成工作需求";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 4:
+                        report_reason="遲遲不肯按確認鍵";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 5:
+                        report_reason="other";
+                        editText.setVisibility(View.VISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                }
+            }
+        });
+        EditText detail_content=item_report.findViewById(R.id.detail_content);
+
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!report_reason.equals("")){
+                    String Detail=detail_content.getText().toString();
+                    if (report_reason.equals("other"))
+                        report_reason=editText.getText().toString();
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason,Detail);
+                }else{
+                    Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        dialog.show();
+
+    }
 
     public void deleteItem(int index) {
         itemList.remove(index);

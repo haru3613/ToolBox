@@ -138,7 +138,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         holder.message.setText(m);
 
         holder.Money.setText("$"+itemList.get(position).getMoney());
-
+        LoadSingleEvaluation(itemList.get(position).getPid(),holder);
         String status=itemList.get(position).getStatus();
         holder.Status.setText(status);
 
@@ -489,6 +489,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         EditText content=item.findViewById(R.id.content);
         Button send=item.findViewById(R.id.sendout);
 
+        content.setText("很棒的案件體驗!");
         title.setText("給予雇主評價");
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -532,7 +533,54 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         dialog.show();
 
     }
+    public void LoadSingleEvaluation(final String uid,final RecyclerViewHoldersMyReport holder){
+        Log.d(ContentValues.TAG, "uid："+uid);
+        String url="http://163.17.5.182/app/avg_grade_boss.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
 
+                            if (response.isEmpty()){
+                                holder.ratingBar.setRating(0);
+                            }else{
+                                if (!TextUtils.isEmpty(response)){
+                                    Log.d(TAG, "onResponse: "+Float.parseFloat(response));
+                                    holder.ratingBar.setRating(Float.parseFloat(response));
+                                }
+
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",uid);
+                params.put("category","全部");
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
     public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyReport holder){
         Log.d(ContentValues.TAG, "uid："+uid);
         String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
