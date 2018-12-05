@@ -281,8 +281,10 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (itemList.get(position).getStatus().equals("已完成"))
+                if (!itemList.get(position).getStatus().equals("已完成"))
                     ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                else
+                    Toast.makeText(context,"案件已經完成，不可以進行檢舉",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -584,8 +586,8 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }
-    public void LoadEvaluation(final String uid){
-        Log.d(ContentValues.TAG, "uid："+uid);
+    public void LoadEvaluation(final String pid){
+        Log.d(ContentValues.TAG, "uid："+pid);
         String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -607,7 +609,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
                             if (posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
                             }else{
-                                adapterRating = new RecyclerViewAdapterRating(context, posts,uid);
+                                adapterRating = new RecyclerViewAdapterRating(context, posts,pid);
                                 recyclerView.setAdapter(adapterRating);
                             }
                         } catch (UnsupportedEncodingException e) {
@@ -625,7 +627,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("uid",uid);
+                params.put("uid",pid);
                 return params;
             }
 

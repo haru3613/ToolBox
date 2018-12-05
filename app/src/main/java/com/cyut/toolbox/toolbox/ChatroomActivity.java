@@ -132,7 +132,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     public static final String ANONYMOUS = "anonymous";
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
-    private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
+    private static final String LOADING_IMAGE_URL = "http://163.17.5.182/app/loading.gif";
 
     private String mUsername;
     private String mPhotoUrl,MToken,WToken;
@@ -257,9 +257,16 @@ public class ChatroomActivity extends AppCompatActivity  {
                                     }
                                 });
                     } else {
-                        Glide.with(viewHolder.messageImageView.getContext())
-                                .load(friendlyMessage.getImageUrl())
-                                .into(viewHolder.messageImageView);
+                        if (imageUrl.equals("123")){
+                            Glide.with(viewHolder.messageImageView.getContext())
+                                    .load(LOADING_IMAGE_URL)
+                                    .into(viewHolder.messageImageView);
+                        }else{
+                            Glide.with(viewHolder.messageImageView.getContext())
+                                    .load(friendlyMessage.getImageUrl())
+                                    .into(viewHolder.messageImageView);
+                        }
+
 
                         Log.d(TAG, "onBindViewHolder: put image");
                     }
@@ -368,15 +375,22 @@ public class ChatroomActivity extends AppCompatActivity  {
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername,
+                        mPhotoUrl, null);
+                try {
+                    if (!WToken.equals("")||MToken.equals("")){
+                        send_message(MToken,friendlyMessage.getName(),"傳送了一張圖片。");
+                        send_message(WToken,friendlyMessage.getName(),"傳送了一張圖片。");
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 Intent picker = new Intent(Intent.ACTION_GET_CONTENT);
                 picker.setType("image/*");
                 picker.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 Intent destIntent = Intent.createChooser(picker, null);
                 startActivityForResult(destIntent, PICKER);
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -615,7 +629,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                     Log.d(TAG, "Uri: " + uri.toString());
 
                     FriendlyMessage tempMessage = new FriendlyMessage(null, mUsername, mPhotoUrl,
-                            LOADING_IMAGE_URL);
+                            "123");
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ROOM_ID).push()
                             .setValue(tempMessage, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -628,7 +642,6 @@ public class ChatroomActivity extends AppCompatActivity  {
                                                         .getReference(mFirebaseUser.getUid())
                                                         .child(key)
                                                         .child(uri.getLastPathSegment());
-
                                         putImageInStorage(storageReference, uri, key);
                                     } else {
                                         Log.w(TAG, "Unable to write message to database.",

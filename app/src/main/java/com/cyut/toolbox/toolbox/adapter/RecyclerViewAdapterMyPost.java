@@ -278,9 +278,10 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (itemList.get(position).getStatus().equals("已完成"))
+                if (!itemList.get(position).getStatus().equals("已完成"))
                     ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
-
+                else
+                    Toast.makeText(context,"案件已經完成，不可以進行檢舉",Toast.LENGTH_SHORT).show();
             }
         });
         holder.view_rating.setOnClickListener(new View.OnClickListener() {
@@ -628,9 +629,9 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         return itemList.get(position).getCid();
     }
 
-    public void LoadEvaluation(final String uid){
-        Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
+    public void LoadEvaluation(final String pid){
+
+        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -651,7 +652,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                             if (posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
                             }else{
-                                adapterRating = new RecyclerViewAdapterRating(context, posts,uid);
+                                adapterRating = new RecyclerViewAdapterRating(context, posts,pid);
                                 recyclerView.setAdapter(adapterRating);
                             }
                         } catch (UnsupportedEncodingException e) {
@@ -669,7 +670,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("uid",uid);
+                params.put("uid",pid);
                 return params;
             }
 

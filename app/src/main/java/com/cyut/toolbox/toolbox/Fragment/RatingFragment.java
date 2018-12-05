@@ -358,8 +358,8 @@ public class RatingFragment extends Fragment {
         dialog.show();
     }
 
-    public void LoadEvaluation(final String uid,String url){
-        Log.d(ContentValues.TAG, "uid："+uid);
+    public void LoadEvaluation(final String pid,String url){
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -399,7 +399,7 @@ public class RatingFragment extends Fragment {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("uid",uid);
+                params.put("uid",pid);
                 return params;
             }
 
