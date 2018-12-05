@@ -223,7 +223,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                if (itemList.get(position).getStatus().equals("已完成"))
+                    ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
             }
         });
         holder.send.setOnClickListener(new View.OnClickListener() {
@@ -527,6 +528,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     }catch (Exception e){
                         e.printStackTrace();
                     }
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
                 }

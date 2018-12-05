@@ -201,6 +201,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
                                     backgorundwork.execute("case_status",itemList.get(position).getCid(),"確認中");
                                     itemList.get(position).setStatus("確認中");
                                     notifyItemChanged(position);
+                                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                                     try {
 
                                         line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_confirm");
@@ -244,7 +245,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void onClick(View view) {
                 if (itemList.get(position).getStatus().equals("評價中")){
-                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid());
+                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid(),itemList.get(position).getPid());
 
                 }else{
                     mExpandedPosition = isExpanded ? -1:position;
@@ -280,7 +281,8 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                if (itemList.get(position).getStatus().equals("已完成"))
+                    ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
 
             }
         });
@@ -475,7 +477,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
             }
         }
     };
-    private void showRatingDialog(String suid,String category,String cid){
+    private void showRatingDialog(String suid,String category,String cid,String pid){
         Log.d(TAG, "接案人:"+uid);
         Log.d(TAG, "分類:"+category);
         boolean wrapInScrollView = true;
@@ -496,7 +498,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void onClick(View view) {
                 Backgorundwork backgorundwork=new Backgorundwork(context);
-                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid);
+                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid,pid);
                 dialog.dismiss();
             }
         });
@@ -623,6 +625,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("uid",uid);
+                params.put("category","全部");
                 return params;
             }
 

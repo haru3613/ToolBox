@@ -204,6 +204,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
 
                 }else if(status.equals("待接案")){
 
+
                     SendMessage(uid,itemList.get(position).getCid(),position);
                 }else{
                     Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
@@ -235,7 +236,8 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                if (itemList.get(position).getStatus().equals("已完成"))
+                    ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
             }
         });
 
@@ -560,6 +562,13 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                         e.printStackTrace();
                     }
                     String type = "sendmessage";
+                    try {
+                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
                 }

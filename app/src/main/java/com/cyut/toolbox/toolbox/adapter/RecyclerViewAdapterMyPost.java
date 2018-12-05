@@ -175,7 +175,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                     backgorundwork.execute("finish_case",itemList.get(position).getCid(),"評價中",itemList.get(position).getMoney(),itemList.get(position).getRid());
                     itemList.get(position).setStatus("評價中");
                     notifyItemChanged(position);
-
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                     try {
                         line_notify(itemList.get(position).getRid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_score");
 
@@ -244,7 +244,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View view) {
                 if (itemList.get(position).getStatus().equals("評價中")){
-                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid());
+                    showRatingDialog(itemList.get(position).getRid(),itemList.get(position).getCategoryImage(),itemList.get(position).getCid(),itemList.get(position).getPid());
                 }else{
                     mExpandedPosition = isExpanded ? -1:position;
                     notifyItemChanged(previousExpandedPosition);
@@ -278,7 +278,8 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                if (itemList.get(position).getStatus().equals("已完成"))
+                    ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
 
             }
         });
@@ -571,7 +572,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
     public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
+        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -611,6 +612,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("uid",uid);
+                params.put("category","全部");
                 return params;
             }
 
@@ -648,7 +650,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         dialog.show();
 
     }
-    private void showRatingDialog(String suid,String category,String cid){
+    private void showRatingDialog(String suid,String category,String cid,String pid){
         Log.d(TAG, "接案人:"+suid);
         Log.d(TAG, "分類:"+category);
         boolean wrapInScrollView = true;
@@ -665,7 +667,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View view) {
                 Backgorundwork backgorundwork=new Backgorundwork(context);
-                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid);
+                backgorundwork.execute("insert_rating",Float.toString(ratingBar.getRating()),content.getText().toString(),suid,category,uid,cid,pid);
                 dialog.dismiss();
             }
         });
