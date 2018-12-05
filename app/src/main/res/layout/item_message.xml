@@ -15,6 +15,7 @@
             android:id="@+id/messengerImageView"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_logo" />
 
         <LinearLayout

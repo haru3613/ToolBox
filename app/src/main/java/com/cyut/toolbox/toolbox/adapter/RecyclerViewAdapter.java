@@ -223,7 +223,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                if (itemList.get(position).getStatus().equals("已完成"))
+                    ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
             }
         });
         holder.send.setOnClickListener(new View.OnClickListener() {
@@ -610,7 +611,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     public void LoadEvaluation(final String uid,final RecyclerViewHolders holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        String url="http://163.17.5.182/app/avg_grade_boss.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -621,19 +622,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                     "UTF-8");
                             response = new String(u, "UTF-8");
                             Log.d(ContentValues.TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
-                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
-                            if (!response.contains("Undefined")) {
-                                posts = mGson.fromJson(response, listType);
-                            }
-                            if (posts.isEmpty()){
+
+                            if (response.isEmpty()){
                                 holder.ratingBar.setRating(0);
                             }else{
-                                if (!TextUtils.isEmpty(posts.get(0).getGrade())){
-                                    Log.d(TAG, "onResponse: "+Float.parseFloat(posts.get(0).getGrade()));
-                                    holder.ratingBar.setRating(Float.parseFloat(posts.get(0).getGrade()));
+                                if (!TextUtils.isEmpty(response)){
+                                    Log.d(TAG, "onResponse: "+Float.parseFloat(response));
+                                    holder.ratingBar.setRating(Float.parseFloat(response));
                                 }
 
                             }
@@ -653,6 +648,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("uid",uid);
+                params.put("category","全部");
                 return params;
             }
 

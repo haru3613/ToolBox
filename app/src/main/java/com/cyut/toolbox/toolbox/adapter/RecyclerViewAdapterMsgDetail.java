@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.ChatroomActivity;
 import com.cyut.toolbox.toolbox.Fragment.RatingFragment;
 import com.cyut.toolbox.toolbox.R;
+import com.cyut.toolbox.toolbox.RecyclerViewHolders;
 import com.cyut.toolbox.toolbox.RecyclerViewMsgDetailHolders;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
@@ -135,6 +138,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         TextView tv_date=(TextView)item.findViewById(R.id.tool_date);
         TextView tv_message=(TextView)item.findViewById(R.id.tool_message);
         TextView tv_introduction=(TextView)item.findViewById(R.id.tool_introduction);
+
         String lineSep = System.getProperty("line.separator");
         String m=message.replaceAll("<br />", lineSep);
         String intr=introduction.replaceAll("<br />", lineSep);
@@ -145,6 +149,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         tv_message.setText(m);
         tv_introduction.setText(intr);
 
+        LoadEvaluation(r_uid,item);
 
         im_choice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +205,54 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         dialog.show();
     }
 
+    public void LoadEvaluation(final String uid,View item){
+        Log.d(ContentValues.TAG, "uid："+uid);
+        String url="http://163.17.5.182/app/avg_grade_toolman.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+                            RatingBar ratingBar=item.findViewById(R.id.alert_rating);
+                            if (response.isEmpty()){
+                                ratingBar.setRating(0);
+                            }else{
+                                if (!TextUtils.isEmpty(response)){
+                                    Log.d(TAG, "onResponse: "+Float.parseFloat(response));
+                                    ratingBar.setRating(Float.parseFloat(response));
+                                }
 
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",uid);
+                params.put("category","全部");
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
 
     public void LoadUser(final String uid,final RecyclerViewMsgDetailHolders holder){
         String url ="http://163.17.5.182/loadusername.php";
