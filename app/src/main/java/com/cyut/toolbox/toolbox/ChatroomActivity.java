@@ -1,7 +1,9 @@
 package com.cyut.toolbox.toolbox;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +39,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.bumptech.glide.Glide;
 import com.cyut.toolbox.toolbox.Fragment.InforFragment;
 import com.cyut.toolbox.toolbox.model.FriendlyMessage;
 import com.cyut.toolbox.toolbox.model.Item;
@@ -81,6 +85,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,6 +114,7 @@ public class ChatroomActivity extends AppCompatActivity  {
         TextView messengerTextView;
         CircleImageView messengerImageView;
 
+
         public MessageViewHolder(View v) {
             super(v);
             messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
@@ -117,7 +123,7 @@ public class ChatroomActivity extends AppCompatActivity  {
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
         }
     }
-
+    private static final int PICKER = 100;
     private static final String TAG = "Chatroom";
     public static final String MESSAGES_CHILD = "messages";
     private String ROOM_ID = "123";
@@ -223,7 +229,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                                             int position,
                                             FriendlyMessage friendlyMessage) {
 
-                Log.d(TAG, "onBindViewHolder: "+friendlyMessage.getText());
+                Log.d(TAG, "onBindViewHolder: "+friendlyMessage.getImageUrl());
 
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
@@ -241,7 +247,9 @@ public class ChatroomActivity extends AppCompatActivity  {
                                         if (task.isSuccessful()) {
                                             String downloadUrl = task.getResult().toString();
                                             Log.d(TAG, "onComplete: "+downloadUrl);
-                                            Picasso.get().load(downloadUrl).fit().centerInside().into(viewHolder.messengerImageView);
+                                            Glide.with(viewHolder.messageImageView.getContext())
+                                                    .load(downloadUrl)
+                                                    .into(viewHolder.messageImageView);
                                         } else {
                                             Log.w(TAG, "Getting download url was not successful.",
                                                     task.getException());
@@ -249,7 +257,11 @@ public class ChatroomActivity extends AppCompatActivity  {
                                     }
                                 });
                     } else {
-                        Picasso.get().load(friendlyMessage.getImageUrl()).fit().centerInside().into(viewHolder.messengerImageView);
+                        Glide.with(viewHolder.messageImageView.getContext())
+                                .load(friendlyMessage.getImageUrl())
+                                .into(viewHolder.messageImageView);
+
+                        Log.d(TAG, "onBindViewHolder: put image");
                     }
                     viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
                     viewHolder.messageTextView.setVisibility(TextView.GONE);
@@ -356,6 +368,11 @@ public class ChatroomActivity extends AppCompatActivity  {
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent picker = new Intent(Intent.ACTION_GET_CONTENT);
+                picker.setType("image/*");
+                picker.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                Intent destIntent = Intent.createChooser(picker, null);
+                startActivityForResult(destIntent, PICKER);
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
@@ -591,9 +608,8 @@ public class ChatroomActivity extends AppCompatActivity  {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
-        if (requestCode == REQUEST_IMAGE) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == PICKER) {
+            if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     final Uri uri = data.getData();
                     Log.d(TAG, "Uri: " + uri.toString());
@@ -623,6 +639,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                 }
             }
         }
+
 
     }
     private void putImageInStorage(StorageReference storageReference, Uri uri, final String key) {

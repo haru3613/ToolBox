@@ -139,7 +139,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
         String status=itemList.get(position).getStatus();
         holder.Status.setText(status);
-        LoadSingleEvaluation(itemList.get(position).getPid(),holder);
+
 
         String short_time=string_sub(itemList.get(position).getTime());
         String short_until=string_sub(itemList.get(position).getUntil());
@@ -521,7 +521,9 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
         itemList.remove(index);
         notifyItemRemoved(index);
     }
-    public void LoadSingleEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
+
+
+    public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
         Log.d(ContentValues.TAG, "uid："+uid);
         String url="http://163.17.5.182/app/avg_grade_boss.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -543,58 +545,6 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                                     holder.ratingBar.setRating(Float.parseFloat(response));
                                 }
 
-                            }
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //do stuffs with response erroe
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("uid",uid);
-                params.put("category","全部");
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-    }
-
-    public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
-        Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Response:",response);
-                        try {
-                            byte[] u = response.getBytes(
-                                    "UTF-8");
-                            response = new String(u, "UTF-8");
-                            Log.d(ContentValues.TAG, "Response " + response);
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson mGson = builder.create();
-                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
-                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
-                            if (!response.contains("Undefined")) {
-                                posts = mGson.fromJson(response, listType);
-                            }
-                            if (posts.isEmpty()){
-                                holder.ratingBar.setRating(0);
-                            }else{
-                                if (!TextUtils.isEmpty(posts.get(0).getGrade()))
-                                    holder.ratingBar.setRating(Float.parseFloat(posts.get(0).getGrade()));
                             }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -677,6 +627,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
     String getItemCid(int position) {
         return itemList.get(position).getCid();
     }
+
     public void LoadEvaluation(final String uid){
         Log.d(ContentValues.TAG, "uid："+uid);
         String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";

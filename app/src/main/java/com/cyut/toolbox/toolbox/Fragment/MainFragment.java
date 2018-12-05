@@ -189,6 +189,11 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
         return v;
     }
+    @Override
+    public void onDestroyView() {
+        recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
     private void requestJsonObject(final View v){
         RequestQueue queue = Volley.newRequestQueue(v.getContext());
         String url ="http://163.17.5.182/SelectCase.php";

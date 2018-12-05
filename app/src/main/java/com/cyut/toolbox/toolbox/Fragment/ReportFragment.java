@@ -363,5 +363,9 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         requestQueue.add(stringRequest);
     }
-
+    @Override
+    public void onDestroyView() {
+        recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
 }

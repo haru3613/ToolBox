@@ -362,5 +362,9 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         requestQueue.add(stringRequest);
     }
-
+    @Override
+    public void onDestroyView() {
+        recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
 }
