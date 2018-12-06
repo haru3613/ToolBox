@@ -133,7 +133,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
     private static final String LOADING_IMAGE_URL = "http://163.17.5.182/app/loading.gif";
-
+    private String image_status="hide";
     private String mUsername;
     private String mPhotoUrl,MToken,WToken;
     private SharedPreferences mSharedPreferences;
@@ -148,7 +148,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     private FirebaseUser mFirebaseUser;
     private FirebaseAnalytics mFirebaseAnalytics;
     private EditText mMessageEditText;
-    private ImageView mAddMessageImageView;
+    private ImageView mAddMessageImageView,bigimage;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
 
@@ -171,7 +171,7 @@ public class ChatroomActivity extends AppCompatActivity  {
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
+        bigimage=findViewById(R.id.tobigimage);
 
         if (mFirebaseUser!=null){
             mUsername = mFirebaseUser.getDisplayName();
@@ -230,6 +230,7 @@ public class ChatroomActivity extends AppCompatActivity  {
                                             FriendlyMessage friendlyMessage) {
 
                 Log.d(TAG, "onBindViewHolder: "+friendlyMessage.getImageUrl());
+
 
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
@@ -292,7 +293,24 @@ public class ChatroomActivity extends AppCompatActivity  {
                     // write this message to the on-device index
                     FirebaseAppIndex.getInstance().update(getMessageIndexable(friendlyMessage));
                 }
+                viewHolder.messageImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (image_status.equals("hide")){
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            Glide.with(viewHolder.messageImageView.getContext())
+                                    .load(friendlyMessage.getImageUrl())
+                                    .into(bigimage);
+                            bigimage.setVisibility(ImageView.VISIBLE);
+                            image_status="show";
+                            mProgressBar.setVisibility(View.GONE);
+                        }else if (image_status.equals("show")){
+                            bigimage.setVisibility(ImageView.GONE);
+                            image_status="hide";
+                        }
 
+                    }
+                });
                 // log a view action on it
                 FirebaseUserActions.getInstance().
 

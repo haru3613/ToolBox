@@ -370,6 +370,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                     String Detail=detail_content.getText().toString();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute("insert_report",cid,uid,pid,report_reason,Detail);
+                    dialog.dismiss();
                 }else{
                     Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
                 }
@@ -526,7 +527,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
     public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/avg_grade_boss.php";
+        String url="http://163.17.5.182/app/avg_grade_toolman.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -631,7 +632,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
     public void LoadEvaluation(final String pid){
 
-        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

@@ -158,9 +158,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="接送";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
-                else
                     url="http://163.17.5.182/app/avg_grade_toolman.php";
+                else
+                    url="http://163.17.5.182/app/avg_grade_boss.php";
 
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"接送",url);
@@ -172,9 +172,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="修繕";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
-                else
                     url="http://163.17.5.182/app/avg_grade_toolman.php";
+                else
+                    url="http://163.17.5.182/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"修繕",url);
             }
@@ -185,9 +185,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="日常";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
-                else
                     url="http://163.17.5.182/app/avg_grade_toolman.php";
+                else
+                    url="http://163.17.5.182/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"日常",url);
             }
@@ -198,9 +198,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="課業";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
-                else
                     url="http://163.17.5.182/app/avg_grade_toolman.php";
+                else
+                    url="http://163.17.5.182/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"課業",url);
             }
@@ -211,9 +211,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="除蟲";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
-                else
                     url="http://163.17.5.182/app/avg_grade_toolman.php";
+                else
+                    url="http://163.17.5.182/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"除蟲",url);
             }
@@ -224,9 +224,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="外送";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
-                else
                     url="http://163.17.5.182/app/avg_grade_toolman.php";
+                else
+                    url="http://163.17.5.182/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"外送",url);
             }

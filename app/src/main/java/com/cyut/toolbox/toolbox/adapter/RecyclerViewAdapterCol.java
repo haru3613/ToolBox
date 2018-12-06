@@ -318,7 +318,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     }
     public void LoadEvaluation(final String pid){
         Log.d(ContentValues.TAG, "uid："+pid);
-        String url="http://163.17.5.182/app/load_my_boss_evaluation.php";
+        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -396,7 +396,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
     }
     public void LoadEvaluation(final String uid,final RecyclerViewHolders holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/avg_grade_boss.php";
+        String url="http://163.17.5.182/app/avg_grade_toolman.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -651,6 +651,7 @@ public class RecyclerViewAdapterCol extends RecyclerView.Adapter<RecyclerViewHol
                         report_reason=editText.getText().toString();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute("insert_report",cid,uid,pid,report_reason,Detail);
+                    dialog.dismiss();
                 }else{
                     Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
                 }
