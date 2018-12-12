@@ -88,7 +88,7 @@ public class RatingFragment extends Fragment {
         v= inflater.inflate(R.layout.fragment_rating, container, false);
         SharedPreferences sharedPreferences = v.getContext().getSharedPreferences(KEY, MODE_PRIVATE);
         uid=sharedPreferences.getString("uid",null);
-
+//TODO TabLayout
         initRatingView();
         FloatingActionButton floatingActionButton=getActivity().findViewById(R.id.fab);
         floatingActionButton.setVisibility(View.GONE);
@@ -122,8 +122,8 @@ public class RatingFragment extends Fragment {
                 toolman.setBackgroundResource(R.color.primaryDarkColor);
                 boss.setBackgroundResource(R.color.white);
                 bgwork load_rating=new bgwork(v.getContext());
-                load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_toolman.php");
-                LoadEvaluation(uid,"http://163.17.5.182/app/load_my_toolman_evaluation.php");
+                load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_boss.php");
+                LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");
             }
         });
 
@@ -135,8 +135,8 @@ public class RatingFragment extends Fragment {
                 toolman.setBackgroundResource(R.color.white);
                 boss.setBackgroundResource(R.color.primaryDarkColor);
                 bgwork load_rating=new bgwork(v.getContext());
-                load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_boss.php");
-                LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");
+                load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_toolman.php");
+                LoadEvaluation(uid,"http://163.17.5.182/app/load_my_toolman_evaluation.php");
             }
         });
         return v;
