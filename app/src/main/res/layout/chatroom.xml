@@ -14,7 +14,9 @@
         android:id="@+id/messageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linearLayout" />
+        android:layout_above="@+id/linearLayout" >
+
+    </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -27,10 +29,9 @@
 
         <ImageView
             android:id="@+id/addMessageImageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/send_message" />
-
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/photo" />
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,11 +49,27 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/tobigimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        ads:srcCompat="@drawable/ic_logo" />
+
     <ProgressBar
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>

@@ -45,8 +45,10 @@ import com.cyut.toolbox.toolbox.Fragment.CollectionFragment;
 import com.cyut.toolbox.toolbox.Fragment.InforFragment;
 import com.cyut.toolbox.toolbox.Fragment.MainFragment;
 import com.cyut.toolbox.toolbox.Fragment.PostFragment;
+import com.cyut.toolbox.toolbox.Fragment.RatingFragment;
 import com.cyut.toolbox.toolbox.Fragment.ReportFragment;
 import com.cyut.toolbox.toolbox.Fragment.aboutFragment;
+import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity
     private  Toolbar toolbar;
     private static Boolean isExit = false;
     private static Boolean hasTask = false;
+    private String ServerUrl="http://35.194.171.235";
     public static final String KEY = "STATUS";
     Timer timerExit = new Timer();
     TimerTask task = new TimerTask() {
@@ -140,7 +143,16 @@ public class MainActivity extends AppCompatActivity
         Umanager.checkUpdate();
 
 
+        SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
+        uid=sharedPreferences.getString("uid",null);
 
+
+
+
+        //set Nav information
+        if (uid!=null){
+            LoadUser(uid);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -177,13 +189,16 @@ public class MainActivity extends AppCompatActivity
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-
+                        String type = "update_user";
+                        Backgorundwork backgorundwork = new Backgorundwork(MainActivity.this);
+                        backgorundwork.execute(type,token,uid);
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d(TAG, msg);
                         //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+
 
 
         //如果在特定Fragment FAB不顯示
@@ -214,16 +229,7 @@ public class MainActivity extends AppCompatActivity
                 .setTitleColor(R.color.primaryTextColor)
                 .setRightBubbleTextColor(R.color.primaryTextColor);*/
 
-        SharedPreferences sharedPreferences = getSharedPreferences(KEY, MODE_PRIVATE);
-        uid=sharedPreferences.getString("uid",null);
 
-
-
-
-        //set Nav information
-        if (uid!=null){
-            LoadUser(uid);
-        }
 
 
 
@@ -299,6 +305,10 @@ public class MainActivity extends AppCompatActivity
             PostFragment fragment = new PostFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
+        } else if (id == R.id.nav_rating) {
+            RatingFragment fragment = new RatingFragment();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
         }  else if (id == R.id.nav_report) {
             ReportFragment fragment = new ReportFragment();
             FragmentManager manager=getSupportFragmentManager();
@@ -335,7 +345,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void LoadUser(final String uid){
-        String url ="http://163.17.5.182/app/loaduser.php";
+        String url =ServerUrl+"/app/loaduser_uid.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -365,6 +375,14 @@ public class MainActivity extends AppCompatActivity
 
                             Picasso.get().load("https://imgur.com/"+itemList.get(0).getImage()+".jpg").fit().centerInside().into(iv);
 
+                            iv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    InforFragment fragment=new InforFragment();
+                                    FragmentManager manager=getSupportFragmentManager();
+                                    manager.beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                }
+                            });
 
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {

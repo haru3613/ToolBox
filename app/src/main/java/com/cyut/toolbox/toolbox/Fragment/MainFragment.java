@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -68,9 +69,9 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapter adapter;
     private RecyclerViewAdapterCategory categoryadapter;
-
+    private ProgressBar progressBar;
     public static final String KEY = "STATUS";
-
+    private String ServerUrl="http://35.194.171.235";
     private FirebaseAnalytics mFirebaseAnalytics;
     private View view;
     String SearchString,uid;
@@ -115,7 +116,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
         ArrayList<String> categorylist=new ArrayList<String>();
 
-
+        progressBar=v.findViewById(R.id.main_loading);
 
 
         categorylist.add("全部");
@@ -158,6 +159,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.show();
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -187,9 +189,14 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
 
         return v;
     }
+    @Override
+    public void onDestroyView() {
+        recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
     private void requestJsonObject(final View v){
         RequestQueue queue = Volley.newRequestQueue(v.getContext());
-        String url ="http://163.17.5.182/SelectCase.php";
+        String url =ServerUrl+"/app/SelectCase.php";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -204,13 +211,13 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                     if (!response.contains("Undefined")) {
                         posts = mGson.fromJson(response, listType);
                     }
-                    if (posts.isEmpty()){
+                    if (posts==null ||posts.isEmpty()){
                         Toast.makeText(view.getContext(),"尚未有人發案",Toast.LENGTH_SHORT).show();
                     }else{
                         adapter = new RecyclerViewAdapter(v.getContext(), posts, uid);
                         recyclerView.setAdapter(adapter);
                     }
-
+                    progressBar.setVisibility(View.GONE);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
 
@@ -337,7 +344,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     }
 
     public void SearchV(final String SearchString){
-        String url ="http://163.17.5.182/search.php";
+        String url =ServerUrl+"/app/search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -355,7 +362,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
                             }
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(view.getContext(),"尚未有此類型的案件",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapter(view.getContext(), posts,uid);
@@ -416,7 +423,7 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
     }
 
     public void SearchQuery(final String SearchString){
-        String url ="http://163.17.5.182/querysearch.php";
+        String url =ServerUrl+"/app/querysearch.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -433,11 +440,14 @@ public class MainFragment extends Fragment  implements SearchView.OnQueryTextLis
                             ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
+                            }
+                            if (posts==null ||posts.isEmpty()){
+                                Toast.makeText(view.getContext(),"尚未有此類型的案件",Toast.LENGTH_SHORT).show();
+                            }else{
                                 adapter = new RecyclerViewAdapter(view.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
-                            }else{
-                                Toast.makeText(getContext(),"沒有搜尋到相關案件",Toast.LENGTH_SHORT).show();
                             }
+
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 

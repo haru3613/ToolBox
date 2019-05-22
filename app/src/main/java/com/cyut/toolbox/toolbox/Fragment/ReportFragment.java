@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -51,9 +52,11 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class ReportFragment extends Fragment implements SearchView.OnQueryTextListener{
     private View view;
+    private String ServerUrl="http://35.194.171.235";
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapterMyReport adapter;
+    private ProgressBar progressBar;
     String uid;
     View v;
     String SearchString;
@@ -87,7 +90,7 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(layoutManager);
 
-
+        progressBar=v.findViewById(R.id.report_loading);
 
         FloatingActionButton floatingActionButton=(FloatingActionButton)getActivity().findViewById(R.id.fab);
         floatingActionButton.setVisibility(View.GONE);
@@ -104,7 +107,7 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
 
     public void Message(final String uid){
         Log.d(TAG, "Message: uid"+uid);
-        String url ="http://163.17.5.182/app/myreport.php";
+        String url =ServerUrl+"/app/myreport.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -123,13 +126,13 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
                                 posts = mGson.fromJson(response, listType);
                             }
 
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(v.getContext(),"尚無案件",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterMyReport(v.getContext(), posts,uid);
                                 recyclerView.setAdapter(adapter);
                             }
-
+                            progressBar.setVisibility(View.GONE);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
 
@@ -259,7 +262,7 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
     public void SearchV(final String SearchString){
         Log.d(TAG, "SearchV: "+SearchString);
         Log.d(TAG, "SearchV: uid"+uid);
-        String url ="http://163.17.5.182/app/myrepot_cate_search.php";
+        String url =ServerUrl+"/app/myrepot_cate_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -277,7 +280,7 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
                             }
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(view.getContext(),"尚未有此類型的案件",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterMyReport(view.getContext(), posts,uid);
@@ -314,7 +317,7 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
     public void SearchQuery(final String SearchString){
         Log.d(TAG, "SearchQuery: "+SearchString);
         Log.d(TAG, "SearchV: uid"+uid);
-        String url ="http://163.17.5.182/app/myreport_search.php";
+        String url =ServerUrl+"/app/myreport_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -361,5 +364,9 @@ public class ReportFragment extends Fragment implements SearchView.OnQueryTextLi
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         requestQueue.add(stringRequest);
     }
-
+    @Override
+    public void onDestroyView() {
+        recyclerView.setAdapter(null);
+        super.onDestroyView();
+    }
 }

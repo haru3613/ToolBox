@@ -39,7 +39,7 @@ public class UpdateManager {
 
     HashMap<String, String> mHashMap;
 
-
+    String ServerUrl="http://35.194.171.235";
 
     private ProgressDialog pDialog;
     private Context mContext;
@@ -65,7 +65,7 @@ public class UpdateManager {
 
         int versionCode = getVersionCode(mContext);
         Log.d(TAG, "VersionCode: " + versionCode);
-        String upurl = "http://163.17.5.182/version.xml";
+        String upurl = ServerUrl+"/app/version.xml";
         try {
             URL url = new URL(upurl);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();

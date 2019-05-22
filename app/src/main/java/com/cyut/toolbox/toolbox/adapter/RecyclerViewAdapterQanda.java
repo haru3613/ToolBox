@@ -47,6 +47,7 @@ public class RecyclerViewAdapterQanda extends RecyclerView.Adapter<RecyclerViewH
     public ArrayList<ItemQanda> itemList;
     private Context context;
     String name , email,uid;
+    private String ServerUrl="http://35.194.171.235";
     private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
     private RecyclerView recyclerView;
@@ -163,7 +164,7 @@ public class RecyclerViewAdapterQanda extends RecyclerView.Adapter<RecyclerViewH
 
 
     public void LoadQName(final String uid,final RecyclerViewHoldersQanda holder){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -208,7 +209,7 @@ public class RecyclerViewAdapterQanda extends RecyclerView.Adapter<RecyclerViewH
         requestQueue.add(stringRequest);
     }
     public void LoadAName(final String uid,final RecyclerViewHoldersQanda holder){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

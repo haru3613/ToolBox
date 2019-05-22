@@ -5,19 +5,24 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Rating;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -31,19 +36,34 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cyut.toolbox.toolbox.LoginActivity;
+import com.cyut.toolbox.toolbox.MainActivity;
 import com.cyut.toolbox.toolbox.R;
 import com.cyut.toolbox.toolbox.RecyclerViewHolders;
+import com.cyut.toolbox.toolbox.SignUpActivity;
 import com.cyut.toolbox.toolbox.SimpleDividerItemDecoration;
 import com.cyut.toolbox.toolbox.connection.Backgorundwork;
 import com.cyut.toolbox.toolbox.model.Item;
 import com.cyut.toolbox.toolbox.model.ItemObject;
 import com.cyut.toolbox.toolbox.model.ItemQanda;
+import com.cyut.toolbox.toolbox.model.ItemRating;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -56,14 +76,16 @@ import static android.content.ContentValues.TAG;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
     public ArrayList<ItemObject> itemList;
     private Context context;
-    private String uid;
-    private EditText sm_message;
+    private String uid,report_reason;
+    private EditText sm_message, editText;
     private TextView sm_time;
     private static MaterialDialog dialog;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private RecyclerViewAdapterQanda adapter;
-
+    private RecyclerViewAdapterRating adapterRating;
+    private View item_report;
+    private String ServerUrl="http://35.194.171.235";
     int c_end_hours = 0;
     int c_end_mins = 0;
     int time_check_status = 0;
@@ -117,17 +139,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 break;
         }
         if (itemList.get(position).getTitle().length()>8){
-            holder.Title.setText(itemList.get(position).getTitle().substring(0,8)+"...");
+            holder.Title.setText(itemList.get(position).getTitle().substring(0,8)+"\n"+itemList.get(position).getTitle().substring(8));
         }else{
             holder.Title.setText(itemList.get(position).getTitle());
         }
 
         String Address=itemList.get(position).getCity()+itemList.get(position).getTown()+itemList.get(position).getRoad();
-        if (Address.length()>10){
-            holder.Area.setText(Address.substring(0,10)+"...");
-        }else{
-            holder.Area.setText(Address);
-        }
+        holder.Area.setText(Address);
 
         String lineSep = System.getProperty("line.separator");
         String m=itemList.get(position).getDetail().replaceAll("<br />", lineSep);
@@ -139,6 +157,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         String status=itemList.get(position).getStatus();
         holder.Status.setText(status);
 
+        LoadEvaluation(itemList.get(position).getPid(),holder);
 
         String short_time=string_sub(itemList.get(position).getTime());
         String short_until=string_sub(itemList.get(position).getUntil());
@@ -166,13 +185,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.like.setVisibility(View.GONE);
             holder.ans.setVisibility(View.GONE);
         }
-
-
+        holder.view_rating.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.rating_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.ratingBar.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.time_title.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.time.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.content.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.message.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-
+        holder.report.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.linearLayout.setVisibility(View.GONE);
+        holder.view_rating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RatingAlert(itemList.get(position).getPid());
+            }
+        });
 
         holder.itemView.setActivated(isExpanded);
         if (isExpanded)
@@ -187,7 +214,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         });
 
-
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!itemList.get(position).getStatus().equals("已完成"))
+                    ReportAlert(itemList.get(position).getCid(),uid,itemList.get(position).getPid());
+                else
+                    Toast.makeText(context,"案件已經完成，不可以進行檢舉",Toast.LENGTH_SHORT).show();
+            }
+        });
         holder.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,7 +236,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                             Toast.makeText(context,"你不能接自己的案子",Toast.LENGTH_SHORT).show();
 
                         }else if(status.equals("待接案")){
-                            SendMessage(uid,itemList.get(position).getCid());
+
+                            SendMessage(uid,itemList.get(position).getCid(),position);
                         }else{
                             Toast.makeText(context,"此案件已完成或在進行中",Toast.LENGTH_SHORT).show();
                         }
@@ -238,7 +280,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         final MaterialDialog dialog =new MaterialDialog.Builder(context)
             .title("問與答 Q&A")
-            .customView(item,false )
+            .customView(item,wrapInScrollView )
             .backgroundColorRes(R.color.colorBackground)
                 .build();
 
@@ -288,7 +330,118 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         dialog.show();
 
     }
+    private void ReportAlert(final String cid,final String uid,final String pid){
+        boolean wrapInScrollView = true;
 
+        item_report = LayoutInflater.from(context).inflate(R.layout.dialog_report, null);
+
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .customView(item_report,wrapInScrollView )
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+        editText=item_report.findViewById(R.id.other_reason);
+        ImageView send=item_report.findViewById(R.id.correct_send);
+        TextView cancel=item_report.findViewById(R.id.cancel);
+        RadioGroup radioGroup=item_report.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                View radioButton = radioGroup.findViewById(i);
+                int index = radioGroup.indexOfChild(radioButton);
+                switch (index) {
+                    case 0: // first button
+                        report_reason="案件含有不雅名稱";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 1: // secondbutton
+                        report_reason="態度惡劣";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 2:
+                        report_reason="持續騷擾";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 3:
+                        report_reason="未達成工作需求";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 4:
+                        report_reason="遲遲不肯按確認鍵";
+                        editText.setVisibility(View.INVISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                    case 5:
+                        report_reason="other";
+                        editText.setVisibility(View.VISIBLE);
+                        Log.d("Selected button number " , Integer.toString(index));
+                        break;
+                }
+            }
+        });
+        EditText detail_content=item_report.findViewById(R.id.detail_content);
+
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!report_reason.equals("")){
+                    String Detail=detail_content.getText().toString();
+                    if (report_reason.equals("other"))
+                        report_reason=editText.getText().toString();
+                    Backgorundwork backgorundwork = new Backgorundwork(context);
+                    backgorundwork.execute("insert_report",cid,uid,pid,report_reason,Detail);
+                    dialog.dismiss();
+                }else{
+                    Toast.makeText(context,"請選擇你檢舉的原因",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
+
+    private void RatingAlert(final String pid){
+        boolean wrapInScrollView = true;
+
+        final View item = LayoutInflater.from(context).inflate(R.layout.dialog_rating_view, null);
+
+        final MaterialDialog dialog =new MaterialDialog.Builder(context)
+                .title("雇主評價")
+                .customView(item,wrapInScrollView )
+                .backgroundColorRes(R.color.colorBackground)
+                .build();
+
+        recyclerView = (RecyclerView)item.findViewById(R.id.dialog_recyclerview);
+        layoutManager = new LinearLayoutManager(item.getContext());
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
+        recyclerView.setLayoutManager(layoutManager);
+
+        LoadEvaluation(pid);
+
+
+
+        dialog.show();
+
+    }
     private String string_sub(String original){
         int start_index=original.indexOf("-");
         int last_index=original.lastIndexOf(":");
@@ -312,7 +465,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         dialog.show();
     }
 
-    public void SendMessage(final String uid,final String cid) {
+    public void SendMessage(final String uid,final String cid,int position) {
         boolean wrapInScrollView = true;
 
         dialog=new MaterialDialog.Builder(context)
@@ -372,6 +525,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     String sm =sm_message.getText().toString();
                     Log.d(TAG, "onClick: "+sm);
                     String type = "sendmessage";
+                    try {
+                        line_notify(itemList.get(position).getPid(),"https://a238c12f.ngrok.io/send_lineNotify",itemList.get(position).getCid(),"case_someone_apply");
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(context,"請稍後...",Toast.LENGTH_SHORT).show();
                     Backgorundwork backgorundwork = new Backgorundwork(context);
                     backgorundwork.execute(type,cid,uid,sm,Integer.toString(c_end_hours),Integer.toString(c_end_mins));
                 }
@@ -402,7 +562,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     public void LoadQuestion(final String cid){
-        String url ="http://163.17.5.182/app/load_question.php";
+        String url =ServerUrl+"/app/load_question.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -421,7 +581,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                 posts = mGson.fromJson(response, listType);
                             }
 
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人詢問",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterQanda(context, posts,uid);
@@ -452,4 +612,154 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         requestQueue.add(stringRequest);
     }
 
+    public void LoadEvaluation(final String pid,final RecyclerViewHolders holder){
+
+        String url=ServerUrl+"/app/avg_grade_toolman.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+
+                            if (response.isEmpty()){
+                                holder.ratingBar.setRating(0);
+                            }else{
+                                if (!TextUtils.isEmpty(response)){
+                                    Log.d(TAG, "onResponse: "+Float.parseFloat(response));
+                                    holder.ratingBar.setRating(Float.parseFloat(response));
+                                }
+
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",pid);
+                params.put("category","全部");
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void LoadEvaluation(final String pid){
+        String url=ServerUrl+"/app/load_my_toolman_evaluation.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response:",response);
+                        try {
+                            byte[] u = response.getBytes(
+                                    "UTF-8");
+                            response = new String(u, "UTF-8");
+                            Log.d(ContentValues.TAG, "Response " + response);
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson mGson = builder.create();
+                            Type listType = new TypeToken<ArrayList<ItemRating>>() {}.getType();
+                            ArrayList<ItemRating> posts = new ArrayList<ItemRating>();
+                            if (!response.contains("Undefined")) {
+                                posts = mGson.fromJson(response, listType);
+                            }
+                            if (posts==null ||posts.isEmpty()){
+                                Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
+                            }else{
+                                adapterRating = new RecyclerViewAdapterRating(context, posts,pid);
+                                recyclerView.setAdapter(adapterRating);
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //do stuffs with response erroe
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("uid",pid);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+    private void line_notify(final String account,final String url,final String cid,final String type ) throws JSONException {
+        HttpURLConnection urlConnection;
+
+
+        JSONObject datas = new JSONObject();
+        datas.put("caseID",cid);
+        datas.put("account",account);
+        datas.put("type",type);
+
+
+        Log.d(TAG, "line_notify: "+datas);
+
+
+        String data = datas.toString();
+        String result = null;
+        try {
+            //Connect
+
+            urlConnection = (HttpURLConnection) ((new URL(url).openConnection()));
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //Write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+            urlConnection.disconnect();
+            Log.d(TAG, "send_message: "+result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

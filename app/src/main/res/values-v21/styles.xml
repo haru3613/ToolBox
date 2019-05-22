@@ -43,6 +43,8 @@
         <item name="android:headerBackground">@color/primaryDarkColor</item>
     </style>
 
+
+
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/black</item>

@@ -33,13 +33,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             Log.d(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
 
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
+
 
         }
 
@@ -60,6 +54,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Instance ID token to your app server.
         sendRegistrationToServer(token);
     }
+
 
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
@@ -83,11 +78,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Short lived task is done.");
     }
 
-    private void sendNotification(String messageBody,String title) {
+    public void sendNotification(String messageBody,String title) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
+
 
         String channelId = "channelId123";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -97,6 +93,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
+
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 

@@ -26,6 +26,63 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/card_rating_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="雇主評價"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_message" />
+
+            <ImageView
+                android:id="@+id/report_icon"
+                android:layout_width="20dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/a_nickname"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/dotdot" />
+
+            <RatingBar
+                android:id="@+id/card_rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:numStars="5"
+                android:stepSize="1.0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_rating_title" />
+
+            <ImageView
+                android:id="@+id/view_rating"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/card_rating"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/moneyTxt"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/viewdetail" />
+
+            <TextView
                 android:id="@+id/card_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +94,7 @@
                 android:textSize="16dp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_message" />
+                app:layout_constraintTop_toBottomOf="@+id/card_rating" />
 
             <TextView
                 android:id="@+id/card_tool_title"
@@ -134,9 +191,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/a_time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_launcher" />
@@ -166,7 +225,7 @@
                 android:text="Name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/primaryTextColor"
-                android:textSize="20dp"
+                android:textSize="18sp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -205,7 +264,7 @@
                 android:textSize="16dp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/a_headpic" />
+                app:layout_constraintTop_toBottomOf="@+id/a_time" />
 
             <TextView
                 android:id="@+id/card_message"
@@ -233,7 +292,7 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView10"
+                app:layout_constraintStart_toEndOf="@+id/rating_life"
                 app:layout_constraintTop_toTopOf="@+id/card_unfinish"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/finished" />
@@ -269,16 +328,48 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_mypost"
                 android:layout_width="0dp"
-                android:layout_height="21dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/card_tomessage"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_tool_title" />
+
+            <LinearLayout
+                android:id="@+id/report_case"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/report_icon"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/a_nickname"
+                app:layout_constraintTop_toTopOf="@+id/report_icon">
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    app:srcCompat="@drawable/report_icon" />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="檢舉"
+                    android:textColor="@color/primaryTextColor" />
+            </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>
 

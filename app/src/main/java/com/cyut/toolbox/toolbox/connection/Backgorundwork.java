@@ -15,7 +15,10 @@ import com.cyut.toolbox.toolbox.LoginActivity;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapter;
 import com.cyut.toolbox.toolbox.adapter.RecyclerViewAdapterCol;
 import com.cyut.toolbox.toolbox.changepassword;
+import com.google.android.gms.common.util.IOUtils;
 
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,6 +45,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
     public static final String KEY = "STATUS";
     private static final String ACTIVITY_TAG ="Logwrite";
     String usermail;
+    private String ServerUrl="http://35.194.171.235";
     public Backgorundwork (Context ctx){
         this.context = ctx;
     }
@@ -50,14 +54,14 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
         Log.d(Backgorundwork.ACTIVITY_TAG,"Let's run~~~~");
         String type =params[0];
 
-        String check_id_match_mail_url = "http://163.17.5.182/check_id_match_mail_url.php";
-        String changepsw = "http://163.17.5.182/changepsw.php";
+        String check_id_match_mail_url = ServerUrl+"/check_id_match_mail_url.php";
+        String changepsw = ServerUrl+"/changepsw.php";
         if(type.equals("login")){
             Log.d(Backgorundwork.ACTIVITY_TAG,"login if run");
             try {
                 String mail = params[1];
                 String pwd = params[2];
-                String login_url ="http://163.17.5.182/app/login.php";
+                String login_url =ServerUrl+"/app/login.php";
                 URL url = new URL(login_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -108,7 +112,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String server=params[13];
 
             Log.d("image src", "doInBackground: "+image);
-            String sign_url ="http://163.17.5.182/app/register.php";
+            String sign_url =ServerUrl+"/app/register.php";
             try {
 
                 URL url = new URL(sign_url);
@@ -157,7 +161,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String cid=params[1];
             String uid=params[2];
 
-            String sign_url ="http://163.17.5.182/addcoll.php";
+            String sign_url =ServerUrl+"/app/addcoll.php";
             try {
 
                 URL url = new URL(sign_url);
@@ -198,7 +202,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String h=params[4];
             String m=params[5];
 
-            String send_url ="http://163.17.5.182/sendmessage.php";
+            String send_url =ServerUrl+"/app/sendmessage.php";
             try {
 
                 URL url = new URL(send_url);
@@ -239,7 +243,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String c_cid = params[1];
             String u_uid = params[2];
 
-            String delete_url = "http://163.17.5.182/deletecase_android.php";
+            String delete_url = ServerUrl+"/app/deletecase_android.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -277,7 +281,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
         }else if(type.equals("deleteMessage")) {
             String c_cid = params[1];
 
-            String delete_url = "http://163.17.5.182/deletemessage_android.php";
+            String delete_url = ServerUrl+"/app/deletemessage_android.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -315,7 +319,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String m_mid = params[1];
             String u_uid = params[2];
 
-            String delete_url = "http://163.17.5.182/app/cancelcase.php";
+            String delete_url = ServerUrl+"/app/cancelcase.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -356,7 +360,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String c_money=params[2];
             String u_uid = params[3];
 
-            String delete_url = "http://163.17.5.182/app/deciderid.php";
+            String delete_url = ServerUrl+"/app/deciderid.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -397,7 +401,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String u_image = params[2];
             String u_uid = params[1];
 
-            String delete_url = "http://163.17.5.182/app/image_update.php";
+            String delete_url = ServerUrl+"/app/image_update.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -439,7 +443,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String u_address = params[4];
             String u_introduce = params[5];
 
-            String delete_url = "http://163.17.5.182/app/member_update.php";
+            String delete_url = ServerUrl+"/app/member_update.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -477,12 +481,52 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if(type.equals("update_user")) {
+
+            String token = params[1];
+            String uid=params[2];
+            Log.d(TAG, "doInBackground: "+uid);
+            String delete_url = ServerUrl+"/app/update_token.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("token", "UTF-8") + "=" + URLEncoder.encode(token, "UTF-8")+
+                        "&"+URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else if(type.equals("case_status")) {
             String c_status = params[2];
             String c_cid = params[1];
 
 
-            String delete_url = "http://163.17.5.182/app/case_status.php";
+            String delete_url = ServerUrl+"/app/case_status.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -560,7 +604,6 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 String mail = params[1];
                 String psw = params[2];
                 String psw2 = params[3];
-                String delete_url = "http://163.17.5.182/app/case_status.php";
                 URL url = new URL(changepsw);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -601,7 +644,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String rid = params[4];
             String money = params[3];
 
-            String delete_url = "http://163.17.5.182/app/finish_case.php";
+            String delete_url = ServerUrl+"/app/finish_case.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -646,7 +689,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String pid = params[3];
             String aid = params[4];
 
-            String delete_url = "http://163.17.5.182/app/insert_qanda.php";
+            String delete_url = ServerUrl+"/app/insert_qanda.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -688,7 +731,7 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             String qid = params[1];
             String text = params[2];
 
-            String delete_url = "http://163.17.5.182/app/update_qanda.php";
+            String delete_url = ServerUrl+"/app/update_qanda.php";
             try {
 
                 URL url = new URL(delete_url);
@@ -702,6 +745,99 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
                 String post_data = URLEncoder.encode("q_qid", "UTF-8") + "=" + URLEncoder.encode(qid, "UTF-8") + "&" +
                         URLEncoder.encode("q_atext", "UTF-8") + "=" + URLEncoder.encode(text, "UTF-8") ;
 
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(type.equals("insert_rating")) {
+
+            String content = params[2];
+            String rating = params[1];
+            String uid = params[3];
+            String category = params[4];
+            String muid = params[5];
+            String cid=params[6];
+            String pid=params[7];
+            String delete_url = ServerUrl+"/app/insert_rating.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("category", "UTF-8") + "=" + URLEncoder.encode(category, "UTF-8") + "&" +
+                        URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
+                        URLEncoder.encode("rating", "UTF-8") + "=" + URLEncoder.encode(rating, "UTF-8")+ "&" +
+                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8")+ "&" +
+                        URLEncoder.encode("muid", "UTF-8") + "=" + URLEncoder.encode(muid, "UTF-8")+ "&" +
+                        URLEncoder.encode("cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8")+ "&" +
+                        URLEncoder.encode("pid", "UTF-8") + "=" + URLEncoder.encode(pid, "UTF-8");
+
+                Log.d("POST_DATA", "doInBackground: " + post_data);
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String result = "";
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(type.equals("insert_report")) {
+
+            String content = params[4];
+            String pid=params[3];
+            String uid = params[2];
+            String cid=params[1];
+            String detail=params[5];
+            String delete_url = ServerUrl+"/app/insert_report.php";
+            try {
+
+                URL url = new URL(delete_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("uid", "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&" +
+                        URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8")+ "&" +
+                        URLEncoder.encode("pid", "UTF-8") + "=" + URLEncoder.encode(pid, "UTF-8")+ "&" +
+                        URLEncoder.encode("cid", "UTF-8") + "=" + URLEncoder.encode(cid, "UTF-8")+ "&" +
+                        URLEncoder.encode("detail", "UTF-8") + "=" + URLEncoder.encode(detail, "UTF-8");
                 Log.d("POST_DATA", "doInBackground: " + post_data);
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
@@ -824,13 +960,14 @@ public class Backgorundwork extends AsyncTask<String,Void,String> {
             Toast.makeText(context, "詢問成功", Toast.LENGTH_SHORT).show();
         }else if(result.contains("qupdate success")) {
             Toast.makeText(context, "回答成功", Toast.LENGTH_SHORT).show();
-        }else if (result.contains("DOCTYPE")){
-            Log.d("Result", "onPostExecute: "+result);
+        }else if(result.contains("評分成功")) {
+            Toast.makeText(context, "評分成功", Toast.LENGTH_SHORT).show();
+        }else if (result.contains("DOCTYPE")) {
+            Log.d("Result", "onPostExecute: " + result);
             Toast.makeText(context, "系統出錯，請再試一次", Toast.LENGTH_SHORT).show();
-        }
-        else
+        }else
         {
-            alertDialog.show();
+            Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
             Log.d("Result", "onPostExecute: "+result);
         }
 

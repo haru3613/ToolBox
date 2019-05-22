@@ -61,6 +61,7 @@ public class adddata extends AppCompatActivity{
     private String category,total_money;
     private TimePickerDialog timePickerDialog;
     private RadioButton rb_cmp_non, rb_cmp_one, rb_cmp_local;
+    private String ServerUrl="http://35.194.171.235";
     private EditText edt_title,edt_money,edt_detail,spinner_other;
     Spinner  spinner_local, spinner_road;
     private Button bt_timeout, bt_case_done_A, bt_case_done_B,bt_sendcase;
@@ -278,6 +279,8 @@ public class adddata extends AppCompatActivity{
                         }
                         break;
                 }
+                if (send_case_disapear.equals(""))
+                    erroMessage=erroMessage+"請確認時間";
                 Log.e("Check radioCheck ~",radioCheck  +"   and   ````````````````"+send_case_finish_end);
                 if (erroMessage.equals("")){
                     Log.e("Check time ~",send_case_disapear+"  and  "+send_case_finish_end);
@@ -669,7 +672,7 @@ public class adddata extends AppCompatActivity{
             super.handleMessage(msg);
             switch (msg.what) {
                 case msgKey1:
-                    if (c_end_hours != 0 && c_end_mins != 0) {
+                    if (c_end_hours != 0 || c_end_mins != 0) {
                         text_end_until_time.setText(end_getTime());
                     } else {
                         text_end_until_time.setText("");
@@ -692,7 +695,7 @@ public class adddata extends AppCompatActivity{
         case_disapear_Month=String.valueOf(c.get(Calendar.MONTH) + 1);
         case_disapear_Day=String.valueOf(c.get(Calendar.DAY_OF_MONTH));
         case_disapear_Week=String.valueOf(c.get(Calendar.DAY_OF_WEEK));
-        case_disapear_hours=String.valueOf(c.get(Calendar.HOUR));
+        case_disapear_hours=String.valueOf(c.get(Calendar.HOUR_OF_DAY));
         case_disapear_mins=String.valueOf(c.get(Calendar.MINUTE));
         case_disapear_Sec=String.valueOf(c.get(Calendar.SECOND));
 
@@ -734,7 +737,7 @@ public class adddata extends AppCompatActivity{
 
 
     public void LoadUserMoney(){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

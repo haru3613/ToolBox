@@ -31,9 +31,13 @@ public class Item {
     private String uid;
     @SerializedName("u_money")
     private String money;
+    @SerializedName("u_Mtoken")
+    private String Mtoken;
+    @SerializedName("u_Wtoken")
+    private String Wtoken;
 
 
-    public Item(String mail, String nickname, String name,String image,String phone,String address,String introduce,String identity, String uid,String money,String pwd) {
+    public Item(String mail, String nickname, String name,String image,String phone,String address,String introduce,String identity, String uid,String money,String pwd,String Mtoken,String Wtoken) {
         this.nickname = nickname;
         this.name = name;
         this.mail=mail;
@@ -45,6 +49,8 @@ public class Item {
         this.uid=uid;
         this.pwd=pwd;
         this.money=money;
+        this.Mtoken=Mtoken;
+        this.Wtoken=Wtoken;
     }
     public String getMail() {
         return mail;
@@ -72,6 +78,14 @@ public class Item {
     }
     public String getUid() {
         return uid;
+    }
+
+    public String getMtoken() {
+        return Mtoken;
+    }
+
+    public String getWtoken() {
+        return Wtoken;
     }
 
     public String getPwd() {
