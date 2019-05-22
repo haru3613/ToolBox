@@ -75,6 +75,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
     private LinearLayoutManager layoutManager;
     private RecyclerViewAdapterRating adapterRating;
     public static final String KEY = "STATUS";
+    private String ServerUrl="http://35.194.171.235";
     private int mExpandedPosition=-1,previousExpandedPosition = -1;
 
     public RecyclerViewAdapterMyPost() {
@@ -382,6 +383,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
     }
 
+
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
 
         @Override
@@ -417,7 +419,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
     };
     //讀取接案人名稱及訊息
     public void MessageLoad(final String cid,final RecyclerViewHoldersMyPost holder){
-        String url ="http://163.17.5.182/messagedetail.php";
+        String url =ServerUrl+"/app/messagedetail.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -431,13 +433,15 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                             GsonBuilder builder = new GsonBuilder();
                             Gson mGson = builder.create();
                             List<ItemMsg> posts = new ArrayList<ItemMsg>();
-                            if (!response.contains("Undefined")){
+                            if (!response.contains("Undefined")) {
                                 posts = Arrays.asList(mGson.fromJson(response, ItemMsg[].class));
+                            }
+                            if (posts==null ||posts.isEmpty()){
+                                holder.tool.setText("此案尚未有工具人");
+                            }else{
                                 adapter = new RecyclerViewAdapterMsgDetail(context, posts,uid);
                                 holder.mypost_ryv.setAdapter(adapter);
                                 holder.tool.setVisibility(View.GONE);
-                            }else{
-                                holder.tool.setText("此案尚未有工具人");
                             }
 
                         } catch (UnsupportedEncodingException e) {
@@ -467,7 +471,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
 
     public void LoadUserName(final String uid,final RecyclerViewHoldersMyPost holder){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -527,7 +531,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
     public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyPost holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/avg_grade_toolman.php";
+        String url=ServerUrl+"/app/avg_grade_toolman.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -632,7 +636,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
 
     public void LoadEvaluation(final String pid){
 
-        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
+        String url=ServerUrl+"/app/load_my_toolman_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -650,7 +654,7 @@ public class RecyclerViewAdapterMyPost extends RecyclerView.Adapter<RecyclerView
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
                             }
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapterRating = new RecyclerViewAdapterRating(context, posts,pid);

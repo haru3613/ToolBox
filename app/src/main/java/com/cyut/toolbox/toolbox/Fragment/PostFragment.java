@@ -55,6 +55,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
     private LinearLayoutManager layoutManager;
     protected static RecyclerViewAdapterMyPost adapter;
     private ProgressBar progressBar;
+    private String ServerUrl="http://35.194.171.235";
     String uid;
     View v;
     String SearchString;
@@ -105,7 +106,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
 
     public void Message(final String uid){
         Log.d(TAG, "Message: uid"+uid);
-        String url ="http://163.17.5.182/app/mypost.php";
+        String url =ServerUrl+"/app/mypost.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -120,11 +121,12 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
                             Gson mGson = builder.create();
                             Type listType = new TypeToken<ArrayList<ItemObject>>() {}.getType();
                             ArrayList<ItemObject> posts = new ArrayList<ItemObject>();
+                            Log.d(TAG, "onResponse: "+posts);
                             if (!response.contains("Undefined")){
                                 posts = mGson.fromJson(response, listType);
                             }
 
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(v.getContext(),"尚無案件",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterMyPost(v.getContext(), posts,uid);
@@ -260,7 +262,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
     public void SearchV(final String SearchString){
         Log.d(TAG, "SearchV: "+SearchString);
         Log.d(TAG, "SearchV: uid"+uid);
-        String url ="http://163.17.5.182/app/myport_cate_search.php";
+        String url =ServerUrl+"/app/myport_cate_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -315,7 +317,7 @@ public class PostFragment extends Fragment implements SearchView.OnQueryTextList
     public void SearchQuery(final String SearchString){
         Log.d(TAG, "SearchQuery: "+SearchString);
         Log.d(TAG, "SearchV: uid"+uid);
-        String url ="http://163.17.5.182/app/myport_search.php";
+        String url =ServerUrl+"/app/myport_search.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

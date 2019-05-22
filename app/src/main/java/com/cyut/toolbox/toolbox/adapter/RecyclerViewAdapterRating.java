@@ -39,7 +39,7 @@ public class RecyclerViewAdapterRating extends RecyclerView.Adapter<RecyclerView
     public ArrayList<ItemRating> itemList;
     private Context context;
     String name , email,uid;
-
+    private String ServerUrl="http://35.194.171.235";
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     public static final String KEY = "STATUS";
@@ -116,7 +116,7 @@ public class RecyclerViewAdapterRating extends RecyclerView.Adapter<RecyclerView
     }
 
     public void LoadName(final String uid,final RecyclerViewHoldersRating holder){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

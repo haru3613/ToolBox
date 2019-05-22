@@ -115,6 +115,7 @@ public class ChatroomActivity extends AppCompatActivity  {
         CircleImageView messengerImageView;
 
 
+
         public MessageViewHolder(View v) {
             super(v);
             messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
@@ -138,6 +139,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     private String mPhotoUrl,MToken,WToken;
     private SharedPreferences mSharedPreferences;
     private String uid;
+    private String ServerUrl="http://35.194.171.235";
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -587,7 +589,7 @@ public class ChatroomActivity extends AppCompatActivity  {
     }
 
     public void LoadUser(final String other_uid){
-        String url ="http://163.17.5.182/app/loaduser.php";
+        String url =ServerUrl+"/app/loaduser_uid.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

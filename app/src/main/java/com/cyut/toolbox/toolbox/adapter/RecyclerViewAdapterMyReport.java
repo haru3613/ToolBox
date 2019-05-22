@@ -74,7 +74,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
     private RecyclerViewAdapterMsgDetail adapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-
+    private String ServerUrl="http://35.194.171.235";
     private RecyclerViewAdapterRating adapterRating;
     public static final String KEY = "STATUS";
     private int mExpandedPosition=-1,previousExpandedPosition = -1;
@@ -339,7 +339,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
 
 
     public void LoadUserName(final String uid,final RecyclerViewHoldersMyReport holder){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -541,7 +541,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
 
     public void LoadEvaluation(final String uid,final RecyclerViewHoldersMyReport holder){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/avg_grade_toolman.php";
+        String url=ServerUrl+"/app/avg_grade_toolman.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -589,7 +589,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
     }
     public void LoadEvaluation(final String pid){
         Log.d(ContentValues.TAG, "uid："+pid);
-        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
+        String url=ServerUrl+"/app/load_my_toolman_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -607,7 +607,7 @@ public class RecyclerViewAdapterMyReport extends RecyclerView.Adapter<RecyclerVi
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
                             }
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapterRating = new RecyclerViewAdapterRating(context, posts,pid);

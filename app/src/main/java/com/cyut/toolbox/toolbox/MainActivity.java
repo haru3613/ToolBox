@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
     private  Toolbar toolbar;
     private static Boolean isExit = false;
     private static Boolean hasTask = false;
+    private String ServerUrl="http://35.194.171.235";
     public static final String KEY = "STATUS";
     Timer timerExit = new Timer();
     TimerTask task = new TimerTask() {
@@ -344,7 +345,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void LoadUser(final String uid){
-        String url ="http://163.17.5.182/app/loaduser.php";
+        String url =ServerUrl+"/app/loaduser_uid.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

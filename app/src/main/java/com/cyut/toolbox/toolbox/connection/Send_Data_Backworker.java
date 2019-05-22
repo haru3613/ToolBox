@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
     public Send_Data_Backworker (Context ctx){
         context = ctx;
     }
-
+    private String ServerUrl="http://35.194.171.235";
     @Override
     protected String doInBackground(String... strings) {
         //type, send_class,send_Title,send_Money,send_city,send_town,send_road,send_otherdetail,send_detail,send_case_disapear,send_case_finish_start,send_case_finish_end
@@ -50,8 +51,9 @@ public class Send_Data_Backworker extends AsyncTask<String,Void,String>{
         String send_case_disapear=strings[9];
         String send_case_finish_end=strings[10];
         String uid=strings[11];
-
-        String login_url ="http://163.17.5.182/addcase_for_android.php";
+        if (send_case_finish_end.isEmpty())
+            send_case_finish_end="0000-00-00 00:00:00";
+        String login_url =ServerUrl+"/app/addcase_for_android.php";
         if(type.equals("check_ok")){
             try {
                 URL url = new URL(login_url);

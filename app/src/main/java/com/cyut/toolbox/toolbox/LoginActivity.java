@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private static Boolean hasTask = false;
     private static final String ACTIVITY_TAG ="Logwrite";
     public static final String KEY = "STATUS";
+    private String ServerUrl="http://35.194.171.235";
     private FirebaseAuth mAuth;
     public Button Login;
     private EditText username,password;
@@ -215,7 +216,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     //拿取uid
     public void LoadUser(final String mail){
-        String url ="http://163.17.5.182/loaduser.php";
+        String url =ServerUrl+"/app/loaduser.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

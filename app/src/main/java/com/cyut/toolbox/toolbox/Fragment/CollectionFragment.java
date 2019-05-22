@@ -52,7 +52,7 @@ public class CollectionFragment extends Fragment {
     public static final String KEY = "STATUS";
     View v;
     String uid;
-
+    private String ServerUrl="http://35.194.171.235";
     public CollectionFragment() {
         // Required empty public constructor
     }
@@ -113,7 +113,7 @@ public class CollectionFragment extends Fragment {
     }
 
     public void Collection(final String uid){
-        String url ="http://163.17.5.182/collection.php";
+        String url =ServerUrl+"/app/collection.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -132,7 +132,7 @@ public class CollectionFragment extends Fragment {
                                 posts = mGson.fromJson(response, listType);
                             }
 
-                            if (posts.isEmpty()){
+                            if (posts==null || posts.isEmpty()){
                                 Toast.makeText(v.getContext(),"您尚未收藏案件",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterCol(v.getContext(), posts,uid);

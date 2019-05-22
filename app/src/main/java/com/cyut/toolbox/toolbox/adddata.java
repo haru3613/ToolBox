@@ -61,6 +61,7 @@ public class adddata extends AppCompatActivity{
     private String category,total_money;
     private TimePickerDialog timePickerDialog;
     private RadioButton rb_cmp_non, rb_cmp_one, rb_cmp_local;
+    private String ServerUrl="http://35.194.171.235";
     private EditText edt_title,edt_money,edt_detail,spinner_other;
     Spinner  spinner_local, spinner_road;
     private Button bt_timeout, bt_case_done_A, bt_case_done_B,bt_sendcase;
@@ -736,7 +737,7 @@ public class adddata extends AppCompatActivity{
 
 
     public void LoadUserMoney(){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

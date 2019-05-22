@@ -67,6 +67,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     public List<ItemMsg> itemList;
     private Context context;
     String name , email,uid;
+    private String ServerUrl="http://35.194.171.235";
     public static final String KEY = "STATUS";
     public RecyclerViewAdapterMsgDetail(Context context, List<ItemMsg> itemList,String uid) {
         this.itemList = itemList;
@@ -191,7 +192,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
                 Toast.makeText(context, "成功，即將開啟聊天室", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
-                notifyDataSetChanged();
+
                 //TODO 讓我的發案列表更新
             }
         });
@@ -207,7 +208,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
 
     public void LoadEvaluation(final String uid,View item){
         Log.d(ContentValues.TAG, "uid："+uid);
-        String url="http://163.17.5.182/app/avg_grade_toolman.php";
+        String url=ServerUrl+"/app/avg_grade_toolman.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -255,7 +256,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     }
 
     public void LoadUser(final String uid,final RecyclerViewMsgDetailHolders holder){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -301,7 +302,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
         requestQueue.add(stringRequest);
     }
     public void LoadUserName(final String uid,final String time,final String message,final String cid,final int position){
-        String url ="http://163.17.5.182/loadusername.php";
+        String url =ServerUrl+"/app/loadusername.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -350,7 +351,7 @@ public class RecyclerViewAdapterMsgDetail extends RecyclerView.Adapter<RecyclerV
     }
     //讀取案件rid及money，並且更新案件進入進行中，並將錢存入第三方
     public void LoadCase(final String cid,final String r_uid){
-        String url ="http://163.17.5.182/app/getcase.php";
+        String url =ServerUrl+"/app/getcase.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

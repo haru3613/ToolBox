@@ -76,6 +76,7 @@ public class InforFragment extends Fragment {
     Uri picUri;
     String path;
     boolean imgboo;
+    private String ServerUrl="http://35.194.171.235";
     private static final int REQUEST_EXTERNAL_STORAGE = 200;
     private static final int PICKER = 100;
     public InforFragment() {
@@ -99,7 +100,7 @@ public class InforFragment extends Fragment {
         return view;
     }
     public void LoadUser(final String uid){
-        String url ="http://163.17.5.182/app/loaduser.php";
+        String url =ServerUrl+"/app/loaduser_uid.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

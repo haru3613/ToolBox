@@ -85,7 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     private RecyclerViewAdapterQanda adapter;
     private RecyclerViewAdapterRating adapterRating;
     private View item_report;
-
+    private String ServerUrl="http://35.194.171.235";
     int c_end_hours = 0;
     int c_end_mins = 0;
     int time_check_status = 0;
@@ -562,7 +562,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     public void LoadQuestion(final String cid){
-        String url ="http://163.17.5.182/app/load_question.php";
+        String url =ServerUrl+"/app/load_question.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -581,7 +581,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                 posts = mGson.fromJson(response, listType);
                             }
 
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人詢問",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterQanda(context, posts,uid);
@@ -614,7 +614,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     public void LoadEvaluation(final String pid,final RecyclerViewHolders holder){
 
-        String url="http://163.17.5.182/app/avg_grade_toolman.php";
+        String url=ServerUrl+"/app/avg_grade_toolman.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -662,7 +662,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     public void LoadEvaluation(final String pid){
-        String url="http://163.17.5.182/app/load_my_toolman_evaluation.php";
+        String url=ServerUrl+"/app/load_my_toolman_evaluation.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -680,7 +680,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
                             }
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(context,"尚未有人評分",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapterRating = new RecyclerViewAdapterRating(context, posts,pid);

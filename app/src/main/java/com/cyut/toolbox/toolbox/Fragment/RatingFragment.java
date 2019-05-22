@@ -75,7 +75,7 @@ public class RatingFragment extends Fragment {
     private Button toolman,boss;
     private String classs,total,category;
     private TextView tv_total;
-
+    private String ServerUrl="http://35.194.171.235";
     public RatingFragment() {
         // Required empty public constructor
     }
@@ -107,9 +107,9 @@ public class RatingFragment extends Fragment {
         category="全部";
 
         bgwork load_rating=new bgwork(v.getContext());
-        load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_boss.php");
+        load_rating.execute(uid,"全部",ServerUrl+"/app/avg_grade_boss.php");
 
-        LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");
+        LoadEvaluation(uid,ServerUrl+"/app/load_my_boss_evaluation.php");
 
         toolman.setBackgroundResource(R.color.white);
         boss.setBackgroundResource(R.color.primaryDarkColor);
@@ -122,8 +122,8 @@ public class RatingFragment extends Fragment {
                 toolman.setBackgroundResource(R.color.primaryDarkColor);
                 boss.setBackgroundResource(R.color.white);
                 bgwork load_rating=new bgwork(v.getContext());
-                load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_boss.php");
-                LoadEvaluation(uid,"http://163.17.5.182/app/load_my_boss_evaluation.php");
+                load_rating.execute(uid,"全部",ServerUrl+"/app/avg_grade_boss.php");
+                LoadEvaluation(uid,ServerUrl+"/app/load_my_boss_evaluation.php");
             }
         });
 
@@ -135,8 +135,8 @@ public class RatingFragment extends Fragment {
                 toolman.setBackgroundResource(R.color.white);
                 boss.setBackgroundResource(R.color.primaryDarkColor);
                 bgwork load_rating=new bgwork(v.getContext());
-                load_rating.execute(uid,"全部","http://163.17.5.182/app/avg_grade_toolman.php");
-                LoadEvaluation(uid,"http://163.17.5.182/app/load_my_toolman_evaluation.php");
+                load_rating.execute(uid,"全部",ServerUrl+"/app/avg_grade_toolman.php");
+                LoadEvaluation(uid,ServerUrl+"/app/load_my_toolman_evaluation.php");
             }
         });
         return v;
@@ -158,9 +158,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="接送";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_toolman.php";
+                    url=ServerUrl+"/app/avg_grade_toolman.php";
                 else
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
+                    url=ServerUrl+"/app/avg_grade_boss.php";
 
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"接送",url);
@@ -172,9 +172,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="修繕";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_toolman.php";
+                    url=ServerUrl+"/app/avg_grade_toolman.php";
                 else
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
+                    url=ServerUrl+"/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"修繕",url);
             }
@@ -185,9 +185,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="日常";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_toolman.php";
+                    url=ServerUrl+"/app/avg_grade_toolman.php";
                 else
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
+                    url=ServerUrl+"/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"日常",url);
             }
@@ -198,9 +198,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="課業";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_toolman.php";
+                    url=ServerUrl+"/app/avg_grade_toolman.php";
                 else
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
+                    url=ServerUrl+"/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"課業",url);
             }
@@ -211,9 +211,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="除蟲";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_toolman.php";
+                    url=ServerUrl+"/app/avg_grade_toolman.php";
                 else
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
+                    url=ServerUrl+"/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"除蟲",url);
             }
@@ -224,9 +224,9 @@ public class RatingFragment extends Fragment {
                 String url="";
                 category="外送";
                 if (classs.equals("雇主"))
-                    url="http://163.17.5.182/app/avg_grade_toolman.php";
+                    url=ServerUrl+"/app/avg_grade_toolman.php";
                 else
-                    url="http://163.17.5.182/app/avg_grade_boss.php";
+                    url=ServerUrl+"/app/avg_grade_boss.php";
                 bgwork load_rating=new bgwork(v.getContext());
                 load_rating.execute(uid,"外送",url);
             }
@@ -377,7 +377,7 @@ public class RatingFragment extends Fragment {
                             if (!response.contains("Undefined")) {
                                 posts = mGson.fromJson(response, listType);
                             }
-                            if (posts.isEmpty()){
+                            if (posts==null ||posts.isEmpty()){
                                 Toast.makeText(v.getContext(),"尚未有人幫你評分",Toast.LENGTH_SHORT).show();
                             }else{
                                 adapter = new RecyclerViewAdapterRating(v.getContext(), posts,uid);
